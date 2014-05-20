@@ -3,14 +3,14 @@
 from setuptools import setup, find_packages
 import os
 
-ROOT_DIR = os.path.dirname(__FILE__)
+ROOT_DIR = os.path.dirname(__file__)
 SOURCE_DIR = os.path.join(ROOT_DIR)
 
 setup(
 	name="opencage",
 	version="1.0.0",
 	description="Simple wrapper module for the OpenCage Geocoder API",
-	author="OpenCage (a Lokku brand)"
+	author="OpenCage (a Lokku brand)",
 	author_email="info@opencagedata.com",
 	url="",
 	license="BSD",
