@@ -60,7 +60,22 @@ class OpenCageGeocodeTestCase(unittest.TestCase):
         latin1_string = six.u("xxá").encode("latin1")
 
         self.assertRaises(InvalidInputError, self.geocoder.geocode, utf8_string)
+
+        # check the exception
+        try:
+            self.geocoder.geocode(utf8_string)
+        except InvalidInputError as ex:
+            self.assertEqual(ex.bad_value, utf8_string)
+            self.assertEqual(str(ex), "Input must be a unicode string, not {0!r}".format(utf8_string))
+
         self.assertRaises(InvalidInputError, self.geocoder.geocode, latin1_string)
+
+        # check the exception
+        try:
+            self.geocoder.geocode(latin1_string)
+        except InvalidInputError as ex:
+            self.assertEqual(ex.bad_value, latin1_string)
+            self.assertEqual(str(ex), "Input must be a unicode string, not {0!r}".format(latin1_string))
 
 
     def testMunster(self):

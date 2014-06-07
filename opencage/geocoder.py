@@ -16,9 +16,19 @@ class OpenCageGeocodeError(Exception):
 
 class InvalidInputError(OpenCageGeocodeError):
 
-    """There was a problem with the input you provided."""
+    """
+    There was a problem with the input you provided.
+    
+    :var bad_value: The value that caused the problem
+    """
 
-    pass
+    def __init__(self, bad_value):
+        self.bad_value = bad_value
+
+    def __unicode__(self):
+        return "Input must be a unicode string, not "+repr(self.bad_value)[:100]
+
+    __str__ = __unicode__
 
 
 class UnknownError(OpenCageGeocodeError):
@@ -93,10 +103,10 @@ class OpenCageGeocode(object):
             try:
                 query = unicode(query)
             except UnicodeDecodeError:
-                raise InvalidInputError("Input query must be unicode string")
+                raise InvalidInputError(bad_value=query)
 
         if not isinstance(query, six.text_type):
-            raise InvalidInputError("Input query must be unicode string")
+            raise InvalidInputError(bad_value=query)
 
         data = {
             'q': query,
