@@ -72,7 +72,7 @@ class OpenCageGeocodeTestCase(unittest.TestCase):
 class FloatifyDictTestCase(unittest.TestCase):
     def _expected_output(input_value, expected_output):
         def test(self):
-            self.assertEquals(floatify_latlng(input_value), expected_output)
+            self.assertEqual(floatify_latlng(input_value), expected_output)
         return test
 
     testString = _expected_output("123", "123")
