@@ -10,6 +10,7 @@ Welcome to OpenCage Geocoder's documentation!
     :members:
 
 
+
 Indices and tables
 ==================
 
