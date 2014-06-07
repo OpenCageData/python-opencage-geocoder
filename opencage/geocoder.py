@@ -49,6 +49,7 @@ class OpenCageGeocode(object):
         url = self.url
         response = requests.get(url, params=data)
 
+        # TODO check for errors
         # check for non-json
         response_json = response.json()
 
@@ -56,8 +57,6 @@ class OpenCageGeocode(object):
             # Rate limit exceeded
             reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
             raise OpenCageGeocodeRateLimitExceededException(reset_to=int(response_json['rate']['limit']), reset_time=reset_time)
-        # TODO check for rate limiting
-        # TODO check for errors
         return floatify_latlng(response.json()['results'])
 
         #return response.json()
