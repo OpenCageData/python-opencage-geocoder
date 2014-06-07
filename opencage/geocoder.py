@@ -1,3 +1,5 @@
+""" Geocoder module. """
+
 import requests
 import collections
 import six
@@ -6,14 +8,17 @@ from decimal import Decimal
 
 
 class OpenCageGeocodeError(Exception):
+    """Base class for all errors/exceptions that can happen when geocoding."""
     pass
 
 
 class InvalidInputError(OpenCageGeocodeError):
+    """There was a problem with the input you provided."""
     pass
 
 
 class RateLimitExceededError(OpenCageGeocodeError):
+    """Your account has exceeded it's limit. Contact OpenCage."""
     def __init__(self, reset_time, reset_to):
         self.reset_time = reset_time
         self.reset_to = reset_to
@@ -26,6 +31,14 @@ class RateLimitExceededError(OpenCageGeocodeError):
 
 
 class OpenCageGeocode(object):
+    """
+    Geocoder object.
+
+    Initialize it with your API key:
+        >>> geocoder = OpenCageGeocode('your-key-here')
+
+    Query 
+    """
     url = 'http://prototype.opencagedata.com/geocode/v1/json'
     key = ''
 
