@@ -7,6 +7,7 @@ import httpretty
 
 from opencage.geocoder import OpenCageGeocode
 from opencage.geocoder import OpenCageGeocodeInvalidInputException
+from opencage.geocoder import OpenCageGeocodeRateLimitExceededException
 from opencage.geocoder import floatify_latlng
 
 
@@ -108,3 +109,43 @@ class FloatifyDictTestCase(unittest.TestCase):
         {'results': [{'geom': {'lat': 12.01, 'lng': -0.9}}, {'geometry': {'lat': 0.1, 'lng': 10}}]}
     )
     testListWithThings = _expected_output([{'foo': 'bar'}], [{'foo': 'bar'}])
+
+#'"
+
+class OpenCageGeocodeRateLimitException(unittest.TestCase):
+    def setUp(self):
+        httpretty.enable()
+
+        self.geocoder = OpenCageGeocode('abcde')
+
+    def tearDown(self):
+        httpretty.disable()
+        httpretty.reset()
+
+    def testNoRateLimit(self):
+        httpretty.register_uri(httpretty.GET,
+            self.geocoder.url,
+            body='{"status":{"code":200,"message":"OK"},"thanks":"For using an OpenCage Data API","total_results":0,"we_are_hiring":"http://lokku.com/#jobs","licenses":[{"url":"http://creativecommons.org/licenses/by-sa/3.0/","name":"CC-BY-SA"},{"url":"http://opendatacommons.org/licenses/odbl/summary/","name":"ODbL"}],"rate":{"reset":1402185600,"limit":"2500","remaining":2479},"results":[],"timestamp":{"created_http":"Sat, 07 Jun 2014 10:38:45 GMT","created_unix":1402137525}}')
+
+        # shouldn't raise an exception
+        self.geocoder.geocode("whatever")
+
+
+    def testRateLimitExceeded(self):
+        httpretty.register_uri(httpretty.GET,
+            self.geocoder.url,
+            body='{"status":{"code":429,"message":"OK"},"thanks":"For using an OpenCage Data API","total_results":0,"we_are_hiring":"http://lokku.com/#jobs","licenses":[{"url":"http://creativecommons.org/licenses/by-sa/3.0/","name":"CC-BY-SA"},{"url":"http://opendatacommons.org/licenses/odbl/summary/","name":"ODbL"}],"rate":{"reset":1402185600,"limit":"2500","remaining":0},"results":[],"timestamp":{"created_http":"Sat, 07 Jun 2014 10:38:45 GMT","created_unix":1402137525}}',
+            status=429,
+            adding_headers={'X-RateLimit-Limit': '2500', 'X-RateLimit-Remaining': '0', 'X-RateLimit-Reset': '1402185600'},
+        )
+
+        self.assertRaises(OpenCageGeocodeRateLimitExceededException, self.geocoder.geocode, "whatever")
+
+        # check the exception
+        try:
+            self.geocoder.geocode("whatever")
+        except OpenCageGeocodeRateLimitExceededException as ex:
+            self.assertEqual(str(ex), 'Your rate limit has expired. It will reset to 2500 on 2014-06-08T00:00:00')
+            self.assertEqual(ex.reset_to, 2500)
+
+
