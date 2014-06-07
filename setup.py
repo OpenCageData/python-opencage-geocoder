@@ -27,5 +27,6 @@ setup(
     install_requires=[
       'Requests>=2.2.0'
 
-    ]
+    ],
+    test_suite='tests',
 )
