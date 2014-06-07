@@ -58,9 +58,11 @@ class OpenCageGeocode(object):
             # Rate limit exceeded
             reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
             raise RateLimitExceededError(reset_to=int(response_json['rate']['limit']), reset_time=reset_time)
+
         return floatify_latlng(response.json()['results'])
 
-        #return response.json()
+    def reverse_geocode(self, lat, lng):
+        return self.geocode("%s,%s" % (lat, lng))
 
 
 def floatify_latlng(input_value):
