@@ -1,5 +1,14 @@
 import requests
 import collections
+import six
+
+
+class OpenCageGeocodeException(Exception):
+    pass
+
+
+class OpenCageGeocodeInvalidInputException(OpenCageGeocodeException):
+    pass
 
 
 class OpenCageGeocode(object):
@@ -10,12 +19,22 @@ class OpenCageGeocode(object):
         self.key = key
 
     def geocode(self, query):
+        if six.PY2:
+            try:
+                query = unicode(query)
+            except UnicodeDecodeError:
+                raise OpenCageGeocodeInvalidInputException("Input query must be unicode string")
+
+        if not isinstance(query, six.text_type):
+            raise OpenCageGeocodeInvalidInputException("Input query must be unicode string")
+
         data = {
             'q': query,
             'key': self.key
         }
         url = self.url
         response = requests.get(url, params=data)
+        #print response.content
         # TODO check for rate limiting
         # TODO check for errors
         return floatify_latlng(response.json()['results'])
