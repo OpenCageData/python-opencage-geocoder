@@ -34,7 +34,7 @@ class OpenCageGeocode(object):
 
     def geocode(self, query):
         if six.PY2:
-            # py3 doesn't have unicode, and instead we check the text_type later
+            # py3 doesn't have unicode() function, and instead we check the text_type later
             try:
                 query = unicode(query)
             except UnicodeDecodeError:
