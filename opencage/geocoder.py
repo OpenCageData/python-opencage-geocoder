@@ -21,6 +21,13 @@ class InvalidInputError(OpenCageGeocodeError):
     pass
 
 
+class UnknownError(OpenCageGeocodeError):
+
+    """There was a problem with the OpenCage server."""
+
+    pass
+
+
 class RateLimitExceededError(OpenCageGeocodeError):
 
     """
@@ -98,16 +105,24 @@ class OpenCageGeocode(object):
         url = self.url
         response = requests.get(url, params=data)
 
-        # TODO check for errors
-        # check for non-json
-        response_json = response.json()
-
         if response.status_code == 429:
             # Rate limit exceeded
-            reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
-            raise RateLimitExceededError(reset_to=int(response_json['rate']['limit']), reset_time=reset_time)
+            reset_time = datetime.utcfromtimestamp(response.json()['rate']['reset'])
+            raise RateLimitExceededError(reset_to=int(response.json()['rate']['limit']), reset_time=reset_time)
 
-        return floatify_latlng(response.json()['results'])
+        elif response.status_code == 500:
+            raise UnknownError("500 status code from API")
+
+        try:
+            response_json = response.json()
+        except ValueError:
+            raise UnknownError("Non-JSON result from server")
+
+        if 'results' not in response_json:
+            raise UnknownError("JSON from API doesn't have a 'results' key")
+
+
+        return floatify_latlng(response_json['results'])
 
     def reverse_geocode(self, lat, lng):
         """

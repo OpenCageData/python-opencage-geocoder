@@ -6,7 +6,7 @@ import six
 import httpretty
 
 from opencage.geocoder import OpenCageGeocode
-from opencage.geocoder import InvalidInputError, RateLimitExceededError
+from opencage.geocoder import InvalidInputError, RateLimitExceededError, UnknownError
 from opencage.geocoder import floatify_latlng, _query_for_reverse_geocoding
 
 
@@ -164,3 +164,38 @@ class ReverseGeocodingTestCase(unittest.TestCase):
     testSimple7 = _expected_output((2.000002, 0.0000001), "2.000002,0.0000001")
 
     testSimple8 = _expected_output(("2.000002", "-120"), "2.000002,-120")
+
+
+class UnknownProblemTestCase(unittest.TestCase):
+    def setUp(self):
+        httpretty.enable()
+        self.geocoder = OpenCageGeocode('abcde')
+
+    def tearDown(self):
+        httpretty.disable()
+        httpretty.reset()
+
+    def test500Status(self):
+        httpretty.register_uri(httpretty.GET,
+            self.geocoder.url,
+            body='',
+            status=500,
+        )
+
+        self.assertRaises(UnknownError, self.geocoder.geocode, "whatever")
+
+    def testNonJson(self):
+        httpretty.register_uri(httpretty.GET,
+            self.geocoder.url,
+            body='',
+        )
+
+        self.assertRaises(UnknownError, self.geocoder.geocode, "whatever")
+
+    def testNoResultsKey(self):
+        httpretty.register_uri(httpretty.GET,
+            self.geocoder.url,
+            body='{"spam": "eggs"}',
+        )
+
+        self.assertRaises(UnknownError, self.geocoder.geocode, "whatever")
