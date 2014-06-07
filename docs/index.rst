@@ -13,6 +13,8 @@ Welcome to OpenCage Geocoder's documentation!
 
 .. autoclass:: opencage.geocoder.RateLimitExceededError
 
+.. autoclass:: opencage.geocoder.UnknownError
+
 Sample Return Format
 --------------------
 

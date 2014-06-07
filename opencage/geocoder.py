@@ -96,6 +96,7 @@ class OpenCageGeocode(object):
         :returns: Dict results
         :raises InvalidInputError: if the query string is not a unicode string
         :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
+        :raises UnknownError: if something goes wrong with the OpenCage API
 
         """
         if six.PY2:
@@ -143,6 +144,7 @@ class OpenCageGeocode(object):
         :return: Results from OpenCageData
         :rtype: dict
         :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
+        :raises UnknownError: if something goes wrong with the OpenCage API
         """
         return self.geocode(query_for_reverse_geocoding(lat, lng))
 
