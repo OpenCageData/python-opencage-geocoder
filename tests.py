@@ -6,8 +6,7 @@ import six
 import httpretty
 
 from opencage.geocoder import OpenCageGeocode
-from opencage.geocoder import OpenCageGeocodeInvalidInputException
-from opencage.geocoder import OpenCageGeocodeRateLimitExceededException
+from opencage.geocoder import InvalidInputError, RateLimitExceededError
 from opencage.geocoder import floatify_latlng
 
 
@@ -60,8 +59,8 @@ class OpenCageGeocodeTestCase(unittest.TestCase):
         utf8_string = six.u("xxá").encode("utf-8")
         latin1_string = six.u("xxá").encode("latin1")
 
-        self.assertRaises(OpenCageGeocodeInvalidInputException, self.geocoder.geocode, utf8_string)
-        self.assertRaises(OpenCageGeocodeInvalidInputException, self.geocoder.geocode, latin1_string)
+        self.assertRaises(InvalidInputError, self.geocoder.geocode, utf8_string)
+        self.assertRaises(InvalidInputError, self.geocoder.geocode, latin1_string)
 
 
     def testMunster(self):
@@ -112,7 +111,7 @@ class FloatifyDictTestCase(unittest.TestCase):
 
 #'"
 
-class OpenCageGeocodeRateLimitException(unittest.TestCase):
+class RateLimitErrorTestCase(unittest.TestCase):
     def setUp(self):
         httpretty.enable()
 
@@ -139,12 +138,12 @@ class OpenCageGeocodeRateLimitException(unittest.TestCase):
             adding_headers={'X-RateLimit-Limit': '2500', 'X-RateLimit-Remaining': '0', 'X-RateLimit-Reset': '1402185600'},
         )
 
-        self.assertRaises(OpenCageGeocodeRateLimitExceededException, self.geocoder.geocode, "whatever")
+        self.assertRaises(RateLimitExceededError, self.geocoder.geocode, "whatever")
 
         # check the exception
         try:
             self.geocoder.geocode("whatever")
-        except OpenCageGeocodeRateLimitExceededException as ex:
+        except RateLimitExceededError as ex:
             self.assertEqual(str(ex), 'Your rate limit has expired. It will reset to 2500 on 2014-06-08T00:00:00')
             self.assertEqual(ex.reset_to, 2500)
 

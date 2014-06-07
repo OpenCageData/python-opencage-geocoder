@@ -4,15 +4,15 @@ import six
 from datetime import datetime
 
 
-class OpenCageGeocodeException(Exception):
+class OpenCageGeocodeError(Exception):
     pass
 
 
-class OpenCageGeocodeInvalidInputException(OpenCageGeocodeException):
+class InvalidInputError(OpenCageGeocodeError):
     pass
 
 
-class OpenCageGeocodeRateLimitExceededException(OpenCageGeocodeException):
+class RateLimitExceededError(OpenCageGeocodeError):
     def __init__(self, reset_time, reset_to):
         self.reset_time = reset_time
         self.reset_to = reset_to
@@ -34,13 +34,14 @@ class OpenCageGeocode(object):
 
     def geocode(self, query):
         if six.PY2:
+            # py3 doesn't have unicode, and instead we check the text_type later
             try:
                 query = unicode(query)
             except UnicodeDecodeError:
-                raise OpenCageGeocodeInvalidInputException("Input query must be unicode string")
+                raise InvalidInputError("Input query must be unicode string")
 
         if not isinstance(query, six.text_type):
-            raise OpenCageGeocodeInvalidInputException("Input query must be unicode string")
+            raise InvalidInputError("Input query must be unicode string")
 
         data = {
             'q': query,
@@ -56,7 +57,7 @@ class OpenCageGeocode(object):
         if response.status_code == 429:
             # Rate limit exceeded
             reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
-            raise OpenCageGeocodeRateLimitExceededException(reset_to=int(response_json['rate']['limit']), reset_time=reset_time)
+            raise RateLimitExceededError(reset_to=int(response_json['rate']['limit']), reset_time=reset_time)
         return floatify_latlng(response.json()['results'])
 
         #return response.json()
