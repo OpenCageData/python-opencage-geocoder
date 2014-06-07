@@ -52,13 +52,11 @@ class RateLimitExceededError(OpenCageGeocodeError):
         self.reset_time = reset_time
         self.reset_to = reset_to
 
-    def __str__(self):
-        """Convert exception to a string."""
-        return self.__unicode__()
-
     def __unicode__(self):
         """Convert exception to a string."""
         return "Your rate limit has expired. It will reset to {0} on {1}".format(self.reset_to, self.reset_time.isoformat())
+
+    __str__ = __unicode__
 
 
 class OpenCageGeocode(object):
