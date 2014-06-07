@@ -9,6 +9,10 @@ Welcome to OpenCage Geocoder's documentation!
 .. autoclass:: opencage.geocoder.OpenCageGeocode
     :members:
 
+.. autoclass:: opencage.geocoder.InvalidInputError
+
+.. autoclass:: opencage.geocoder.RateLimitExceededError
+
 
 
 Indices and tables

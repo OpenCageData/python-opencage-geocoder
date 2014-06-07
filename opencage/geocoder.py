@@ -68,6 +68,11 @@ class OpenCageGeocode(object):
     def geocode(self, query):
         """
         Given a string to search for, return the results from OpenCage's Geocoder.
+
+        :param string query: String to search for
+        :returns: Dict results
+        :raises InvalidInputError: if the query string is not a unicode string
+        :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
         """
         if six.PY2:
             # py3 doesn't have unicode() function, and instead we check the text_type later
@@ -100,6 +105,12 @@ class OpenCageGeocode(object):
     def reverse_geocode(self, lat, lng):
         """
         Given a latitude & longitude, return an address for that point from OpenCage's Geocoder.
+
+        :param lat: Latitude
+        :param lng: Longitude
+        :return: Results from OpenCageData
+        :rtype: dict
+        :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
         """
         return self.geocode(query_for_reverse_geocoding(lat, lng))
 
