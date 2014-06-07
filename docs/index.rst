@@ -6,6 +6,11 @@
 Welcome to OpenCage Geocoder's documentation!
 =============================================
 
+.. toctree::
+   :maxdepth: 2
+
+   hacking
+
 .. autoclass:: opencage.geocoder.OpenCageGeocode
     :members:
 
