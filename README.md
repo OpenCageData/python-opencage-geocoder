@@ -19,9 +19,20 @@ key = 'your-api-key-here'
 geocoder = OpenCageGeocode(key)
 ```
 
-Pass a string containing the query or address to be geocoded to the modules's `geocoder` method:
+Pass a string containing the query or address to be geocoded to the modules's `geocode` method:
 
 ```python
 query = "82 Clerkenwell Road, London";
 result = geocoder.geocode(query)
 ```
+
+### Reverse geocoding
+
+Turn a lat/long into an address with the ``reverse_geocode`` method:
+
+    >>> results = geocoder.reverse_geocode(51.51024, -0.10303)
+
+
+### Exceptions
+
+If anything goes wrong, then an exception will be raised: ``InvalidInputError`` for non-unicode query strings, ``UnknownError`` if there's some problem with the API (bad results, 500 status code, etc). ``RateLimitExceededError`` if you go past your rate limit.
