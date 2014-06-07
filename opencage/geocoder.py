@@ -4,6 +4,7 @@ import six
 from datetime import datetime
 from decimal import Decimal
 
+
 class OpenCageGeocodeError(Exception):
     pass
 
@@ -16,13 +17,12 @@ class RateLimitExceededError(OpenCageGeocodeError):
     def __init__(self, reset_time, reset_to):
         self.reset_time = reset_time
         self.reset_to = reset_to
-        
+
     def __str__(self):
         return self.__unicode__()
-    
+
     def __unicode__(self):
         return "Your rate limit has expired. It will reset to {0} on {1}".format(self.reset_to, self.reset_time.isoformat())
-
 
 
 class OpenCageGeocode(object):
@@ -71,7 +71,6 @@ def _query_for_reverse_geocoding(lat, lng):
     # decimal places as the user already specified and (b) to ensure we don't
     # get e-5 stuff
     return "{0:f},{1:f}".format(Decimal(str(lat)), Decimal(str(lng)))
-    
 
 
 def floatify_latlng(input_value):
