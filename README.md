@@ -30,7 +30,7 @@ result = geocoder.geocode(query)
 
 Turn a lat/long into an address with the ``reverse_geocode`` method:
 
-    >>> results = geocoder.reverse_geocode(51.51024, -0.10303)
+    results = geocoder.reverse_geocode(51.51024, -0.10303)
 
 
 ### Exceptions
