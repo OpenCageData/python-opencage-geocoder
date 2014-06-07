@@ -7,7 +7,7 @@ import httpretty
 
 from opencage.geocoder import OpenCageGeocode
 from opencage.geocoder import InvalidInputError, RateLimitExceededError
-from opencage.geocoder import floatify_latlng
+from opencage.geocoder import floatify_latlng, _query_for_reverse_geocoding
 
 
 class OpenCageGeocodeTestCase(unittest.TestCase):
@@ -148,3 +148,19 @@ class RateLimitErrorTestCase(unittest.TestCase):
             self.assertEqual(ex.reset_to, 2500)
 
 
+class ReverseGeocodingTestCase(unittest.TestCase):
+    def _expected_output(input_latlng, expected_output):
+        def test(self):
+            lat, lng = input_latlng
+            self.assertEqual(_query_for_reverse_geocoding(lat, lng), expected_output)
+        return test
+
+    testSimple1 = _expected_output((10, 10), "10,10")
+    testSimple2 = _expected_output((10.0, 10.0), "10.0,10.0")
+    testSimple3 = _expected_output((0.000002, -120), "0.000002,-120")
+    testSimple4 = _expected_output((2.000002, -120), "2.000002,-120")
+    testSimple5 = _expected_output((2.000002, -120.000002), "2.000002,-120.000002")
+    testSimple6 = _expected_output((2.000002, -1.0000002), "2.000002,-1.0000002")
+    testSimple7 = _expected_output((2.000002, 0.0000001), "2.000002,0.0000001")
+
+    testSimple8 = _expected_output(("2.000002", "-120"), "2.000002,-120")

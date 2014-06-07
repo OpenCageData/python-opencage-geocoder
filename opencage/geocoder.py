@@ -2,7 +2,7 @@ import requests
 import collections
 import six
 from datetime import datetime
-
+from decimal import Decimal
 
 class OpenCageGeocodeError(Exception):
     pass
@@ -62,7 +62,16 @@ class OpenCageGeocode(object):
         return floatify_latlng(response.json()['results'])
 
     def reverse_geocode(self, lat, lng):
-        return self.geocode("%s,%s" % (lat, lng))
+        return self.geocode(query_for_reverse_geocoding(lat, lng))
+
+
+def _query_for_reverse_geocoding(lat, lng):
+    """Given a lat & lng, what's the string search query. If the API changes, change this function. Only for internal use"""
+    # have to do some stupid f/Decimal/str stuff to (a) ensure we get as much
+    # decimal places as the user already specified and (b) to ensure we don't
+    # get e-5 stuff
+    return "{0:f},{1:f}".format(Decimal(str(lat)), Decimal(str(lng)))
+    
 
 
 def floatify_latlng(input_value):
