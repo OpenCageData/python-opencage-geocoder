@@ -23,7 +23,12 @@ class InvalidInputError(OpenCageGeocodeError):
 
 class RateLimitExceededError(OpenCageGeocodeError):
 
-    """Your account has exceeded it's limit. Contact OpenCage."""
+    """
+    Exception raised when account has exceeded it's limit.
+
+    :var datetime reset_time: When your account limit will be reset.
+    :var int reset_to: What your account will be reset to.
+    """
 
     def __init__(self, reset_time, reset_to):
         """Constructor."""
@@ -70,9 +75,11 @@ class OpenCageGeocode(object):
         Given a string to search for, return the results from OpenCage's Geocoder.
 
         :param string query: String to search for
+
         :returns: Dict results
         :raises InvalidInputError: if the query string is not a unicode string
         :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
+
         """
         if six.PY2:
             # py3 doesn't have unicode() function, and instead we check the text_type later
