@@ -31,7 +31,6 @@ class OpenCageGeocodeTestCase(unittest.TestCase):
             any((abs(result['geometry']['lat'] - 51.5201666) < 0.05 and abs(result['geometry']['lng'] - -0.0985142) < 0.05) for result in results),
             msg="Bad result"
         )
-       #'
 
     def testAustralia(self):
         httpretty.register_uri(httpretty.GET,
@@ -124,7 +123,6 @@ class FloatifyDictTestCase(unittest.TestCase):
     )
     testListWithThings = _expected_output([{'foo': 'bar'}], [{'foo': 'bar'}])
 
-#'"
 
 class RateLimitErrorTestCase(unittest.TestCase):
     def setUp(self):
