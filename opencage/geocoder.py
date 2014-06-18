@@ -78,7 +78,7 @@ class OpenCageGeocode(object):
 
     """
 
-    url = 'http://prototype.opencagedata.com/geocode/v1/json'
+    url = 'http://api.opencagedata.com/geocode/v1/json'
     key = ''
 
     def __init__(self, key):
