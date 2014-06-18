@@ -31,7 +31,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Topic :: Utilities'],
     install_requires=[
-        'Requests>=2.2.0'
+        'Requests>=2.2.0',
         'six',
     ],
     test_suite='tests',
