@@ -144,7 +144,7 @@ class OpenCageGeocode(object):
         :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
         :raises UnknownError: if something goes wrong with the OpenCage API
         """
-        return self.geocode(query_for_reverse_geocoding(lat, lng))
+        return self.geocode(_query_for_reverse_geocoding(lat, lng))
 
 
 def _query_for_reverse_geocoding(lat, lng):
