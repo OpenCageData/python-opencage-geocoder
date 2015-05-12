@@ -159,6 +159,14 @@ def _query_for_reverse_geocoding(lat, lng):
     return "{0:f},{1:f}".format(Decimal(str(lat)), Decimal(str(lng)))
 
 
+def float_if_float(float_string):
+    try:
+        float_val = float(float_string)
+        return float_val
+    except ValueError:
+        return float_string
+
+
 def floatify_latlng(input_value):
     """
     Work around a JSON dict with string, not float, lat/lngs.
@@ -173,7 +181,7 @@ def floatify_latlng(input_value):
     if isinstance(input_value, collections.Mapping):
         if len(input_value) == 2 and sorted(input_value.keys()) == ['lat', 'lng']:
             # This dict has only 2 keys 'lat' & 'lon'
-            return {'lat': float(input_value['lat']), 'lng': float(input_value['lng'])}
+            return {'lat': float_if_float(input_value["lat"]), 'lng': float_if_float(input_value["lng"])}
         else:
             return dict((key, floatify_latlng(value)) for key, value in input_value.items())
     elif isinstance(input_value, collections.MutableSequence):
