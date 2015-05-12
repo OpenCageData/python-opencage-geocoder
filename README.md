@@ -7,7 +7,8 @@ geocoder.
 
 Install the module:
 
-```pip install opencage
+```bash
+pip install opencage
 ```
 
 Load the module:
