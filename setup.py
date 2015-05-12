@@ -8,9 +8,9 @@ SOURCE_DIR = os.path.join(ROOT_DIR)
 
 setup(
 	name="opencage",
-	version="1.0.0",
+	version="1.0.1",
 	description="Simple wrapper module for the OpenCage Geocoder API",
-	author="OpenCage (a Lokku brand)",
+	author="OpenCage Data Ltd",
 	author_email="info@opencagedata.com",
 	url="",
 	license="BSD",
