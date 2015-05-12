@@ -5,6 +5,11 @@ geocoder.
 
 ## Usage
 
+Install the module:
+
+```pip install opencage
+```
+
 Load the module:
 
 ```python
