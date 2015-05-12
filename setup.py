@@ -8,15 +8,16 @@ SOURCE_DIR = os.path.join(ROOT_DIR)
 
 setup(
 	name="opencage",
-	version="1.0.1",
+	version="1.1.0",
 	description="Simple wrapper module for the OpenCage Geocoder API",
 	author="OpenCage Data Ltd",
 	author_email="info@opencagedata.com",
-	url="",
+	url="https://github.com/OpenCageData/python-opencage-geocoder/",
 	license="BSD",
 	packages=find_packages(),
 	include_package_data=True,
 	zip_safe=False,
+    keywords=['geocoding', 'geocoder'],
 	classifiers=[
 		'Environment :: Web Environment',
         'Intended Audience :: Developers',
