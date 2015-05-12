@@ -13,6 +13,7 @@ setup(
 	author="OpenCage Data Ltd",
 	author_email="info@opencagedata.com",
 	url="https://github.com/OpenCageData/python-opencage-geocoder/",
+    download_url="https://github.com/OpenCageData/python-opencage-geocoder/tarball/1.1",
 	license="BSD",
 	packages=find_packages(),
 	include_package_data=True,
