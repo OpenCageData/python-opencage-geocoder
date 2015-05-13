@@ -8,7 +8,7 @@ SOURCE_DIR = os.path.join(ROOT_DIR)
 
 setup(
 	name="opencage",
-	version="1.1.0",
+	version="1.1.1",
 	description="Simple wrapper module for the OpenCage Geocoder API",
 	author="OpenCage Data Ltd",
 	author_email="info@opencagedata.com",
@@ -34,11 +34,11 @@ setup(
         'Topic :: Utilities'],
     install_requires=[
         'Requests>=2.2.0',
-        'six',
+        'six>=1.4.0',
     ],
     test_suite='tests',
     tests_require=[
         'httpretty',
-        'six',
+        'six>=1.4.0',
     ],
 )
