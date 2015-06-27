@@ -85,7 +85,7 @@ class OpenCageGeocode(object):
         """Constructor."""
         self.key = key
 
-    def geocode(self, query):
+    def geocode(self, query, **kwargs):
         """
         Given a string to search for, return the results from OpenCage's Geocoder.
 
@@ -111,6 +111,9 @@ class OpenCageGeocode(object):
             'q': query,
             'key': self.key
         }
+        # Add user parameters
+        data.update(kwargs) 
+        
         url = self.url
         response = requests.get(url, params=data)
 
@@ -133,7 +136,7 @@ class OpenCageGeocode(object):
 
         return floatify_latlng(response_json['results'])
 
-    def reverse_geocode(self, lat, lng):
+    def reverse_geocode(self, lat, lng, **kwargs):
         """
         Given a latitude & longitude, return an address for that point from OpenCage's Geocoder.
 
@@ -144,7 +147,7 @@ class OpenCageGeocode(object):
         :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
         :raises UnknownError: if something goes wrong with the OpenCage API
         """
-        return self.geocode(_query_for_reverse_geocoding(lat, lng))
+        return self.geocode(_query_for_reverse_geocoding(lat, lng), **kwargs)
 
 
 def _query_for_reverse_geocoding(lat, lng):
