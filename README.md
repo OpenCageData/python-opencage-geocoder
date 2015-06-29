@@ -32,6 +32,12 @@ query = "82 Clerkenwell Road, London";
 result = geocoder.geocode(query)
 ```
 
+You can add additinal parameters:
+```python
+result = geocoder.geocode('London', no_annotations=1, language='es')
+```
+
+
 ### Reverse geocoding
 
 Turn a lat/long into an address with the ``reverse_geocode`` method:
