@@ -32,7 +32,7 @@ query = "82 Clerkenwell Road, London";
 result = geocoder.geocode(query)
 ```
 
-You can add additinal parameters:
+You can add additional parameters:
 ```python
 result = geocoder.geocode('London', no_annotations=1, language='es')
 ```
