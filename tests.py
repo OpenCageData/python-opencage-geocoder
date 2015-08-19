@@ -137,7 +137,7 @@ class RateLimitErrorTestCase(unittest.TestCase):
     def testNoRateLimit(self):
         httpretty.register_uri(httpretty.GET,
             self.geocoder.url,
-            body='{"status":{"code":200,"message":"OK"},"thanks":"For using an OpenCage Data API","total_results":0,"we_are_hiring":"http://lokku.com/#jobs","licenses":[{"url":"http://creativecommons.org/licenses/by-sa/3.0/","name":"CC-BY-SA"},{"url":"http://opendatacommons.org/licenses/odbl/summary/","name":"ODbL"}],"rate":{"reset":1402185600,"limit":"2500","remaining":2479},"results":[],"timestamp":{"created_http":"Sat, 07 Jun 2014 10:38:45 GMT","created_unix":1402137525}}')
+            body='{"status":{"code":200,"message":"OK"},"thanks":"For using an OpenCage Data API","total_results":0,"licenses":[{"url":"http://creativecommons.org/licenses/by-sa/3.0/","name":"CC-BY-SA"},{"url":"http://opendatacommons.org/licenses/odbl/summary/","name":"ODbL"}],"rate":{"reset":1402185600,"limit":"2500","remaining":2479},"results":[],"timestamp":{"created_http":"Sat, 07 Jun 2014 10:38:45 GMT","created_unix":1402137525}}')
 
         # shouldn't raise an exception
         self.geocoder.geocode("whatever")
@@ -146,8 +146,8 @@ class RateLimitErrorTestCase(unittest.TestCase):
     def testRateLimitExceeded(self):
         httpretty.register_uri(httpretty.GET,
             self.geocoder.url,
-            body='{"status":{"code":429,"message":"OK"},"thanks":"For using an OpenCage Data API","total_results":0,"we_are_hiring":"http://lokku.com/#jobs","licenses":[{"url":"http://creativecommons.org/licenses/by-sa/3.0/","name":"CC-BY-SA"},{"url":"http://opendatacommons.org/licenses/odbl/summary/","name":"ODbL"}],"rate":{"reset":1402185600,"limit":"2500","remaining":0},"results":[],"timestamp":{"created_http":"Sat, 07 Jun 2014 10:38:45 GMT","created_unix":1402137525}}',
-            status=429,
+            body='{"status":{"code":402,"message":"OK"},"thanks":"For using an OpenCage Data API","total_results":0,"licenses":[{"url":"http://creativecommons.org/licenses/by-sa/3.0/","name":"CC-BY-SA"},{"url":"http://opendatacommons.org/licenses/odbl/summary/","name":"ODbL"}],"rate":{"reset":1402185600,"limit":"2500","remaining":0},"results":[],"timestamp":{"created_http":"Sat, 07 Jun 2014 10:38:45 GMT","created_unix":1402137525}}',
+            status=402,
             adding_headers={'X-RateLimit-Limit': '2500', 'X-RateLimit-Remaining': '0', 'X-RateLimit-Reset': '1402185600'},
         )
 

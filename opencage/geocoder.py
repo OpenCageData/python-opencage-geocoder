@@ -117,7 +117,7 @@ class OpenCageGeocode(object):
         url = self.url
         response = requests.get(url, params=data)
 
-        if response.status_code == 429:
+        if (response.status_code == 402 or response.status_code == 429):
             # Rate limit exceeded
             reset_time = datetime.utcfromtimestamp(response.json()['rate']['reset'])
             raise RateLimitExceededError(reset_to=int(response.json()['rate']['limit']), reset_time=reset_time)
