@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.org/OpenCageData/python-opencage-geocoder.svg?branch=master)](https://travis-ci.org/OpenCageData/python-opencage-geocoder)
+
 # OpenCage Data Geocoding Module for Python
 
 A Python module that uses [OpenCage Data's](http://www.opencagedata.com/)
