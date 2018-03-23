@@ -9,11 +9,9 @@ sudo apt-get apt-get autoremove -y
 # sudo apt-get upgrade -y
 sudo apt-get install -y build-dep python-dev python-pip python3.2 python3.3 python2.6
 
-
 sudo pip install tox
 
-
-cd /home/vagrant
+cd /home/vagrant || exit
 
 # get arrow-keys working in terminal (e.g. editing in vi)
 echo 'stty sane' >> ~/.bash_profile
