@@ -51,4 +51,7 @@ Turn a lat/long into an address with the ``reverse_geocode`` method:
 
 ### Exceptions
 
-If anything goes wrong, then an exception will be raised: ``InvalidInputError`` for non-unicode query strings, ``UnknownError`` if there's some problem with the API (bad results, 500 status code, etc). ``RateLimitExceededError`` if you go past your rate limit.
+If anything goes wrong, then an exception will be raised: 
+``InvalidInputError`` for non-unicode query strings, 
+``UnknownError`` if there's some problem with the API (bad results, 500 status code, etc). 
+``RateLimitExceededError`` if you go past your rate limit.
