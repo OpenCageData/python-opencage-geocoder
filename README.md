@@ -1,6 +1,7 @@
 
 [![Build Status](https://travis-ci.org/OpenCageData/python-opencage-geocoder.svg?branch=master)](https://travis-ci.org/OpenCageData/python-opencage-geocoder)
 [![Kritika Analysis Status](https://kritika.io/users/freyfogle/repos/1769415496124133/heads/master/status.svg)](https://kritika.io/users/freyfogle/repos/1769415496124133/heads/master/)
+[![PyPI version](https://badge.fury.io/py/opencage.svg)](https://badge.fury.io/py/opencage)
 
 # OpenCage Data Geocoding Module for Python
 
