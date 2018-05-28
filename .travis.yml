@@ -1,4 +1,7 @@
+dist: trusty
 sudo: false
+git:
+  depth: false
 language: python
 python:
     - "2.7"
