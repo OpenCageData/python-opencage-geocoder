@@ -5,8 +5,7 @@
 
 # OpenCage Data Geocoding Module for Python
 
-A Python module that uses [OpenCage Data's](http://www.opencagedata.com/)
-geocoder.
+A Python module that uses [OpenCage Data's](https://opencagedata.com/) geocoder.
 
 ## Usage
 
