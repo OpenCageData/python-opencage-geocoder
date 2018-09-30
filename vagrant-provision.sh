@@ -16,6 +16,9 @@ cd /home/vagrant || exit
 # get arrow-keys working in terminal (e.g. editing in vi)
 echo 'stty sane' >> ~/.bash_profile
 echo 'export TERM=linux' >> ~/.bash_profile
+
+# Kritika (https://github.com/koalaman/shellcheck/wiki/SC1090)
+# shellcheck source=/dev/null
 source ~/.bash_profile
 
 

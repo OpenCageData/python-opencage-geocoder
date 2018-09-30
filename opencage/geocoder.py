@@ -4,9 +4,8 @@ from datetime import datetime
 from decimal import Decimal
 import collections
 
-import requests
 import six
-
+import requests
 
 class OpenCageGeocodeError(Exception):
 
