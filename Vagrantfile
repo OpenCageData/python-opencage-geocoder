@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
 
   # Ubuntu LTS 14.04
-  config.vm.box = "ubuntu/trusty64" 
+  config.vm.box = "bento/ubuntu-18.04"
 
 
   config.vm.synced_folder ".", "/home/vagrant/python-opencage-geocoder"
