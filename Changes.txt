@@ -1,3 +1,6 @@
+v1.1.5 Sun 30 Sep 2018
+  Update setup.py to show project description on pypi.org
+
 v1.1.4 Mon 19 Jul 2015
   Server response for exceeded quota is HTTP 402, not 429
 
