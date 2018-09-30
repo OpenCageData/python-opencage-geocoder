@@ -13,10 +13,25 @@ if os.environ.get('USER','') == 'vagrant':
 ROOT_DIR = os.path.dirname(__file__)
 SOURCE_DIR = os.path.join(ROOT_DIR)
 
+# try for pypy
+try:
+    FileNotFoundError
+except NameError:
+    FileNotFoundError = IOError
+
+# try for travis
+try:
+    with open(os.path.join(SOURCE_DIR, 'README.md')) as f:
+        long_description = f.read()
+except FileNotFoundError:
+    long_description = ""
+
 setup(
 	name="opencage",
 	version="1.1.4",
 	description="Simple wrapper module for the OpenCage Geocoder API",
+	long_description=long_description,
+	long_description_content_type='text/markdown',
 	author="OpenCage Data Ltd",
 	author_email="info@opencagedata.com",
 	url="https://github.com/OpenCageData/python-opencage-geocoder/",
