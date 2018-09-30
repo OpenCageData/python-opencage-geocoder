@@ -7,7 +7,7 @@
 sudo apt-get update -qq
 sudo apt-get autoremove -y
 # sudo apt-get upgrade -y
-sudo apt-get install -y python-dev python-pip python3 python3.4 python2.7
+sudo apt-get install -y python-dev python-pip python3 python3.4 python2.7 pypy
 
 sudo pip install tox
 
