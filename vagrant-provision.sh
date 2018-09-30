@@ -5,7 +5,7 @@
 ## directory is '/root'
 
 sudo apt-get update -qq
-sudo apt-get apt-get autoremove -y
+sudo apt-get autoremove -y
 # sudo apt-get upgrade -y
 sudo apt-get install -y build-dep python-dev python-pip python3.2 python3.3 python2.6
 
