@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+# pylint: disable=redefined-builtin
+
 #
 # OpenCage Geocoder documentation build configuration file, created by
 # sphinx-quickstart on Sat Jun  7 14:38:18 2014.
@@ -187,22 +190,21 @@ htmlhelp_basename = 'OpenCageGeocoderdoc'
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
-# The paper size ('letterpaper' or 'a4paper').
-#'papersize': 'letterpaper',
+    # The paper size ('letterpaper' or 'a4paper').
+    #'papersize': 'letterpaper',
 
-# The font size ('10pt', '11pt' or '12pt').
-#'pointsize': '10pt',
+    # The font size ('10pt', '11pt' or '12pt').
+    #'pointsize': '10pt',
 
-# Additional stuff for the LaTeX preamble.
-#'preamble': '',
+    # Additional stuff for the LaTeX preamble.
+    #'preamble': '',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'OpenCageGeocoder.tex', u'OpenCage Geocoder Documentation',
-   u'Rory McCann', 'manual'),
+    ('index', 'OpenCageGeocoder.tex', u'OpenCage Geocoder Documentation', u'Rory McCann', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -231,8 +233,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'opencagegeocoder', u'OpenCage Geocoder Documentation',
-     [u'Rory McCann'], 1)
+    ('index', 'opencagegeocoder', u'OpenCage Geocoder Documentation', [u'Rory McCann'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -245,9 +246,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'OpenCageGeocoder', u'OpenCage Geocoder Documentation',
-   u'Rory McCann', 'OpenCageGeocoder', 'One line description of project.',
-   'Miscellaneous'),
+    ('index', 'OpenCageGeocoder', u'OpenCage Geocoder Documentation', u'Rory McCann', 'OpenCageGeocoder', 'One line description of project.', 'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.
