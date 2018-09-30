@@ -45,7 +45,7 @@ setup(
     ],
     test_suite='tests',
     tests_require=[
-        'httpretty',
+        'httpretty<=0.8.14',
         'six>=1.4.0',
     ],
 )
