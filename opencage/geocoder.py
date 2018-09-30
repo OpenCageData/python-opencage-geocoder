@@ -1,10 +1,11 @@
 """ Geocoder module. """
 
-import requests
-import collections
-import six
 from datetime import datetime
 from decimal import Decimal
+import collections
+
+import requests
+import six
 
 
 class OpenCageGeocodeError(Exception):
@@ -18,11 +19,12 @@ class InvalidInputError(OpenCageGeocodeError):
 
     """
     There was a problem with the input you provided.
-    
+
     :var bad_value: The value that caused the problem
     """
 
     def __init__(self, bad_value):
+        super(InvalidInputError, self).__init__()
         self.bad_value = bad_value
 
     def __unicode__(self):
@@ -49,6 +51,7 @@ class RateLimitExceededError(OpenCageGeocodeError):
 
     def __init__(self, reset_time, reset_to):
         """Constructor."""
+        super(RateLimitExceededError, self).__init__()
         self.reset_time = reset_time
         self.reset_to = reset_to
 
@@ -112,8 +115,8 @@ class OpenCageGeocode(object):
             'key': self.key
         }
         # Add user parameters
-        data.update(kwargs) 
-        
+        data.update(kwargs)
+
         url = self.url
         response = requests.get(url, params=data)
 
@@ -163,6 +166,10 @@ def _query_for_reverse_geocoding(lat, lng):
 
 
 def float_if_float(float_string):
+    """
+    Given a float string, returns the float value.
+    On value error returns the original string.
+    """
     try:
         float_val = float(float_string)
         return float_val
