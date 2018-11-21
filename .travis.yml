@@ -1,5 +1,4 @@
 dist: trusty
-sudo: false
 git:
   depth: false
 language: python
