@@ -7,7 +7,7 @@ from flask import request
 from opencage.geocoder import OpenCageGeocode
 
 app = Flask(__name__)
-_key = OPEN_CAGE_KEY = "db6a41dce5777db388d7dc348358690e"
+_key = OPEN_CAGE_KEY = "YOUR_OPEN_CAGE_KEY"
 _geocoder = OpenCageGeocode(OPEN_CAGE_KEY)
 
 @app.route("/forward/<address>")
