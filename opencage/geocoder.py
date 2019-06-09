@@ -80,7 +80,7 @@ class OpenCageGeocode(object):
 
     """
 
-    url = 'http://api.opencagedata.com/geocode/v1/json'
+    url = 'https://api.opencagedata.com/geocode/v1/json'
     key = ''
 
     def __init__(self, key):
@@ -116,8 +116,7 @@ class OpenCageGeocode(object):
         # Add user parameters
         data.update(kwargs)
 
-        url = self.url
-        response = requests.get(url, params=data)
+        response = requests.get(self.url, params=data)
 
         if (response.status_code == 402 or response.status_code == 429):
             # Rate limit exceeded
