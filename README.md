@@ -32,13 +32,22 @@ geocoder = OpenCageGeocode(key)
 Pass a string containing the query or address to be geocoded to the modules's `geocode` method:
 
 ```python
-query = "82 Clerkenwell Road, London";
+query = "82 Clerkenwell Road, London"
 result = geocoder.geocode(query)
 ```
 
-You can add additional parameters:
+You can add [additional parameters](https://opencagedata.com/api#forward):
+
 ```python
 result = geocoder.geocode('London', no_annotations=1, language='es')
+```
+
+You can use the proximity parameter to provide the geocoder with a hint:
+
+```python
+result = geocoder.geocode('London', proximity='42.828576, -81.406643')
+print(result[0]['formatted'])
+# u'London, ON N6A 3M8, Canada'
 ```
 
 

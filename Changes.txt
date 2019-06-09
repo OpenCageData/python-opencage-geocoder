@@ -1,3 +1,9 @@
+v1.2 Sun 9 Jun 2019
+  Use https as default
+  Handle 401 and 403 exceptions
+  Documentation clean up
+  Test proximity works and add an example to README
+
 v1.1.5 Sun 30 Sep 2018
   Update setup.py to show project description on pypi.org
 

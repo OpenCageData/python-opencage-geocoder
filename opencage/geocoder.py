@@ -61,6 +61,32 @@ class RateLimitExceededError(OpenCageGeocodeError):
     __str__ = __unicode__
 
 
+class NotAuthorizedError(OpenCageGeocodeError):
+
+    """
+    Exception raised when an unautorized API key is used.
+    """
+
+    def __unicode__(self):
+        """Convert exception to a string."""
+        return "Your API key is not authorized. You may have entered it incorrectly."
+
+    __str__ = __unicode__
+
+
+class ForbiddenError(OpenCageGeocodeError):
+
+    """
+    Exception raised when a blocked or suspended API key is used.
+    """
+
+    def __unicode__(self):
+        """Convert exception to a string."""
+        return "Your API key has been blocked or suspended."
+
+    __str__ = __unicode__
+
+
 class OpenCageGeocode(object):
 
     """
@@ -80,7 +106,7 @@ class OpenCageGeocode(object):
 
     """
 
-    url = 'http://api.opencagedata.com/geocode/v1/json'
+    url = 'https://api.opencagedata.com/geocode/v1/json'
     key = ''
 
     def __init__(self, key):
@@ -116,8 +142,13 @@ class OpenCageGeocode(object):
         # Add user parameters
         data.update(kwargs)
 
-        url = self.url
-        response = requests.get(url, params=data)
+        response = requests.get(self.url, params=data)
+
+        if (response.status_code == 401):
+            raise NotAuthorizedError()
+
+        if (response.status_code == 403):
+            raise ForbiddenError()
 
         if (response.status_code == 402 or response.status_code == 429):
             # Rate limit exceeded
