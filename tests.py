@@ -10,7 +10,7 @@ import six
 import httpretty
 
 from opencage.geocoder import OpenCageGeocode
-from opencage.geocoder import InvalidInputError, RateLimitExceededError, UnknownError
+from opencage.geocoder import InvalidInputError, RateLimitExceededError, UnknownError, ForbiddenError, NotAuthorizedError
 from opencage.geocoder import floatify_latlng, _query_for_reverse_geocoding
 
 
@@ -169,6 +169,60 @@ class RateLimitErrorTestCase(unittest.TestCase):
         except RateLimitExceededError as ex:
             self.assertEqual(str(ex), 'Your rate limit has expired. It will reset to 2500 on 2014-06-08T00:00:00')
             self.assertEqual(ex.reset_to, 2500)
+
+
+class NotAuthorizedErrorTestCase(unittest.TestCase):
+    def setUp(self):
+        httpretty.enable()
+
+        self.geocoder = OpenCageGeocode('unauthorized-key')
+
+    def tearDown(self):
+        httpretty.disable()
+        httpretty.reset()
+
+    def testApiKeyForbidden(self):
+        httpretty.register_uri(
+            httpretty.GET,
+            self.geocoder.url,
+            body='{"documentation":"https://opencagedata.com/api","licenses":[{"name":"see attribution guide","url":"https://opencagedata.com/credits"}],"results":[],"status":{"code":401,"message":"invalid API key"},"stay_informed":{"blog":"https://blog.opencagedata.com","twitter":"https://twitter.com/opencagedata"},"thanks":"For using an OpenCage Data API","timestamp":{"created_http":"Sun, 09 Jun 2019 19:58:46 GMT","created_unix":1560110326},"total_results":0}',
+            status=401,
+        )
+
+        self.assertRaises(NotAuthorizedError, self.geocoder.geocode, "whatever")
+
+        # check the exception
+        try:
+            self.geocoder.geocode("whatever")
+        except NotAuthorizedError as ex:
+            self.assertEqual(str(ex), 'Your API key is not authorized. You may have entered it incorrectly.')
+
+
+class ForbiddenErrorTestCase(unittest.TestCase):
+    def setUp(self):
+        httpretty.enable()
+
+        self.geocoder = OpenCageGeocode('2e10e5e828262eb243ec0b54681d699a')
+
+    def tearDown(self):
+        httpretty.disable()
+        httpretty.reset()
+
+    def testApiKeyBlocked(self):
+        httpretty.register_uri(
+            httpretty.GET,
+            self.geocoder.url,
+            body='{"documentation":"https://opencagedata.com/api","licenses":[{"name":"see attribution guide","url":"https://opencagedata.com/credits"}],"results":[],"status":{"code":403,"message":"suspended"},"stay_informed":{"blog":"https://blog.opencagedata.com","twitter":"https://twitter.com/opencagedata"},"thanks":"For using an OpenCage Data API","timestamp":{"created_http":"Sun, 09 Jun 2019 20:01:22 GMT","created_unix":1560110482},"total_results":0}',
+            status=403,
+        )
+
+        self.assertRaises(ForbiddenError, self.geocoder.geocode, "whatever")
+
+        # check the exception
+        try:
+            self.geocoder.geocode("whatever")
+        except ForbiddenError as ex:
+            self.assertEqual(str(ex), 'Your API key has been blocked or suspended.')
 
 
 class ReverseGeocodingTestCase(unittest.TestCase):
