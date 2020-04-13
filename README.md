@@ -1,11 +1,13 @@
 
+# OpenCage Geocoding Module for Python
+
+A Python module to access the [OpenCage Geocoder](https://opencagedata.com/).
+
+## Build Status
+
 [![Build Status](https://travis-ci.org/OpenCageData/python-opencage-geocoder.svg?branch=master)](https://travis-ci.org/OpenCageData/python-opencage-geocoder)
 [![Kritika Analysis Status](https://kritika.io/users/freyfogle/repos/1769415496124133/heads/master/status.svg)](https://kritika.io/users/freyfogle/repos/1769415496124133/heads/master/)
 [![PyPI version](https://badge.fury.io/py/opencage.svg)](https://badge.fury.io/py/opencage)
-
-# OpenCage Data Geocoding Module for Python
-
-A Python module that uses [OpenCage Data's](https://opencagedata.com/) geocoder.
 
 ## Usage
 
@@ -64,3 +66,17 @@ If anything goes wrong, then an exception will be raised:
  * ``InvalidInputError`` for non-unicode query strings
  * ``UnknownError`` if there's some problem with the API (bad results, 500 status code, etc)
  * ``RateLimitExceededError`` if you go past your rate limit
+
+
+## Copyright & Licencse
+
+This software is copyright OpenCage GmbH.
+Please see `LICENSE.txt`
+
+### Who is OpenCage GmbH?
+
+<a href="https://opencagedata.com"><img src="opencage_logo_300_150.png"></a>
+
+We run the [OpenCage Geocoder](https://opencagedata.com). Learn more [about us](https://opencagedata.com/about). 
+
+We also run [Geomob](https://thegeomob.com), a series of regular meetups for location based service creators, where we do our best to highlight geoinnovation. If you like geo stuff, you will probably enjoy [the Geomob podcast](https://thegeomob.com/podcast/).
