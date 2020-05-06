@@ -166,7 +166,7 @@ class OpenCageGeocode(object):
 
     @backoff.on_exception(
         backoff.expo,
-        (UnknownError),
+        (UnknownError, requests.exceptions.RequestException),
         max_tries=5, max_time=backoff_max_time)
     def _opencage_request(self, params):
         response = requests.get(self.url, params=params)
