@@ -4,9 +4,13 @@ from datetime import datetime
 from decimal import Decimal
 import collections
 
+import os
 import six
 import requests
 import backoff
+
+def backoff_max_time():
+    return int(os.environ.get('BACKOFF_MAX_TIME', '120'))
 
 class OpenCageGeocodeError(Exception):
 
@@ -160,7 +164,10 @@ class OpenCageGeocode(object):
         """
         return self.geocode(_query_for_reverse_geocoding(lat, lng), **kwargs)
 
-    @backoff.on_exception(backoff.expo, UnknownError, max_tries=8, max_time=120)
+    @backoff.on_exception(
+        backoff.expo,
+        (UnknownError),
+        max_tries=5, max_time=backoff_max_time)
     def _opencage_request(self, params):
         response = requests.get(self.url, params=params)
 
