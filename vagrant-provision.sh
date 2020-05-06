@@ -4,10 +4,11 @@
 ## During 'vagrant provision' this script runs as root and the current
 ## directory is '/root'
 
+sudo add-apt-repository -y ppa:pypy/ppa
 sudo apt-get update -qq
 sudo apt-get autoremove -y
 # sudo apt-get upgrade -y
-sudo apt-get install -y python-dev python-pip python3 python3-pip python3.4 python2.7 pypy
+sudo apt-get install -y python-dev python-pip python3 python3-dev python3-pip python3.4 python3.5 python2.7 pypy3
 
 sudo pip install tox
 
@@ -42,6 +43,3 @@ source ~/.bash_profile
 # make
 # sudo make install
 # cd -
-
-
-
