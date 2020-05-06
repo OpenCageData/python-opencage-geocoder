@@ -1,5 +1,6 @@
 v1.2.1 Wed 6 May 2020
   Ensure OpenSSL is available on installation
+  Add exponential backoff to HTTP requests
 
 v1.2 Sun 9 Jun 2019
   Use https as default

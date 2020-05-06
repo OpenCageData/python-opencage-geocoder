@@ -56,7 +56,8 @@ setup(
     install_requires=[
         'Requests>=2.2.0',
         'six>=1.4.0',
-        'pyopenssl>=0.15.1'
+        'pyopenssl>=0.15.1',
+        'backoff>=1.10.0'
     ],
     test_suite='tests',
     tests_require=[

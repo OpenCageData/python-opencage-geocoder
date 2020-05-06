@@ -6,6 +6,7 @@ import collections
 
 import six
 import requests
+import backoff
 
 class OpenCageGeocodeError(Exception):
 
@@ -142,7 +143,26 @@ class OpenCageGeocode(object):
         # Add user parameters
         data.update(kwargs)
 
-        response = requests.get(self.url, params=data)
+        response = self._opencage_request(data)
+
+        return floatify_latlng(response['results'])
+
+    def reverse_geocode(self, lat, lng, **kwargs):
+        """
+        Given a latitude & longitude, return an address for that point from OpenCage's Geocoder.
+
+        :param lat: Latitude
+        :param lng: Longitude
+        :return: Results from OpenCageData
+        :rtype: dict
+        :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
+        :raises UnknownError: if something goes wrong with the OpenCage API
+        """
+        return self.geocode(_query_for_reverse_geocoding(lat, lng), **kwargs)
+
+    @backoff.on_exception(backoff.expo, UnknownError, max_tries=8, max_time=120)
+    def _opencage_request(self, params):
+        response = requests.get(self.url, params=params)
 
         if (response.status_code == 401):
             raise NotAuthorizedError()
@@ -166,22 +186,7 @@ class OpenCageGeocode(object):
         if 'results' not in response_json:
             raise UnknownError("JSON from API doesn't have a 'results' key")
 
-
-        return floatify_latlng(response_json['results'])
-
-    def reverse_geocode(self, lat, lng, **kwargs):
-        """
-        Given a latitude & longitude, return an address for that point from OpenCage's Geocoder.
-
-        :param lat: Latitude
-        :param lng: Longitude
-        :return: Results from OpenCageData
-        :rtype: dict
-        :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
-        :raises UnknownError: if something goes wrong with the OpenCage API
-        """
-        return self.geocode(_query_for_reverse_geocoding(lat, lng), **kwargs)
-
+        return response_json
 
 def _query_for_reverse_geocoding(lat, lng):
     """
