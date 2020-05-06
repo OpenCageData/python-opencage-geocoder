@@ -6,6 +6,7 @@
 
 import unittest
 
+import os
 import six
 import httpretty
 
@@ -13,6 +14,8 @@ from opencage.geocoder import OpenCageGeocode
 from opencage.geocoder import InvalidInputError, RateLimitExceededError, UnknownError, ForbiddenError, NotAuthorizedError
 from opencage.geocoder import floatify_latlng, _query_for_reverse_geocoding
 
+# reduce maximum backoff retry time from 120s to 1s
+os.environ['BACKOFF_MAX_TIME'] = '1'
 
 class OpenCageGeocodeTestCase(unittest.TestCase):
     def setUp(self):
