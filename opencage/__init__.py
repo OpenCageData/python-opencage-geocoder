@@ -2,4 +2,4 @@
 
 __author__ = "OpenCage Data"
 __email__ = 'info@opencagedata.com'
-__version__ = '1.2.1'
+__version__ = '1.2.2'

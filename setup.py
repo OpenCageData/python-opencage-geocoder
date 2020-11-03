@@ -27,14 +27,14 @@ except FileNotFoundError:
 
 setup(
     name="opencage",
-    version="1.2.1",
+    version="1.2.2",
     description="Simple wrapper module for the OpenCage Geocoder API",
     long_description=long_description,
     long_description_content_type='text/markdown',
     author="OpenCage Data Ltd",
     author_email="info@opencagedata.com",
     url="https://github.com/OpenCageData/python-opencage-geocoder/",
-    download_url="https://github.com/OpenCageData/python-opencage-geocoder/tarball/1.2.1",
+    download_url="https://github.com/OpenCageData/python-opencage-geocoder/tarball/1.2.2",
     license="BSD",
     packages=find_packages(),
     include_package_data=True,
@@ -53,6 +53,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Utilities'],
     install_requires=[
         'Requests>=2.2.0',

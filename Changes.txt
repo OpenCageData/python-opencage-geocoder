@@ -1,3 +1,6 @@
+v1.2.2 Tue 3 Nov 2020
+  Test on Python 3.9
+
 v1.2.1 Wed 6 May 2020
   Ensure OpenSSL is available on installation
   Add exponential backoff to HTTP requests
