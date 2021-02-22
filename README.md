@@ -8,6 +8,7 @@ A Python module to access the [OpenCage Geocoder](https://opencagedata.com/).
 [![Build Status](https://travis-ci.org/OpenCageData/python-opencage-geocoder.svg?branch=master)](https://travis-ci.org/OpenCageData/python-opencage-geocoder)
 [![Kritika Analysis Status](https://kritika.io/users/freyfogle/repos/1769415496124133/heads/master/status.svg)](https://kritika.io/users/freyfogle/repos/1769415496124133/heads/master/)
 [![PyPI version](https://badge.fury.io/py/opencage.svg)](https://badge.fury.io/py/opencage)
+[![Twitter Follow](https://img.shields.io/twitter/follow/OpenCage?label=Follow%20OpenCage&style=social)](https://twitter.com/opencage)
 
 ## Usage
 
