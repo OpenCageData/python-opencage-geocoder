@@ -1,0 +1,271 @@
+{
+    "licenses": [{
+        "name": "CC-BY-SA",
+        "url": "http://creativecommons.org/licenses/by-sa/3.0/"
+    }, {
+        "name": "ODbL",
+        "url": "http://opendatacommons.org/licenses/odbl/summary/"
+    }],
+    "thanks": "For using an OpenCage Data API",
+    "total_results": 10,
+    "status": {
+        "message": "OK",
+        "code": 200
+    },
+    "results": [{
+        "formatted": "M\u00fcnster, M\u00fcnster, 48143,48144,48145,48146,48147,48148,48149,48150,48151,48152,48153,48154,48155,48156,48157,48158,48159,48160,48161,48162,48163,48164,48165,48166,48167, Regierungsbezirk M\u00fcnster, North Rhine-Westphalia, Germany, de",
+        "geometry": {
+            "lat": "51.9625101",
+            "lng": "7.6251879"
+        },
+        "components": {
+            "country_code": "de",
+            "postcode": "48143,48144,48145,48146,48147,48148,48149,48150,48151,48152,48153,48154,48155,48156,48157,48158,48159,48160,48161,48162,48163,48164,48165,48166,48167",
+            "state_district": "Regierungsbezirk M\u00fcnster",
+            "state": "North Rhine-Westphalia",
+            "city": "M\u00fcnster",
+            "county": "M\u00fcnster",
+            "country": "Germany"
+        },
+        "bounds": {
+            "southwest": {
+                "lng": "7.4651879",
+                "lat": "51.8025101"
+            },
+            "northeast": {
+                "lng": "7.7851879",
+                "lat": "52.1225101"
+            }
+        },
+        "annotations": {}
+    }, {
+        "bounds": {
+            "northeast": {
+                "lat": "52.0600706",
+                "lng": "7.7743708"
+            },
+            "southwest": {
+                "lat": "51.8402214",
+                "lng": "7.4738051"
+            }
+        },
+        "annotations": {},
+        "geometry": {
+            "lat": "51.95027025",
+            "lng": "7.61334708872901"
+        },
+        "components": {
+            "country_code": "de",
+            "state_district": "Regierungsbezirk M\u00fcnster",
+            "state": "North Rhine-Westphalia",
+            "county": "M\u00fcnster",
+            "country": "Germany"
+        },
+        "formatted": "M\u00fcnster, Regierungsbezirk M\u00fcnster, North Rhine-Westphalia, Germany, de"
+    }, {
+        "formatted": "Munster, Ireland, ie",
+        "annotations": {},
+        "bounds": {
+            "southwest": {
+                "lat": "51.4199027",
+                "lng": "-10.6891099"
+            },
+            "northeast": {
+                "lng": "-6.9497829",
+                "lat": "53.1689062"
+            }
+        },
+        "components": {
+            "country_code": "ie",
+            "state_district": "Munster",
+            "country": "Ireland"
+        },
+        "geometry": {
+            "lng": "-8.57089717629267",
+            "lat": "52.3076216"
+        }
+    }, {
+        "formatted": "Germany, de, M\u00fcnster",
+        "annotations": {},
+        "bounds": {
+            "southwest": {
+                "lat": "51.8402214",
+                "lng": "7.4738051"
+            },
+            "northeast": {
+                "lat": "52.0600706",
+                "lng": "7.7743708"
+            }
+        },
+        "geometry": {
+            "lat": "51.95027025",
+            "lng": "7.61334708872901"
+        },
+        "components": {
+            "country_code": "de",
+            "address100": "M\u00fcnster",
+            "country": "Germany"
+        }
+    }, {
+        "formatted": "M\u00fcnster, M\u00fcnster, Stuttgart, Stuttgart, Regierungsbezirk Stuttgart, Baden-W\u00fcrttemberg, Germany, de",
+        "components": {
+            "city": "Stuttgart",
+            "state": "Baden-W\u00fcrttemberg",
+            "city_district": "M\u00fcnster",
+            "country": "Germany",
+            "country_code": "de",
+            "state_district": "Regierungsbezirk Stuttgart",
+            "suburb": "M\u00fcnster",
+            "county": "Stuttgart"
+        },
+        "geometry": {
+            "lat": "48.8212962",
+            "lng": "9.2200016"
+        },
+        "bounds": {
+            "northeast": {
+                "lng": "9.2400016",
+                "lat": "48.8412962"
+            },
+            "southwest": {
+                "lng": "9.2000016",
+                "lat": "48.8012962"
+            }
+        },
+        "annotations": {}
+    }, {
+        "geometry": {
+            "lng": "8.8671181",
+            "lat": "49.9229236"
+        },
+        "components": {
+            "country_code": "de",
+            "state_district": "Regierungsbezirk Darmstadt",
+            "state": "Hesse",
+            "city": "M\u00fcnster",
+            "county": "Landkreis Darmstadt-Dieburg",
+            "country": "Germany"
+        },
+        "annotations": {},
+        "bounds": {
+            "northeast": {
+                "lat": "49.9438725",
+                "lng": "8.9161067"
+            },
+            "southwest": {
+                "lat": "49.9056973",
+                "lng": "8.7705856"
+            }
+        },
+        "formatted": "M\u00fcnster, Landkreis Darmstadt-Dieburg, Regierungsbezirk Darmstadt, Hesse, Germany, de"
+    }, {
+        "formatted": "M\u00fcnster, Stuttgart, Stuttgart, Regierungsbezirk Stuttgart, Baden-W\u00fcrttemberg, Germany, de",
+        "geometry": {
+            "lat": "48.8272797",
+            "lng": "9.2024402537349"
+        },
+        "components": {
+            "country_code": "de",
+            "state_district": "Regierungsbezirk Stuttgart",
+            "state": "Baden-W\u00fcrttemberg",
+            "city": "Stuttgart",
+            "city_district": "M\u00fcnster",
+            "county": "Stuttgart",
+            "country": "Germany"
+        },
+        "bounds": {
+            "northeast": {
+                "lat": "48.8384709",
+                "lng": "9.2273738"
+            },
+            "southwest": {
+                "lng": "9.1883711",
+                "lat": "48.8152795"
+            }
+        },
+        "annotations": {}
+    }, {
+        "bounds": {
+            "southwest": {
+                "lng": "10.8788966",
+                "lat": "48.5896428"
+            },
+            "northeast": {
+                "lat": "48.6515558",
+                "lng": "10.9314006"
+            }
+        },
+        "annotations": {},
+        "geometry": {
+            "lng": "10.9008883",
+            "lat": "48.6242219"
+        },
+        "components": {
+            "country_code": "de",
+            "state_district": "Swabia",
+            "state": "Free State of Bavaria",
+            "city": "M\u00fcnster",
+            "county": "Rain (Schwaben)",
+            "country": "Germany"
+        },
+        "formatted": "M\u00fcnster, Rain (Schwaben), Swabia, Free State of Bavaria, Germany, de"
+    }, {
+        "formatted": "Munster, Lake County, Indiana, United States of America, us",
+        "bounds": {
+            "northeast": {
+                "lat": "41.5814003",
+                "lng": "-87.4802388"
+            },
+            "southwest": {
+                "lng": "-87.5254509",
+                "lat": "41.522608"
+            }
+        },
+        "annotations": {},
+        "geometry": {
+            "lat": "41.5644798",
+            "lng": "-87.5125412"
+        },
+        "components": {
+            "country_code": "us",
+            "state": "Indiana",
+            "city": "Munster",
+            "county": "Lake County",
+            "country": "United States of America"
+        }
+    }, {
+        "bounds": {
+            "northeast": {
+                "lng": "12.5929086",
+                "lat": "48.9728073"
+            },
+            "southwest": {
+                "lng": "12.5529086",
+                "lat": "48.9328073"
+            }
+        },
+        "annotations": {},
+        "geometry": {
+            "lng": "12.5729086",
+            "lat": "48.9528073"
+        },
+        "components": {
+            "country_code": "de",
+            "state_district": "Lower Bavaria",
+            "village": "M\u00fcnster",
+            "state": "Free State of Bavaria",
+            "county": "Landkreis Straubing-Bogen",
+            "country": "Germany"
+        },
+        "formatted": "M\u00fcnster, Landkreis Straubing-Bogen, Lower Bavaria, Free State of Bavaria, Germany, de"
+    }],
+    "timestamp": {
+        "created_unix": 1402135758,
+        "created_http": "Sat, 07 Jun 2014 10:09:18 GMT"
+    },
+    "rate": {
+        "remaining": 2485,
+        "reset": 1402185600,
+        "limit": "2500"
+    }
+}
