@@ -1,45 +1,28 @@
 #!/bin/bash
 
-
-## During 'vagrant provision' this script runs as root and the current
-## directory is '/root'
-
-sudo add-apt-repository -y ppa:pypy/ppa
 sudo apt-get update -qq
-sudo apt-get autoremove -y
-# sudo apt-get upgrade -y
-sudo apt-get install -y python-dev python-pip python3 python3-dev python3-pip python3.4 python3.5 python2.7 pypy3
+sudo apt-get install --no-install-recommends -q -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
 
-sudo pip install tox
-
-cd /home/vagrant || exit
-
-# get arrow-keys working in terminal (e.g. editing in vi)
-echo 'stty sane' >> ~/.bash_profile
-echo 'export TERM=linux' >> ~/.bash_profile
-
-# Kritika (https://github.com/koalaman/shellcheck/wiki/SC1090)
-# shellcheck source=/dev/null
-source ~/.bash_profile
+# https://github.com/pyenv/pyenv-installer#readme
+curl -s -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 
 
-# other Python versions (optional)
-#
-# sudo apt-get install -y dpkg-dev zlibc zlib1g zlib1g-dev libssl-dev
-#
-# wget https://www.python.org/ftp/python/3.2.6/Python-3.2.6.tgz
-# tar xzf Python-3.2.6.tgz
-# cd Python-3.2.6
-# ./configure
-# make
-# sudo make install
-# cd -
-#
-#
-# wget https://www.python.org/ftp/python/3.3.6/Python-3.3.6.tgz
-# tar xzf Python-3.3.6.tgz
-# cd Python-3.3.6
-# ./configure
-# make
-# sudo make install
-# cd -
+echo '
+export PATH="${HOME}/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+' >> ~/.bashrc
+source ~/.bashrc
+
+for VERSION in 3.6.13  3.7.10  3.8.8  3.9.2; do
+  pyenv install --skip-existing $VERSION
+  pyenv global $VERSION
+done
+
+# Python 3.8 has conflicts with upstream Ubuntu and removed distutils from base
+# installation, now add a global one back
+sudo apt-get install --no-install-recommends -q -y python3-distutils
+
+pyenv versions
+
+sudo pip3 install tox
