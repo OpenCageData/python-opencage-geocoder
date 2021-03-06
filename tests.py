@@ -9,7 +9,6 @@ import unittest
 from pathlib import Path
 
 import os
-import six
 import httpretty
 
 from opencage.geocoder import OpenCageGeocode
@@ -62,12 +61,11 @@ class OpenCageGeocodeTestCase(unittest.TestCase):
 
         # Should not give errors
         self.geocoder.geocode('xxx')    # ascii convertable
-        self.geocoder.geocode(six.u('xxx'))   # unicode
-        self.geocoder.geocode(six.u('xxá'))   # unicode
+        self.geocoder.geocode('xxá')   # unicode
 
         # But if it isn't a unicode string, it should give error
-        utf8_string = six.u("xxá").encode("utf-8")
-        latin1_string = six.u("xxá").encode("latin1")
+        utf8_string = "xxá".encode("utf-8")
+        latin1_string = "xxá".encode("latin1")
 
         self.assertRaises(InvalidInputError, self.geocoder.geocode, utf8_string)
 
@@ -95,7 +93,7 @@ class OpenCageGeocodeTestCase(unittest.TestCase):
             body=Path('test/fixtures/muenster.json').read_text()
         )
 
-        results = self.geocoder.geocode(six.u("Münster"))
+        results = self.geocoder.geocode("Münster")
         self.assertTrue(
             any((abs(result['geometry']['lat'] - 51.9625101) < 0.05 and abs(result['geometry']['lng'] - 7.6251879) < 0.05) for result in results),
             msg="Bad result"
@@ -116,7 +114,7 @@ class OpenCageGeocodeTestCase(unittest.TestCase):
         )
 
         # test that the results are in unicode
-        self.assertEqual(results[0]['formatted'], six.u('San Sebasti\xe1n, Donostialdea/Donostia-San Sebasti\xe1n, 20001;20002;20003;20004;20005;20006;20007;20008;20009;20010;20011;20012;20013;20014;20015;20016;20017;20018, Basque Country, Spain, es'))
+        self.assertEqual(results[0]['formatted'], 'San Sebasti\xe1n, Donostialdea/Donostia-San Sebasti\xe1n, 20001;20002;20003;20004;20005;20006;20007;20008;20009;20010;20011;20012;20013;20014;20015;20016;20017;20018, Basque Country, Spain, es')
 
 
 class FloatifyDictTestCase(unittest.TestCase):

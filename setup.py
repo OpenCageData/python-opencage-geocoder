@@ -1,6 +1,7 @@
 #/usr/bin/env python
 
 import os
+import sys
 from setuptools import setup, find_packages
 
 # if you are not using vagrant, just delete os.link directly,
@@ -11,6 +12,12 @@ if os.environ.get('USER', '') == 'vagrant':
 
 ROOT_DIR = os.path.dirname(__file__)
 SOURCE_DIR = os.path.join(ROOT_DIR)
+
+if sys.version_info < (3, 5):
+    raise RuntimeError(
+        "openage requires Python 3.6 or newer"
+        "Use older operncage 1.x for Python 2.7 or 3.5"
+    )
 
 # try for pypy
 try:
@@ -28,10 +35,10 @@ except FileNotFoundError:
 setup(
     name="opencage",
     version="1.2.2",
-    description="Simple wrapper module for the OpenCage Geocoder API",
+    description="Wrapper module for the OpenCage Geocoder API",
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author="OpenCage Data Ltd",
+    author="OpenCage GmbH",
     author_email="info@opencagedata.com",
     url="https://github.com/OpenCageData/python-opencage-geocoder/",
     download_url="https://github.com/OpenCageData/python-opencage-geocoder/tarball/1.2.2",
@@ -45,11 +52,7 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
+        "Programming Language :: Python :: 3 :: Only",
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
@@ -57,13 +60,11 @@ setup(
         'Topic :: Utilities'],
     install_requires=[
         'Requests>=2.2.0',
-        'six>=1.4.0',
         'pyopenssl>=0.15.1',
         'backoff>=1.10.0'
     ],
     test_suite='tests',
     tests_require=[
-        'httpretty>=0.9.6',
-        'six>=1.4.0',
+        'httpretty>=0.9.6'
     ],
 )

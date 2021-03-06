@@ -5,7 +5,6 @@ from decimal import Decimal
 import collections
 
 import os
-import six
 import requests
 import backoff
 
@@ -130,14 +129,7 @@ class OpenCageGeocode(object):
         :raises UnknownError: if something goes wrong with the OpenCage API
 
         """
-        if six.PY2:
-            # py3 doesn't have unicode() function, and instead we check the text_type later
-            try:
-                query = unicode(query)
-            except UnicodeDecodeError:
-                raise InvalidInputError(bad_value=query)
-
-        if not isinstance(query, six.text_type):
+        if not isinstance(query, str):
             raise InvalidInputError(bad_value=query)
 
         data = {
