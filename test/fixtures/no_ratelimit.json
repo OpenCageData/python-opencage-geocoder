@@ -1,0 +1,25 @@
+{
+    "status": {
+        "code": 200,
+        "message": "OK"
+    },
+    "thanks": "For using an OpenCage Data API",
+    "total_results": 0,
+    "licenses": [{
+        "url": "http://creativecommons.org/licenses/by-sa/3.0/",
+        "name": "CC-BY-SA"
+    }, {
+        "url": "http://opendatacommons.org/licenses/odbl/summary/",
+        "name": "ODbL"
+    }],
+    "rate": {
+        "reset": 1402185600,
+        "limit": "2500",
+        "remaining": 2479
+    },
+    "results": [],
+    "timestamp": {
+        "created_http": "Sat, 07 Jun 2014 10:38:45 GMT",
+        "created_unix": 1402137525
+    }
+}

@@ -1,0 +1,71 @@
+{
+    "licenses": [{
+        "url": "http://creativecommons.org/licenses/by-sa/3.0/",
+        "name": "CC-BY-SA"
+    }, {
+        "url": "http://opendatacommons.org/licenses/odbl/summary/",
+        "name": "ODbL"
+    }],
+    "status": {
+        "message": "OK",
+        "code": 200
+    },
+    "thanks": "For using an OpenCage Data API",
+    "results": [{
+        "geometry": {
+            "lng": "149.5886383",
+            "lat": "-32.5980702"
+        },
+        "components": {
+            "country_code": "au",
+            "state": "New South Wales",
+            "country": "Australia",
+            "town": "Mudgee"
+        },
+        "formatted": "Mudgee, New South Wales, Australia, au",
+        "annotations": {},
+        "bounds": {
+            "southwest": {
+                "lng": "149.5486383",
+                "lat": "-32.6380702"
+            },
+            "northeast": {
+                "lng": "149.6286383",
+                "lat": "-32.5580702"
+            }
+        }
+    }, {
+        "formatted": "Mudgee, Mid-Western Regional, New South Wales, Australia",
+        "components": {
+            "state": "New South Wales",
+            "country": "Australia",
+            "county": "Mid-Western Regional",
+            "town": "Mudgee"
+        },
+        "bounds": {
+            "southwest": {
+                "lng": "149.573196411",
+                "lat": "-32.6093025208"
+            },
+            "northeast": {
+                "lng": "149.602890015",
+                "lat": "-32.5818252563"
+            }
+        },
+        "annotations": {},
+        "geometry": {
+            "lng": 149.5871,
+            "lat": -32.59426
+        }
+    }],
+    "total_results": 2,
+    "rate": {
+        "reset": 1402185600,
+        "limit": "2500",
+        "remaining": 2489
+    },
+    "timestamp": {
+        "created_http": "Sat, 07 Jun 2014 09:31:50 GMT",
+        "created_unix": 1402133510
+    }
+}
