@@ -3,12 +3,12 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "bento/ubuntu-18.04"
+  config.vm.box = "bento/ubuntu-20.04"
 
   config.vm.synced_folder ".", "/home/vagrant/python-opencage-geocoder"
 
   # provision using a simple shell script
-  config.vm.provision :shell, :path => "vagrant-provision.sh"
+  config.vm.provision :shell, path: "vagrant-provision.sh", privileged: false
 
 
   # configure shared package cache if possible
@@ -22,6 +22,4 @@ Vagrant.configure("2") do |config|
     vb.gui = false
     # vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
-
-
 end
