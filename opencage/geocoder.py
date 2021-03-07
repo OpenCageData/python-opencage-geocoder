@@ -15,8 +15,6 @@ class OpenCageGeocodeError(Exception):
 
     """Base class for all errors/exceptions that can happen when geocoding."""
 
-    pass
-
 
 class InvalidInputError(OpenCageGeocodeError):
 
@@ -27,7 +25,7 @@ class InvalidInputError(OpenCageGeocodeError):
     """
 
     def __init__(self, bad_value):
-        super(InvalidInputError, self).__init__()
+        super().__init__()
         self.bad_value = bad_value
 
     def __unicode__(self):
@@ -39,8 +37,6 @@ class InvalidInputError(OpenCageGeocodeError):
 class UnknownError(OpenCageGeocodeError):
 
     """There was a problem with the OpenCage server."""
-
-    pass
 
 
 class RateLimitExceededError(OpenCageGeocodeError):
@@ -54,7 +50,7 @@ class RateLimitExceededError(OpenCageGeocodeError):
 
     def __init__(self, reset_time, reset_to):
         """Constructor."""
-        super(RateLimitExceededError, self).__init__()
+        super().__init__()
         self.reset_time = reset_time
         self.reset_to = reset_to
 
@@ -91,7 +87,7 @@ class ForbiddenError(OpenCageGeocodeError):
     __str__ = __unicode__
 
 
-class OpenCageGeocode(object):
+class OpenCageGeocode:
 
     """
     Geocoder object.
@@ -163,10 +159,10 @@ class OpenCageGeocode(object):
     def _opencage_request(self, params):
         response = requests.get(self.url, params=params)
 
-        if (response.status_code == 401):
+        if response.status_code == 401:
             raise NotAuthorizedError()
 
-        if (response.status_code == 403):
+        if response.status_code == 403:
             raise ForbiddenError()
 
         if (response.status_code == 402 or response.status_code == 429):
@@ -174,13 +170,13 @@ class OpenCageGeocode(object):
             reset_time = datetime.utcfromtimestamp(response.json()['rate']['reset'])
             raise RateLimitExceededError(reset_to=int(response.json()['rate']['limit']), reset_time=reset_time)
 
-        elif response.status_code == 500:
+        if response.status_code == 500:
             raise UnknownError("500 status code from API")
 
         try:
             response_json = response.json()
-        except ValueError:
-            raise UnknownError("Non-JSON result from server")
+        except ValueError as e:
+            raise UnknownError("Non-JSON result from server") from e
 
         if 'results' not in response_json:
             raise UnknownError("JSON from API doesn't have a 'results' key")
@@ -222,13 +218,13 @@ def floatify_latlng(input_value):
     If the API returns the lat/lng as strings, and not numbers, then this
     function will 'clean them up' to be floats.
     """
-    if isinstance(input_value, collections.Mapping):
+    if isinstance(input_value, collections.abc.Mapping):
         if len(input_value) == 2 and sorted(input_value.keys()) == ['lat', 'lng']:
             # This dict has only 2 keys 'lat' & 'lon'
             return {'lat': float_if_float(input_value["lat"]), 'lng': float_if_float(input_value["lng"])}
         else:
             return dict((key, floatify_latlng(value)) for key, value in input_value.items())
-    elif isinstance(input_value, collections.MutableSequence):
+    elif isinstance(input_value, collections.abc.MutableSequence):
         return [floatify_latlng(x) for x in input_value]
     else:
         return input_value

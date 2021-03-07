@@ -19,12 +19,6 @@ if sys.version_info < (3, 5):
         "Use older operncage 1.x for Python 2.7 or 3.5"
     )
 
-# try for pypy
-try:
-    FileNotFoundError
-except NameError:
-    FileNotFoundError = IOError
-
 # try for travis
 try:
     with open(os.path.join(SOURCE_DIR, 'README.md')) as f:
@@ -65,6 +59,7 @@ setup(
     ],
     test_suite='tests',
     tests_require=[
-        'httpretty>=0.9.6'
+        'httpretty>=0.9.6',
+        'pylint>=2.7.2'
     ],
 )
