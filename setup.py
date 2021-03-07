@@ -43,6 +43,7 @@ setup(
     keywords=['geocoding', 'geocoder'],
     classifiers=[
         'Environment :: Web Environment',
+        "Development Status :: 5 - Production/Stable",
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
@@ -51,7 +52,9 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
-        'Topic :: Utilities'],
+        'Topic :: Scientific/Engineering :: GIS',
+        'Topic :: Utilities'
+    ],
     install_requires=[
         'Requests>=2.2.0',
         'pyopenssl>=0.15.1',
