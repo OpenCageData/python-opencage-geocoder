@@ -1,9 +1,5 @@
 # encoding: utf-8
 
-# pylint: disable=line-too-long
-# pylint: disable=anomalous-unicode-escape-in-string
-# pylint: disable=no-self-argument
-
 import unittest
 
 from pathlib import Path
@@ -45,7 +41,7 @@ class OpenCageGeocodeTestCase(unittest.TestCase):
         httpretty.register_uri(
             httpretty.GET,
             self.geocoder.url,
-            body=Path('test/fixtures/australia.json').read_text()
+            body=Path('test/fixtures/mudgee_australia.json').read_text()
         )
 
         results = self.geocoder.geocode("Mudgee, Australia")
@@ -114,11 +110,11 @@ class OpenCageGeocodeTestCase(unittest.TestCase):
         )
 
         # test that the results are in unicode
-        self.assertEqual(results[0]['formatted'], 'San Sebasti\xe1n, Donostialdea/Donostia-San Sebasti\xe1n, 20001;20002;20003;20004;20005;20006;20007;20008;20009;20010;20011;20012;20013;20014;20015;20016;20017;20018, Basque Country, Spain, es')
+        self.assertEqual(results[0]['formatted'], 'San Sebastián, Autonomous Community of the Basque Country, Spain')
 
 
 class FloatifyDictTestCase(unittest.TestCase):
-    def _expected_output(input_value, expected_output):
+    def _expected_output(input_value, expected_output): # pylint: disable=no-self-argument
         def test(self):
             self.assertEqual(floatify_latlng(input_value), expected_output)
         return test
@@ -156,6 +152,7 @@ class RateLimitErrorTestCase(unittest.TestCase):
 
 
     def testRateLimitExceeded(self):
+        # 4372eff77b8343cebfc843eb4da4ddc4 will always return 402
         httpretty.register_uri(
             httpretty.GET,
             self.geocoder.url,
@@ -170,7 +167,7 @@ class RateLimitErrorTestCase(unittest.TestCase):
         try:
             self.geocoder.geocode("whatever")
         except RateLimitExceededError as ex:
-            self.assertEqual(str(ex), 'Your rate limit has expired. It will reset to 2500 on 2014-06-08T00:00:00')
+            self.assertEqual(str(ex), 'Your rate limit has expired. It will reset to 2500 on 2021-03-08T00:00:00')
             self.assertEqual(ex.reset_to, 2500)
 
 
@@ -205,7 +202,7 @@ class ForbiddenErrorTestCase(unittest.TestCase):
     def setUp(self):
         httpretty.enable()
 
-        self.geocoder = OpenCageGeocode('2e10e5e828262eb243ec0b54681d699a')
+        self.geocoder = OpenCageGeocode('2e10e5e828262eb243ec0b54681d699a') # will always return 403
 
     def tearDown(self):
         httpretty.disable()
@@ -229,7 +226,7 @@ class ForbiddenErrorTestCase(unittest.TestCase):
 
 
 class ReverseGeocodingTestCase(unittest.TestCase):
-    def _expected_output(input_latlng, expected_output):
+    def _expected_output(input_latlng, expected_output): # pylint: disable=no-self-argument
         def test(self):
             lat, lng = input_latlng
             self.assertEqual(_query_for_reverse_geocoding(lat, lng), expected_output)
