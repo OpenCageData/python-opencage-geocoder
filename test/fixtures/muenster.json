@@ -1,271 +1,359 @@
 {
-    "licenses": [{
-        "name": "CC-BY-SA",
-        "url": "http://creativecommons.org/licenses/by-sa/3.0/"
-    }, {
-        "name": "ODbL",
-        "url": "http://opendatacommons.org/licenses/odbl/summary/"
-    }],
-    "thanks": "For using an OpenCage Data API",
-    "total_results": 10,
-    "status": {
-        "message": "OK",
-        "code": 200
-    },
-    "results": [{
-        "formatted": "M\u00fcnster, M\u00fcnster, 48143,48144,48145,48146,48147,48148,48149,48150,48151,48152,48153,48154,48155,48156,48157,48158,48159,48160,48161,48162,48163,48164,48165,48166,48167, Regierungsbezirk M\u00fcnster, North Rhine-Westphalia, Germany, de",
-        "geometry": {
-            "lat": "51.9625101",
-            "lng": "7.6251879"
-        },
-        "components": {
-            "country_code": "de",
-            "postcode": "48143,48144,48145,48146,48147,48148,48149,48150,48151,48152,48153,48154,48155,48156,48157,48158,48159,48160,48161,48162,48163,48164,48165,48166,48167",
-            "state_district": "Regierungsbezirk M\u00fcnster",
-            "state": "North Rhine-Westphalia",
-            "city": "M\u00fcnster",
-            "county": "M\u00fcnster",
-            "country": "Germany"
-        },
-        "bounds": {
-            "southwest": {
-                "lng": "7.4651879",
-                "lat": "51.8025101"
-            },
-            "northeast": {
-                "lng": "7.7851879",
-                "lat": "52.1225101"
-            }
-        },
-        "annotations": {}
-    }, {
-        "bounds": {
-            "northeast": {
-                "lat": "52.0600706",
-                "lng": "7.7743708"
-            },
-            "southwest": {
-                "lat": "51.8402214",
-                "lng": "7.4738051"
-            }
-        },
-        "annotations": {},
-        "geometry": {
-            "lat": "51.95027025",
-            "lng": "7.61334708872901"
-        },
-        "components": {
-            "country_code": "de",
-            "state_district": "Regierungsbezirk M\u00fcnster",
-            "state": "North Rhine-Westphalia",
-            "county": "M\u00fcnster",
-            "country": "Germany"
-        },
-        "formatted": "M\u00fcnster, Regierungsbezirk M\u00fcnster, North Rhine-Westphalia, Germany, de"
-    }, {
-        "formatted": "Munster, Ireland, ie",
-        "annotations": {},
-        "bounds": {
-            "southwest": {
-                "lat": "51.4199027",
-                "lng": "-10.6891099"
-            },
-            "northeast": {
-                "lng": "-6.9497829",
-                "lat": "53.1689062"
-            }
-        },
-        "components": {
-            "country_code": "ie",
-            "state_district": "Munster",
-            "country": "Ireland"
-        },
-        "geometry": {
-            "lng": "-8.57089717629267",
-            "lat": "52.3076216"
-        }
-    }, {
-        "formatted": "Germany, de, M\u00fcnster",
-        "annotations": {},
-        "bounds": {
-            "southwest": {
-                "lat": "51.8402214",
-                "lng": "7.4738051"
-            },
-            "northeast": {
-                "lat": "52.0600706",
-                "lng": "7.7743708"
-            }
-        },
-        "geometry": {
-            "lat": "51.95027025",
-            "lng": "7.61334708872901"
-        },
-        "components": {
-            "country_code": "de",
-            "address100": "M\u00fcnster",
-            "country": "Germany"
-        }
-    }, {
-        "formatted": "M\u00fcnster, M\u00fcnster, Stuttgart, Stuttgart, Regierungsbezirk Stuttgart, Baden-W\u00fcrttemberg, Germany, de",
-        "components": {
-            "city": "Stuttgart",
-            "state": "Baden-W\u00fcrttemberg",
-            "city_district": "M\u00fcnster",
-            "country": "Germany",
-            "country_code": "de",
-            "state_district": "Regierungsbezirk Stuttgart",
-            "suburb": "M\u00fcnster",
-            "county": "Stuttgart"
-        },
-        "geometry": {
-            "lat": "48.8212962",
-            "lng": "9.2200016"
-        },
-        "bounds": {
-            "northeast": {
-                "lng": "9.2400016",
-                "lat": "48.8412962"
-            },
-            "southwest": {
-                "lng": "9.2000016",
-                "lat": "48.8012962"
-            }
-        },
-        "annotations": {}
-    }, {
-        "geometry": {
-            "lng": "8.8671181",
-            "lat": "49.9229236"
-        },
-        "components": {
-            "country_code": "de",
-            "state_district": "Regierungsbezirk Darmstadt",
-            "state": "Hesse",
-            "city": "M\u00fcnster",
-            "county": "Landkreis Darmstadt-Dieburg",
-            "country": "Germany"
-        },
-        "annotations": {},
-        "bounds": {
-            "northeast": {
-                "lat": "49.9438725",
-                "lng": "8.9161067"
-            },
-            "southwest": {
-                "lat": "49.9056973",
-                "lng": "8.7705856"
-            }
-        },
-        "formatted": "M\u00fcnster, Landkreis Darmstadt-Dieburg, Regierungsbezirk Darmstadt, Hesse, Germany, de"
-    }, {
-        "formatted": "M\u00fcnster, Stuttgart, Stuttgart, Regierungsbezirk Stuttgart, Baden-W\u00fcrttemberg, Germany, de",
-        "geometry": {
-            "lat": "48.8272797",
-            "lng": "9.2024402537349"
-        },
-        "components": {
-            "country_code": "de",
-            "state_district": "Regierungsbezirk Stuttgart",
-            "state": "Baden-W\u00fcrttemberg",
-            "city": "Stuttgart",
-            "city_district": "M\u00fcnster",
-            "county": "Stuttgart",
-            "country": "Germany"
-        },
-        "bounds": {
-            "northeast": {
-                "lat": "48.8384709",
-                "lng": "9.2273738"
-            },
-            "southwest": {
-                "lng": "9.1883711",
-                "lat": "48.8152795"
-            }
-        },
-        "annotations": {}
-    }, {
-        "bounds": {
-            "southwest": {
-                "lng": "10.8788966",
-                "lat": "48.5896428"
-            },
-            "northeast": {
-                "lat": "48.6515558",
-                "lng": "10.9314006"
-            }
-        },
-        "annotations": {},
-        "geometry": {
-            "lng": "10.9008883",
-            "lat": "48.6242219"
-        },
-        "components": {
-            "country_code": "de",
-            "state_district": "Swabia",
-            "state": "Free State of Bavaria",
-            "city": "M\u00fcnster",
-            "county": "Rain (Schwaben)",
-            "country": "Germany"
-        },
-        "formatted": "M\u00fcnster, Rain (Schwaben), Swabia, Free State of Bavaria, Germany, de"
-    }, {
-        "formatted": "Munster, Lake County, Indiana, United States of America, us",
-        "bounds": {
-            "northeast": {
-                "lat": "41.5814003",
-                "lng": "-87.4802388"
-            },
-            "southwest": {
-                "lng": "-87.5254509",
-                "lat": "41.522608"
-            }
-        },
-        "annotations": {},
-        "geometry": {
-            "lat": "41.5644798",
-            "lng": "-87.5125412"
-        },
-        "components": {
-            "country_code": "us",
-            "state": "Indiana",
-            "city": "Munster",
-            "county": "Lake County",
-            "country": "United States of America"
-        }
-    }, {
-        "bounds": {
-            "northeast": {
-                "lng": "12.5929086",
-                "lat": "48.9728073"
-            },
-            "southwest": {
-                "lng": "12.5529086",
-                "lat": "48.9328073"
-            }
-        },
-        "annotations": {},
-        "geometry": {
-            "lng": "12.5729086",
-            "lat": "48.9528073"
-        },
-        "components": {
-            "country_code": "de",
-            "state_district": "Lower Bavaria",
-            "village": "M\u00fcnster",
-            "state": "Free State of Bavaria",
-            "county": "Landkreis Straubing-Bogen",
-            "country": "Germany"
-        },
-        "formatted": "M\u00fcnster, Landkreis Straubing-Bogen, Lower Bavaria, Free State of Bavaria, Germany, de"
-    }],
-    "timestamp": {
-        "created_unix": 1402135758,
-        "created_http": "Sat, 07 Jun 2014 10:09:18 GMT"
-    },
-    "rate": {
-        "remaining": 2485,
-        "reset": 1402185600,
-        "limit": "2500"
+  "documentation": "https://opencagedata.com/api",
+  "licenses": [
+    {
+      "name": "see attribution guide",
+      "url": "https://opencagedata.com/credits"
     }
+  ],
+  "rate": {
+    "limit": 2500,
+    "remaining": 2497,
+    "reset": 1615161600
+  },
+  "results": [
+    {
+      "bounds": {
+        "northeast": {
+          "lat": 52.0600251,
+          "lng": 7.7743634
+        },
+        "southwest": {
+          "lat": 51.8401448,
+          "lng": 7.4737853
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "DE",
+        "ISO_3166-1_alpha-3": "DEU",
+        "_category": "place",
+        "_type": "city",
+        "city": "Münster",
+        "continent": "Europe",
+        "country": "Germany",
+        "country_code": "de",
+        "political_union": "European Union",
+        "state": "North Rhine-Westphalia",
+        "state_code": "NW"
+      },
+      "confidence": 4,
+      "formatted": "Münster, North Rhine-Westphalia, Germany",
+      "geometry": {
+        "lat": 51.9625101,
+        "lng": 7.6251879
+      }
+    },
+    {
+      "bounds": {
+        "northeast": {
+          "lat": 53.1689062,
+          "lng": -6.949942
+        },
+        "southwest": {
+          "lat": 51.388867,
+          "lng": -10.6626169
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "IE",
+        "ISO_3166-1_alpha-3": "IRL",
+        "_category": "place",
+        "_type": "state",
+        "continent": "Europe",
+        "country": "Ireland",
+        "country_code": "ie",
+        "political_union": "European Union",
+        "state": "Munster",
+        "state_code": "M"
+      },
+      "confidence": 1,
+      "formatted": "Munster, Ireland",
+      "geometry": {
+        "lat": 52.3076216,
+        "lng": -8.5708973
+      }
+    },
+    {
+      "bounds": {
+        "northeast": {
+          "lat": 48.9209128,
+          "lng": 6.9284105
+        },
+        "southwest": {
+          "lat": 48.8961288,
+          "lng": 6.8640003
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "FR",
+        "ISO_3166-1_alpha-3": "FRA",
+        "_category": "place",
+        "_type": "village",
+        "continent": "Europe",
+        "country": "France",
+        "country_code": "fr",
+        "county": "Moselle",
+        "municipality": "Sarrebourg-Château-Salins",
+        "political_union": "European Union",
+        "postcode": "57670",
+        "state": "Grand Est",
+        "state_code": "GES",
+        "village": "Munster"
+      },
+      "confidence": 7,
+      "formatted": "57670 Munster, France",
+      "geometry": {
+        "lat": 48.9154719,
+        "lng": 6.9037077
+      }
+    },
+    {
+      "bounds": {
+        "northeast": {
+          "lat": 49.4626882,
+          "lng": 10.0571749
+        },
+        "southwest": {
+          "lat": 49.4226882,
+          "lng": 10.0171749
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "DE",
+        "ISO_3166-1_alpha-3": "DEU",
+        "_category": "place",
+        "_type": "village",
+        "continent": "Europe",
+        "country": "Germany",
+        "country_code": "de",
+        "county": "Main-Tauber-Kreis",
+        "political_union": "European Union",
+        "postcode": "97993",
+        "state": "Baden-Württemberg",
+        "state_code": "BW",
+        "town": "Creglingen",
+        "village": "Münster"
+      },
+      "confidence": 7,
+      "formatted": "97993 Creglingen, Germany",
+      "geometry": {
+        "lat": 49.4426882,
+        "lng": 10.0371749
+      }
+    },
+    {
+      "bounds": {
+        "northeast": {
+          "lat": 48.0646256,
+          "lng": 7.1665754
+        },
+        "southwest": {
+          "lat": 48.0286031,
+          "lng": 7.0964409
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "FR",
+        "ISO_3166-1_alpha-3": "FRA",
+        "_category": "place",
+        "_type": "city",
+        "continent": "Europe",
+        "country": "France",
+        "country_code": "fr",
+        "county": "Haut-Rhin",
+        "municipality": "Colmar-Ribeauvillé",
+        "political_union": "European Union",
+        "postcode": "68140",
+        "state": "Grand Est",
+        "state_code": "GES",
+        "town": "Munster"
+      },
+      "confidence": 7,
+      "formatted": "68140 Munster, France",
+      "geometry": {
+        "lat": 48.0408618,
+        "lng": 7.1371568
+      }
+    },
+    {
+      "bounds": {
+        "northeast": {
+          "lat": 48.6515558,
+          "lng": 10.9314006
+        },
+        "southwest": {
+          "lat": 48.5841708,
+          "lng": 10.8788966
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "DE",
+        "ISO_3166-1_alpha-3": "DEU",
+        "_category": "place",
+        "_type": "village",
+        "continent": "Europe",
+        "country": "Germany",
+        "country_code": "de",
+        "county": "Landkreis Donau-Ries",
+        "municipality": "Rain (Schwaben)",
+        "political_union": "European Union",
+        "postcode": "86692",
+        "state": "Bavaria",
+        "state_code": "BY",
+        "village": "Münster"
+      },
+      "confidence": 7,
+      "formatted": "86692 Münster, Germany",
+      "geometry": {
+        "lat": 48.6242219,
+        "lng": 10.9008883
+      }
+    },
+    {
+      "bounds": {
+        "northeast": {
+          "lat": 50.4101197,
+          "lng": 8.6366094
+        },
+        "southwest": {
+          "lat": 50.3701197,
+          "lng": 8.5966094
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "DE",
+        "ISO_3166-1_alpha-3": "DEU",
+        "_category": "place",
+        "_type": "village",
+        "continent": "Europe",
+        "country": "Germany",
+        "country_code": "de",
+        "county": "Wetteraukreis",
+        "political_union": "European Union",
+        "state": "Hesse",
+        "state_code": "HE",
+        "town": "Butzbach",
+        "village": "Münster"
+      },
+      "confidence": 7,
+      "formatted": "Butzbach, Hesse, Germany",
+      "geometry": {
+        "lat": 50.3901197,
+        "lng": 8.6166094
+      }
+    },
+    {
+      "bounds": {
+        "northeast": {
+          "lat": 47.4709858,
+          "lng": 11.8640661
+        },
+        "southwest": {
+          "lat": 47.4020668,
+          "lng": 11.7729344
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "AT",
+        "ISO_3166-1_alpha-3": "AUT",
+        "_category": "place",
+        "_type": "city",
+        "city": "Gemeinde Münster",
+        "continent": "Europe",
+        "country": "Austria",
+        "country_code": "at",
+        "political_union": "European Union",
+        "postcode": "6232",
+        "region": "Bezirk Kufstein",
+        "state": "Tyrol"
+      },
+      "confidence": 7,
+      "formatted": "Gemeinde Münster, Tyrol, Austria",
+      "geometry": {
+        "lat": 47.4366555,
+        "lng": 11.8134682
+      }
+    },
+    {
+      "bounds": {
+        "northeast": {
+          "lat": 46.9474256,
+          "lng": 7.452171
+        },
+        "southwest": {
+          "lat": 46.9470562,
+          "lng": 7.4510185
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "CH",
+        "ISO_3166-1_alpha-3": "CHE",
+        "_category": "place_of_worship",
+        "_type": "place_of_worship",
+        "city": "Bern",
+        "city_district": "Stadtteil I",
+        "continent": "Europe",
+        "country": "Switzerland",
+        "country_code": "ch",
+        "county": "Bern-Mittelland administrative district",
+        "place_of_worship": "Münster",
+        "postcode": "3011",
+        "quarter": "Old City",
+        "road": "Münsterplatz",
+        "state": "Bern",
+        "state_code": "BE",
+        "state_district": "Bernese Mittelland administrative region"
+      },
+      "confidence": 9,
+      "formatted": "Münster, Münsterplatz, 3011 Bern, Switzerland",
+      "geometry": {
+        "lat": 46.9472379,
+        "lng": 7.4515787
+      }
+    },
+    {
+      "bounds": {
+        "northeast": {
+          "lat": 52.1952705,
+          "lng": -104.9807394
+        },
+        "southwest": {
+          "lat": 52.1874551,
+          "lng": -105.0067561
+        }
+      },
+      "components": {
+        "ISO_3166-1_alpha-2": "CA",
+        "ISO_3166-1_alpha-3": "CAN",
+        "_category": "place",
+        "_type": "county",
+        "continent": "North America",
+        "country": "Canada",
+        "country_code": "ca",
+        "county": "Muenster",
+        "state": "Saskatchewan",
+        "state_code": "SK"
+      },
+      "confidence": 8,
+      "formatted": "SK, Canada",
+      "geometry": {
+        "lat": 52.1925528,
+        "lng": -104.9937505
+      }
+    }
+  ],
+  "status": {
+    "code": 200,
+    "message": "OK"
+  },
+  "stay_informed": {
+    "blog": "https://blog.opencagedata.com",
+    "twitter": "https://twitter.com/OpenCage"
+  },
+  "thanks": "For using an OpenCage API",
+  "timestamp": {
+    "created_http": "Sun, 07 Mar 2021 01:13:17 GMT",
+    "created_unix": 1615079597
+  },
+  "total_results": 10
 }
