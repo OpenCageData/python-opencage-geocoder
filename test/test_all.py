@@ -14,6 +14,13 @@ os.environ['BACKOFF_MAX_TIME'] = '1'
 
 geocoder = OpenCageGeocode('abcde')
 
+def _any_result_around(results, lat=None, lon=None):
+    for result in results:
+        if (abs(result['geometry']['lat'] - lat) < 0.05 and
+            abs(result['geometry']['lng'] - lon) < 0.05):
+            return True
+    return False
+
 @httprettified
 def test_gb_postcode():
     httpretty.register_uri(
@@ -23,7 +30,7 @@ def test_gb_postcode():
     )
 
     results = geocoder.geocode("EC1M 5RF")
-    assert any((abs(result['geometry']['lat'] - 51.5201666) < 0.05 and abs(result['geometry']['lng'] - -0.0985142) < 0.05) for result in results)
+    assert _any_result_around(results, lat=51.5201666, lon=-0.0985142)
 
 
 @httprettified
@@ -35,11 +42,11 @@ def test_australia():
     )
 
     results = geocoder.geocode("Mudgee, Australia")
-    assert any((abs(result['geometry']['lat'] - -32.5980702) < 0.05 and abs(result['geometry']['lng'] - 149.5886383) < 0.05) for result in results)
+    assert _any_result_around(results, lat=-32.5980702, lon=149.5886383)
 
 
 @httprettified
-def testMunster():
+def test_munster():
     httpretty.register_uri(
         httpretty.GET,
         geocoder.url,
@@ -47,10 +54,10 @@ def testMunster():
     )
 
     results = geocoder.geocode("Münster")
-    assert any((abs(result['geometry']['lat'] - 51.9625101) < 0.05 and abs(result['geometry']['lng'] - 7.6251879) < 0.05) for result in results)
+    assert _any_result_around(results, lat=51.9625101, lon=7.6251879)
 
 @httprettified
-def testDonostia():
+def test_donostia():
     httpretty.register_uri(
         httpretty.GET,
         geocoder.url,
@@ -59,7 +66,7 @@ def testDonostia():
     )
 
     results =geocoder.geocode("Donostia")
-    assert any((abs(result['geometry']['lat'] - 43.300836) < 0.05 and abs(result['geometry']['lng'] - -1.9809529) < 0.05) for result in results)
+    assert _any_result_around(results, lat=43.300836, lon=-1.9809529)
 
     # test that the results are in unicode
     assert results[0]['formatted'] == 'San Sebastián, Autonomous Community of the Basque Country, Spain'

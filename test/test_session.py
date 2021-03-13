@@ -9,6 +9,12 @@ from httpretty import httprettified
 from opencage.geocoder import OpenCageGeocode
 from opencage.geocoder import NotAuthorizedError
 
+def _any_result_around(results, lat=None, lon=None):
+    for result in results:
+        if (abs(result['geometry']['lat'] - lat) < 0.05 and
+            abs(result['geometry']['lng'] - lon) < 0.05):
+            return True
+    return False
 
 @httprettified
 def test_success():
@@ -20,7 +26,7 @@ def test_success():
         )
 
         results = geocoder.geocode("EC1M 5RF")
-        assert any((abs(result['geometry']['lat'] - 51.5201666) < 0.05 and abs(result['geometry']['lng'] - -0.0985142) < 0.05) for result in results)
+        assert _any_result_around(results, lat=51.5201666, lon=-0.0985142)
 
 @httprettified
 def test_failure():

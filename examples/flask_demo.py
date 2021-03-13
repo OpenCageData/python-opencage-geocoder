@@ -14,7 +14,8 @@ _geocoder = OpenCageGeocode(OPEN_CAGE_KEY)
 def forward(address):
     verbose = json.loads(request.args.get('verbose', "false").lower())
     raw_result = _geocoder.geocode(address)
-    return json.dumps(raw_result if verbose else [{"confidence": r["confidence"], "geometry": r["geometry"]} for r in raw_result if r["confidence"]])
+    formatted = [{"confidence": r["confidence"], "geometry": r["geometry"]} for r in raw_result if r["confidence"]]
+    return json.dumps(raw_result if verbose else formatted)
 
 @app.route("/reverse/<lat>/<lng>/")
 def reverse(lat, lng):

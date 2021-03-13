@@ -22,15 +22,15 @@ if sys.version_info < (3, 6):
 # try for travis
 try:
     with open(os.path.join(SOURCE_DIR, 'README.md'), encoding="utf-8") as f:
-        long_description = f.read()
+        LONG_DESCRIPTION = f.read()
 except FileNotFoundError:
-    long_description = ""
+    LONG_DESCRIPTION = ""
 
 setup(
     name="opencage",
     version="2.1.0",
     description="Wrapper module for the OpenCage Geocoder API",
-    long_description=long_description,
+    long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
     author="OpenCage GmbH",
     author_email="info@opencagedata.com",
@@ -61,7 +61,7 @@ setup(
         'pyopenssl>=0.15.1',
         'backoff>=1.10.0'
     ],
-    test_suite='tests',
+    test_suite='pytest',
     tests_require=[
         'httpretty>=0.9.6',
         'pylint==2.15.9',

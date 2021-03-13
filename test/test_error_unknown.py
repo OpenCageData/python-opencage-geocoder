@@ -16,10 +16,10 @@ def test_http_500_status():
         status=500,
     )
 
-    with pytest.raises(UnknownError) as e:
+    with pytest.raises(UnknownError) as excinfo:
         geocoder.geocode('whatever')
 
-    assert str(e.value) == '500 status code from API'
+    assert str(excinfo.value) == '500 status code from API'
 
 @httprettified
 def test_non_json():
@@ -34,10 +34,10 @@ def test_non_json():
         status=503
     )
 
-    with pytest.raises(UnknownError) as e:
+    with pytest.raises(UnknownError) as excinfo:
         geocoder.geocode('whatever')
 
-    assert str(e.value) == 'Non-JSON result from server'
+    assert str(excinfo.value) == 'Non-JSON result from server'
 
 @httprettified
 def test_no_results_key():
@@ -47,7 +47,7 @@ def test_no_results_key():
         body='{"spam": "eggs"}',
     )
 
-    with pytest.raises(UnknownError) as e:
+    with pytest.raises(UnknownError) as excinfo:
         geocoder.geocode('whatever')
 
-    assert str(e.value) == "JSON from API doesn't have a 'results' key"
+    assert str(excinfo.value) == "JSON from API doesn't have a 'results' key"
