@@ -63,6 +63,7 @@ setup(
     test_suite='tests',
     tests_require=[
         'httpretty>=0.9.6',
-        'pylint>=2.7.2'
+        'pylint>=2.7.2',
+        'pytest>=6.0'
     ],
 )

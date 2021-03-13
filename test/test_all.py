@@ -5,11 +5,14 @@ import unittest
 from pathlib import Path
 
 import os
+import sys
 import httpretty
 
 from opencage.geocoder import OpenCageGeocode
 from opencage.geocoder import InvalidInputError, RateLimitExceededError, UnknownError, ForbiddenError, NotAuthorizedError
 from opencage.geocoder import floatify_latlng, _query_for_reverse_geocoding
+
+sys.path.insert(0,'.')
 
 # reduce maximum backoff retry time from 120s to 1s
 os.environ['BACKOFF_MAX_TIME'] = '1'
