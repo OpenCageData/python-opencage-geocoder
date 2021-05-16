@@ -47,3 +47,6 @@ docs/_build/
 .vagrant
 .pypirc
 .eggs/
+
+# VS Code
+.vscode/

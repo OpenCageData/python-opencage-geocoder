@@ -62,8 +62,22 @@ print(result[0]['formatted'])
 
 Turn a lat/long into an address with the ``reverse_geocode`` method:
 
-    results = geocoder.reverse_geocode(51.51024, -0.10303)
+```python
+results = geocoder.reverse_geocode(51.51024, -0.10303)
+```
 
+### Sessions
+
+You can reuse your HTTP connection for multiple requests by
+using a `with` block. This can help performance when making
+a lot of requests:
+
+```python
+queries = ['82 Clerkenwell Road, London', ...]
+with OpenCageGeocode(key) as geocoder:
+    # Queries reuse the same HTTP connection
+    results = [geocoder.geocode(query) for query in queries]
+```
 
 ### Exceptions
 
@@ -82,6 +96,6 @@ Please see `LICENSE.txt`
 
 <a href="https://opencagedata.com"><img src="opencage_logo_300_150.png"></a>
 
-We run the [OpenCage Geocoder](https://opencagedata.com). Learn more [about us](https://opencagedata.com/about). 
+We run the [OpenCage Geocoder](https://opencagedata.com). Learn more [about us](https://opencagedata.com/about).
 
 We also run [Geomob](https://thegeomob.com), a series of regular meetups for location based service creators, where we do our best to highlight geoinnovation. If you like geo stuff, you will probably enjoy [the Geomob podcast](https://thegeomob.com/podcast/).

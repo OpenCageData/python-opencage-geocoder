@@ -108,10 +108,20 @@ class OpenCageGeocode:
 
     url = 'https://api.opencagedata.com/geocode/v1/json'
     key = ''
+    session = None
 
     def __init__(self, key):
         """Constructor."""
         self.key = key
+
+    def __enter__(self):
+        self.session = requests.Session()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        self.session.close()
+        self.session = None
+        return False
 
     def geocode(self, query, **kwargs):
         """
@@ -157,7 +167,10 @@ class OpenCageGeocode:
         (UnknownError, requests.exceptions.RequestException),
         max_tries=5, max_time=backoff_max_time)
     def _opencage_request(self, params):
-        response = requests.get(self.url, params=params)
+        if self.session:
+            response = self.session.get(self.url, params=params)
+        else:
+            response = requests.get(self.url, params=params)
 
         if response.status_code == 401:
             raise NotAuthorizedError()
