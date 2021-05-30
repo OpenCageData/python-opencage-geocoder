@@ -150,7 +150,7 @@ class OpenCageGeocode:
         return self
 
     async def __aexit__(self, *args):
-        self.session.close()
+        await self.session.close()
         self.session = None
         return False
 
@@ -204,12 +204,25 @@ class OpenCageGeocode:
         else:
             response = requests.get(self.url, params=params)
 
-        _validate_response(response)
-
         try:
             response_json = response.json()
         except ValueError as e:
-            raise UnknownError("Non-JSON result from server") from e
+            if response.status_code == 200:
+                raise UnknownError("Non-JSON result from server") from e
+
+        if response.status_code == 401:
+            raise NotAuthorizedError()
+
+        if response.status_code == 403:
+            raise ForbiddenError()
+
+        if (response.status_code == 402 or response.status_code == 429):
+            # Rate limit exceeded
+            reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
+            raise RateLimitExceededError(reset_to=int(response_json['rate']['limit']), reset_time=reset_time)
+
+        if response.status_code == 500:
+            raise UnknownError("500 status code from API")
 
         if 'results' not in response_json:
             raise UnknownError("JSON from API doesn't have a 'results' key")
@@ -217,13 +230,26 @@ class OpenCageGeocode:
         return response_json
 
     async def _opencage_async_request(self, params):
-        async with self.session.get(self.url, params) as response:
-            _validate_response(response)
-
+        async with self.session.get(self.url, params=params) as response:
             try:
                 response_json = await response.json()
             except ValueError as e:
-                raise UnknownError("Non-JSON result from server") from e
+                if response.status == 200:
+                    raise UnknownError("Non-JSON result from server") from e
+
+            if response.status == 401:
+                raise NotAuthorizedError()
+
+            if response.status == 403:
+                raise ForbiddenError()
+
+            if (response.status == 402 or response.status == 429):
+                # Rate limit exceeded
+                reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
+                raise RateLimitExceededError(reset_to=int(response_json['rate']['limit']), reset_time=reset_time)
+
+            if response.status == 500:
+                raise UnknownError("500 status code from API")
 
             if 'results' not in response_json:
                 raise UnknownError("JSON from API doesn't have a 'results' key")
@@ -284,20 +310,3 @@ def floatify_latlng(input_value):
         return [floatify_latlng(x) for x in input_value]
     else:
         return input_value
-
-def _validate_response(response):
-    if response.status_code == 401:
-        raise NotAuthorizedError()
-
-    if response.status_code == 403:
-        raise ForbiddenError()
-
-    if (response.status_code == 402 or response.status_code == 429):
-        # Rate limit exceeded
-        reset_time = datetime.utcfromtimestamp(response.json()['rate']['reset'])
-        raise RateLimitExceededError(reset_to=int(response.json()['rate']['limit']), reset_time=reset_time)
-
-    if response.status_code == 500:
-        raise UnknownError("500 status code from API")
-
-    return True
