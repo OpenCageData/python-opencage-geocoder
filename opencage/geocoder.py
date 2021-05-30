@@ -8,6 +8,12 @@ import os
 import requests
 import backoff
 
+try:
+    import aiohttp
+    aiohttp_avaiable = True
+except ImportError:
+    aiohttp_avaiable = False
+
 def backoff_max_time():
     return int(os.environ.get('BACKOFF_MAX_TIME', '120'))
 
@@ -87,6 +93,19 @@ class ForbiddenError(OpenCageGeocodeError):
     __str__ = __unicode__
 
 
+class AioHttpNotAvailableError(OpenCageGeocodeError):
+
+    """
+    Exception raise when async HTTP calls are tried without the aiohttp library installed
+    """
+
+    def __unicode__(self):
+        """Convert exception to a string."""
+        return "You must install aiohttp to use async HTTP calls."
+
+    __str__ = __unicode__
+
+
 class OpenCageGeocode:
 
     """
@@ -118,10 +137,31 @@ class OpenCageGeocode:
         self.session = requests.Session()
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
+    def __exit__(self, *args):
         self.session.close()
         self.session = None
         return False
+
+    async def __aenter__(self):
+        if not aiohttp_avaiable:
+            raise AioHttpNotAvailableError()
+
+        self.session = aiohttp.ClientSession()
+        return self
+
+    async def __aexit__(self, *args):
+        self.session.close()
+        self.session = None
+        return False
+
+    async def geocode_async(self, query, **kwargs):
+        if not aiohttp_avaiable:
+            raise AioHttpNotAvailableError()
+
+        request = self._parse_request(query, kwargs)
+        response = await self._opencage_async_request(request)
+
+        return floatify_latlng(response['results'])
 
     def geocode(self, query, **kwargs):
         """
@@ -135,17 +175,9 @@ class OpenCageGeocode:
         :raises UnknownError: if something goes wrong with the OpenCage API
 
         """
-        if not isinstance(query, str):
-            raise InvalidInputError(bad_value=query)
 
-        data = {
-            'q': query,
-            'key': self.key
-        }
-        # Add user parameters
-        data.update(kwargs)
-
-        response = self._opencage_request(data)
+        request = self._parse_request(query, kwargs)
+        response = self._opencage_request(request)
 
         return floatify_latlng(response['results'])
 
@@ -172,19 +204,7 @@ class OpenCageGeocode:
         else:
             response = requests.get(self.url, params=params)
 
-        if response.status_code == 401:
-            raise NotAuthorizedError()
-
-        if response.status_code == 403:
-            raise ForbiddenError()
-
-        if (response.status_code == 402 or response.status_code == 429):
-            # Rate limit exceeded
-            reset_time = datetime.utcfromtimestamp(response.json()['rate']['reset'])
-            raise RateLimitExceededError(reset_to=int(response.json()['rate']['limit']), reset_time=reset_time)
-
-        if response.status_code == 500:
-            raise UnknownError("500 status code from API")
+        _validate_response(response)
 
         try:
             response_json = response.json()
@@ -195,6 +215,29 @@ class OpenCageGeocode:
             raise UnknownError("JSON from API doesn't have a 'results' key")
 
         return response_json
+
+    async def _opencage_async_request(self, params):
+        async with self.session.get(self.url, params) as response:
+            _validate_response(response)
+
+            try:
+                response_json = await response.json()
+            except ValueError as e:
+                raise UnknownError("Non-JSON result from server") from e
+
+            if 'results' not in response_json:
+                raise UnknownError("JSON from API doesn't have a 'results' key")
+
+            return response_json
+
+    def _parse_request(self, query, params):
+        if not isinstance(query, str):
+            raise InvalidInputError(bad_value=query)
+
+        data = { 'q': query, 'key': self.key }
+        data.update(params) # Add user parameters
+        return data
+
 
 def _query_for_reverse_geocoding(lat, lng):
     """
@@ -241,3 +284,20 @@ def floatify_latlng(input_value):
         return [floatify_latlng(x) for x in input_value]
     else:
         return input_value
+
+def _validate_response(response):
+    if response.status_code == 401:
+        raise NotAuthorizedError()
+
+    if response.status_code == 403:
+        raise ForbiddenError()
+
+    if (response.status_code == 402 or response.status_code == 429):
+        # Rate limit exceeded
+        reset_time = datetime.utcfromtimestamp(response.json()['rate']['reset'])
+        raise RateLimitExceededError(reset_to=int(response.json()['rate']['limit']), reset_time=reset_time)
+
+    if response.status_code == 500:
+        raise UnknownError("500 status code from API")
+
+    return True
