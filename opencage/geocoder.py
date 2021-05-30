@@ -93,17 +93,11 @@ class ForbiddenError(OpenCageGeocodeError):
     __str__ = __unicode__
 
 
-class AioHttpNotAvailableError(OpenCageGeocodeError):
+class AioHttpError(OpenCageGeocodeError):
 
     """
-    Exception raise when async HTTP calls are tried without the aiohttp library installed
+    Exceptions related to async HTTP calls with aiohttp
     """
-
-    def __unicode__(self):
-        """Convert exception to a string."""
-        return "You must install aiohttp to use async HTTP calls."
-
-    __str__ = __unicode__
 
 
 class OpenCageGeocode:
@@ -144,7 +138,7 @@ class OpenCageGeocode:
 
     async def __aenter__(self):
         if not aiohttp_avaiable:
-            raise AioHttpNotAvailableError()
+            raise AioHttpError("You must install `aiohttp` to use async methods")
 
         self.session = aiohttp.ClientSession()
         return self
@@ -188,7 +182,10 @@ class OpenCageGeocode:
         """
 
         if not aiohttp_avaiable:
-            raise AioHttpNotAvailableError()
+            raise AioHttpError("You must install `aiohttp` to use async methods")
+
+        if not self.session:
+            raise AioHttpError("async methods must be used inside an async context")
 
         request = self._parse_request(query, kwargs)
         response = await self._opencage_async_request(request)
