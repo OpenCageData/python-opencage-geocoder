@@ -1,23 +1,18 @@
 # encoding: utf-8
 
-# from pathlib import Path
+import pytest
 
-# import httpretty
+from opencage.geocoder import OpenCageGeocode, AioHttpError
 
-# from httpretty import httprettified
-from opencage.geocoder import OpenCageGeocode
+# async def test_success():
+#     async with OpenCageGeocode('abc123') as geocoder:
+#         results = await geocoder.geocode_async("EC1M 5RF")
+#         assert any((abs(result['geometry']['lat'] - 51.5201666) < 0.05 and abs(result['geometry']['lng'] - -0.0985142) < 0.05) for result in results)
 
+async def test_without_session():
+    geocoder = OpenCageGeocode('abc123')
 
-# @httprettified
-async def test_success():
-    async with OpenCageGeocode('ba12d829b226403f9635c4d64cbca4c1') as geocoder:
-        # httpretty.register_uri(
-        #     httpretty.GET,
-        #     geocoder.url,
-        #     body=Path('test/fixtures/uk_postcode.json').read_text()
-        # )
+    with pytest.raises(AioHttpError) as excinfo:
+        await geocoder.geocode_async("whatever")
 
-        results = await geocoder.geocode_async("EC1M 5RF")
-        assert any((abs(result['geometry']['lat'] - 51.5201666) < 0.05 and abs(result['geometry']['lng'] - -0.0985142) < 0.05) for result in results)
-
-# test AioHttpError
+    assert str(excinfo.value) == 'Async methods must be used inside an async context.'

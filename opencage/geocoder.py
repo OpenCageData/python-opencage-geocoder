@@ -182,10 +182,10 @@ class OpenCageGeocode:
         """
 
         if not aiohttp_avaiable:
-            raise AioHttpError("You must install `aiohttp` to use async methods")
+            raise AioHttpError("You must install `aiohttp` to use async methods.")
 
         if not self.session:
-            raise AioHttpError("async methods must be used inside an async context")
+            raise AioHttpError("Async methods must be used inside an async context.")
 
         request = self._parse_request(query, kwargs)
         response = await self._opencage_async_request(request)
