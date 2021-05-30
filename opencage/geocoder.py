@@ -154,15 +154,6 @@ class OpenCageGeocode:
         self.session = None
         return False
 
-    async def geocode_async(self, query, **kwargs):
-        if not aiohttp_avaiable:
-            raise AioHttpNotAvailableError()
-
-        request = self._parse_request(query, kwargs)
-        response = await self._opencage_async_request(request)
-
-        return floatify_latlng(response['results'])
-
     def geocode(self, query, **kwargs):
         """
         Given a string to search for, return the results from OpenCage's Geocoder.
@@ -181,6 +172,29 @@ class OpenCageGeocode:
 
         return floatify_latlng(response['results'])
 
+    async def geocode_async(self, query, **kwargs):
+        """
+        Aync version of `geocode`.
+
+        Given a string to search for, return the results from OpenCage's Geocoder.
+
+        :param string query: String to search for
+
+        :returns: Dict results
+        :raises InvalidInputError: if the query string is not a unicode string
+        :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
+        :raises UnknownError: if something goes wrong with the OpenCage API
+
+        """
+
+        if not aiohttp_avaiable:
+            raise AioHttpNotAvailableError()
+
+        request = self._parse_request(query, kwargs)
+        response = await self._opencage_async_request(request)
+
+        return floatify_latlng(response['results'])
+
     def reverse_geocode(self, lat, lng, **kwargs):
         """
         Given a latitude & longitude, return an address for that point from OpenCage's Geocoder.
@@ -193,6 +207,21 @@ class OpenCageGeocode:
         :raises UnknownError: if something goes wrong with the OpenCage API
         """
         return self.geocode(_query_for_reverse_geocoding(lat, lng), **kwargs)
+
+    async def reverse_geocode_async(self, lat, lng, **kwargs):
+        """
+        Aync version of `reverse_geocode`.
+
+        Given a latitude & longitude, return an address for that point from OpenCage's Geocoder.
+
+        :param lat: Latitude
+        :param lng: Longitude
+        :return: Results from OpenCageData
+        :rtype: dict
+        :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
+        :raises UnknownError: if something goes wrong with the OpenCage API
+        """
+        return await self.geocode_async(_query_for_reverse_geocoding(lat, lng), **kwargs)
 
     @backoff.on_exception(
         backoff.expo,
