@@ -161,6 +161,9 @@ class OpenCageGeocode:
 
         """
 
+        if self.session and isinstance(self.session, aiohttp.client.ClientSession):
+            raise AioHttpError("Cannot use `geocode` in an async context, use `gecode_async`.")
+
         request = self._parse_request(query, kwargs)
         response = self._opencage_request(request)
 
@@ -186,6 +189,9 @@ class OpenCageGeocode:
 
         if not self.session:
             raise AioHttpError("Async methods must be used inside an async context.")
+
+        if not isinstance(self.session, aiohttp.client.ClientSession):
+            raise AioHttpError("You must use `geocode_async` in an async context.")
 
         request = self._parse_request(query, kwargs)
         response = await self._opencage_async_request(request)
@@ -225,6 +231,7 @@ class OpenCageGeocode:
         (UnknownError, requests.exceptions.RequestException),
         max_tries=5, max_time=backoff_max_time)
     def _opencage_request(self, params):
+
         if self.session:
             response = self.session.get(self.url, params=params)
         else:
@@ -271,6 +278,7 @@ class OpenCageGeocode:
 
             if (response.status == 402 or response.status == 429):
                 # Rate limit exceeded
+                print(response_json)
                 reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
                 raise RateLimitExceededError(reset_to=int(response_json['rate']['limit']), reset_time=reset_time)
 
