@@ -9,7 +9,7 @@ A Python module to access the [OpenCage Geocoder](https://opencagedata.com/).
 [![Downloads](https://pepy.tech/badge/opencage/month)](https://pepy.tech/project/opencage)
 [![Versions](https://img.shields.io/pypi/pyversions/opencage)](https://pypi.org/project/opencage/)
 ![GitHub contributors](https://img.shields.io/github/contributors/opencagedata/python-opencage-geocoder)
-[![Build Status](https://travis-ci.org/OpenCageData/python-opencage-geocoder.svg?branch=master)](https://travis-ci.org/OpenCageData/python-opencage-geocoder)
+[![Build Status](https://travis-ci.com/OpenCageData/python-opencage-geocoder.svg?branch=master)](https://travis-ci.com/OpenCageData/python-opencage-geocoder)
 [![Twitter Follow](https://img.shields.io/twitter/follow/OpenCage?label=Follow%20OpenCage&style=social)](https://twitter.com/opencage)
 
 ## Usage
@@ -73,7 +73,7 @@ If anything goes wrong, then an exception will be raised:
  * ``RateLimitExceededError`` if you go past your rate limit
 
 
-## Copyright & Licencse
+## Copyright & License
 
 This software is copyright OpenCage GmbH.
 Please see `LICENSE.txt`
