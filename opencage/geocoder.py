@@ -8,6 +8,12 @@ import os
 import requests
 import backoff
 
+try:
+    import aiohttp
+    aiohttp_avaiable = True
+except ImportError:
+    aiohttp_avaiable = False
+
 def backoff_max_time():
     return int(os.environ.get('BACKOFF_MAX_TIME', '120'))
 
@@ -87,6 +93,13 @@ class ForbiddenError(OpenCageGeocodeError):
     __str__ = __unicode__
 
 
+class AioHttpError(OpenCageGeocodeError):
+
+    """
+    Exceptions related to async HTTP calls with aiohttp
+    """
+
+
 class OpenCageGeocode:
 
     """
@@ -108,10 +121,32 @@ class OpenCageGeocode:
 
     url = 'https://api.opencagedata.com/geocode/v1/json'
     key = ''
+    session = None
 
     def __init__(self, key):
         """Constructor."""
         self.key = key
+
+    def __enter__(self):
+        self.session = requests.Session()
+        return self
+
+    def __exit__(self, *args):
+        self.session.close()
+        self.session = None
+        return False
+
+    async def __aenter__(self):
+        if not aiohttp_avaiable:
+            raise AioHttpError("You must install `aiohttp` to use async methods")
+
+        self.session = aiohttp.ClientSession()
+        return self
+
+    async def __aexit__(self, *args):
+        await self.session.close()
+        self.session = None
+        return False
 
     def geocode(self, query, **kwargs):
         """
@@ -125,17 +160,41 @@ class OpenCageGeocode:
         :raises UnknownError: if something goes wrong with the OpenCage API
 
         """
-        if not isinstance(query, str):
-            raise InvalidInputError(bad_value=query)
 
-        data = {
-            'q': query,
-            'key': self.key
-        }
-        # Add user parameters
-        data.update(kwargs)
+        if self.session and isinstance(self.session, aiohttp.client.ClientSession):
+            raise AioHttpError("Cannot use `geocode` in an async context, use `gecode_async`.")
 
-        response = self._opencage_request(data)
+        request = self._parse_request(query, kwargs)
+        response = self._opencage_request(request)
+
+        return floatify_latlng(response['results'])
+
+    async def geocode_async(self, query, **kwargs):
+        """
+        Aync version of `geocode`.
+
+        Given a string to search for, return the results from OpenCage's Geocoder.
+
+        :param string query: String to search for
+
+        :returns: Dict results
+        :raises InvalidInputError: if the query string is not a unicode string
+        :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
+        :raises UnknownError: if something goes wrong with the OpenCage API
+
+        """
+
+        if not aiohttp_avaiable:
+            raise AioHttpError("You must install `aiohttp` to use async methods.")
+
+        if not self.session:
+            raise AioHttpError("Async methods must be used inside an async context.")
+
+        if not isinstance(self.session, aiohttp.client.ClientSession):
+            raise AioHttpError("You must use `geocode_async` in an async context.")
+
+        request = self._parse_request(query, kwargs)
+        response = await self._opencage_async_request(request)
 
         return floatify_latlng(response['results'])
 
@@ -152,12 +211,37 @@ class OpenCageGeocode:
         """
         return self.geocode(_query_for_reverse_geocoding(lat, lng), **kwargs)
 
+    async def reverse_geocode_async(self, lat, lng, **kwargs):
+        """
+        Aync version of `reverse_geocode`.
+
+        Given a latitude & longitude, return an address for that point from OpenCage's Geocoder.
+
+        :param lat: Latitude
+        :param lng: Longitude
+        :return: Results from OpenCageData
+        :rtype: dict
+        :raises RateLimitExceededError: if you have exceeded the number of queries you can make. Exception says when you can try again
+        :raises UnknownError: if something goes wrong with the OpenCage API
+        """
+        return await self.geocode_async(_query_for_reverse_geocoding(lat, lng), **kwargs)
+
     @backoff.on_exception(
         backoff.expo,
         (UnknownError, requests.exceptions.RequestException),
         max_tries=5, max_time=backoff_max_time)
     def _opencage_request(self, params):
-        response = requests.get(self.url, params=params)
+
+        if self.session:
+            response = self.session.get(self.url, params=params)
+        else:
+            response = requests.get(self.url, params=params)
+
+        try:
+            response_json = response.json()
+        except ValueError as e:
+            if response.status_code == 200:
+                raise UnknownError("Non-JSON result from server") from e
 
         if response.status_code == 401:
             raise NotAuthorizedError()
@@ -167,21 +251,53 @@ class OpenCageGeocode:
 
         if (response.status_code == 402 or response.status_code == 429):
             # Rate limit exceeded
-            reset_time = datetime.utcfromtimestamp(response.json()['rate']['reset'])
-            raise RateLimitExceededError(reset_to=int(response.json()['rate']['limit']), reset_time=reset_time)
+            reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
+            raise RateLimitExceededError(reset_to=int(response_json['rate']['limit']), reset_time=reset_time)
 
         if response.status_code == 500:
             raise UnknownError("500 status code from API")
-
-        try:
-            response_json = response.json()
-        except ValueError as e:
-            raise UnknownError("Non-JSON result from server") from e
 
         if 'results' not in response_json:
             raise UnknownError("JSON from API doesn't have a 'results' key")
 
         return response_json
+
+    async def _opencage_async_request(self, params):
+        async with self.session.get(self.url, params=params) as response:
+            try:
+                response_json = await response.json()
+            except ValueError as e:
+                if response.status == 200:
+                    raise UnknownError("Non-JSON result from server") from e
+
+            if response.status == 401:
+                raise NotAuthorizedError()
+
+            if response.status == 403:
+                raise ForbiddenError()
+
+            if (response.status == 402 or response.status == 429):
+                # Rate limit exceeded
+                print(response_json)
+                reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
+                raise RateLimitExceededError(reset_to=int(response_json['rate']['limit']), reset_time=reset_time)
+
+            if response.status == 500:
+                raise UnknownError("500 status code from API")
+
+            if 'results' not in response_json:
+                raise UnknownError("JSON from API doesn't have a 'results' key")
+
+            return response_json
+
+    def _parse_request(self, query, params):
+        if not isinstance(query, str):
+            raise InvalidInputError(bad_value=query)
+
+        data = { 'q': query, 'key': self.key }
+        data.update(params) # Add user parameters
+        return data
+
 
 def _query_for_reverse_geocoding(lat, lng):
     """
