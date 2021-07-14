@@ -13,12 +13,14 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 ' >> ~/.bashrc
 source ~/.bashrc
+exec $SHELL
 
 for VERSION in 3.6.13  3.7.10  3.8.8  3.9.2; do
   pyenv install --skip-existing $VERSION
   pyenv global $VERSION
 done
 
+sudo apt-get install -y python3-pip
 # Python 3.8 has conflicts with upstream Ubuntu and removed distutils from base
 # installation, now add a global one back
 sudo apt-get install --no-install-recommends -q -y python3-distutils

@@ -5,7 +5,6 @@ A Python module to access the [OpenCage Geocoder](https://opencagedata.com/).
 
 ## Build Status / Code Quality / etc
 
-[![PyPI version](https://badge.fury.io/py/opencage.svg)](https://badge.fury.io/py/opencage)
 [![Downloads](https://pepy.tech/badge/opencage/month)](https://pepy.tech/project/opencage)
 [![Versions](https://img.shields.io/pypi/pyversions/opencage)](https://pypi.org/project/opencage/)
 ![GitHub contributors](https://img.shields.io/github/contributors/opencagedata/python-opencage-geocoder)
@@ -78,6 +77,20 @@ with OpenCageGeocode(key) as geocoder:
     # Queries reuse the same HTTP connection
     results = [geocoder.geocode(query) for query in queries]
 ```
+
+### Asycronous requests
+
+You can run requests in parallel with the `geocode_async` and `reverse_geocode_async`
+method which have the same parameters and response as their synronous counterparts.
+You will need at least Python 3.7 and the `asyncio` and `aiohttp` packages installed.
+
+```python
+async with OpenCageGeocode(key) as geocoder:
+    results = await geocoder.geocode_async(address)
+```
+
+For a more complete example and links to futher tutorials on asycronous IO see
+`batch.py` in the `examples` directory.
 
 ### Exceptions
 

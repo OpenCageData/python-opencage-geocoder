@@ -1,3 +1,11 @@
+v2.0.0 Thu 15 Jul 2021
+  Python 2 no longer supported
+  New geocode_async and reverse_geocode_async methods
+  You can now reuse HTTP connections for multiple requests by using a `with` block
+  Updated examples/batch.py using asyncronous/parallel requests, much faster
+  Mayor refactor of test suite
+  Some tests now run against the live API endpoint using test API keys
+
 v1.2.2 Tue 3 Nov 2020
   Test on Python 3.9
 

@@ -16,7 +16,7 @@ SOURCE_DIR = os.path.join(ROOT_DIR)
 if sys.version_info < (3, 5):
     raise RuntimeError(
         "openage requires Python 3.6 or newer"
-        "Use older operncage 1.x for Python 2.7 or 3.5"
+        "Use older opencage 1.x for Python 2.7 or 3.5"
     )
 
 # try for travis
@@ -28,14 +28,14 @@ except FileNotFoundError:
 
 setup(
     name="opencage",
-    version="1.2.2",
+    version="2.0.0",
     description="Wrapper module for the OpenCage Geocoder API",
     long_description=long_description,
     long_description_content_type='text/markdown',
     author="OpenCage GmbH",
     author_email="info@opencagedata.com",
     url="https://github.com/OpenCageData/python-opencage-geocoder/",
-    download_url="https://github.com/OpenCageData/python-opencage-geocoder/tarball/1.2.2",
+    download_url="https://github.com/OpenCageData/python-opencage-geocoder/tarball/2.0.0",
     license="BSD",
     packages=find_packages(),
     include_package_data=True,
