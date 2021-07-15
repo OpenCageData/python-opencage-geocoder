@@ -5,6 +5,7 @@ A Python module to access the [OpenCage Geocoder](https://opencagedata.com/).
 
 ## Build Status / Code Quality / etc
 
+[![PyPI version](https://badge.fury.io/py/opencage.svg)](https://badge.fury.io/py/opencage)
 [![Downloads](https://pepy.tech/badge/opencage/month)](https://pepy.tech/project/opencage)
 [![Versions](https://img.shields.io/pypi/pyversions/opencage)](https://pypi.org/project/opencage/)
 ![GitHub contributors](https://img.shields.io/github/contributors/opencagedata/python-opencage-geocoder)
