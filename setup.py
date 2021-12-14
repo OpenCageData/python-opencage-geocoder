@@ -15,7 +15,7 @@ SOURCE_DIR = os.path.join(ROOT_DIR)
 
 if sys.version_info < (3, 5):
     raise RuntimeError(
-        "openage requires Python 3.6 or newer"
+        "opencage requires Python 3.6 or newer"
         "Use older opencage 1.x for Python 2.7 or 3.5"
     )
 
