@@ -15,7 +15,8 @@ eval "$(pyenv virtualenv-init -)"
 source ~/.bashrc
 exec $SHELL
 
-for VERSION in 3.6.13  3.7.10  3.8.8  3.9.2; do
+for VERSION in 3.6.13  3.7.10  3.8.15  3.9.2  3.10.8; do
+  echo "Installing $VERSION ..."
   pyenv install --skip-existing $VERSION
   pyenv global $VERSION
 done
