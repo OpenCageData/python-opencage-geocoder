@@ -13,23 +13,31 @@ def test_http_500_status():
     httpretty.register_uri(
         httpretty.GET,
         geocoder.url,
-        body='',
         status=500,
     )
 
-    with pytest.raises(UnknownError):
+    with pytest.raises(UnknownError) as e:
         geocoder.geocode('whatever')
+
+    assert str(e.value) == '500 status code from API'
 
 @httprettified
 def test_non_json():
+    "These kinds of errors come from webserver and may not be JSON"
     httpretty.register_uri(
         httpretty.GET,
         geocoder.url,
-        body='',
+        body='<html><body><h1>503 Service Unavailable</h1></body></html>',
+        forcing_headers={
+            'Content-Type': 'text/html',
+        },
+        status=503
     )
 
-    with pytest.raises(UnknownError):
+    with pytest.raises(UnknownError) as e:
         geocoder.geocode('whatever')
+
+    assert str(e.value) == 'Non-JSON result from server'
 
 @httprettified
 def test_no_results_key():
@@ -39,5 +47,7 @@ def test_no_results_key():
         body='{"spam": "eggs"}',
     )
 
-    with pytest.raises(UnknownError):
+    with pytest.raises(UnknownError) as e:
         geocoder.geocode('whatever')
+
+    assert str(e.value) == "JSON from API doesn't have a 'results' key"

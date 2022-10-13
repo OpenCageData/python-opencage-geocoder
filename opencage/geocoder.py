@@ -240,8 +240,7 @@ class OpenCageGeocode:
         try:
             response_json = response.json()
         except ValueError as e:
-            if response.status_code == 200:
-                raise UnknownError("Non-JSON result from server") from e
+            raise UnknownError("Non-JSON result from server") from e
 
         if response.status_code == 401:
             raise NotAuthorizedError()
@@ -267,8 +266,7 @@ class OpenCageGeocode:
             try:
                 response_json = await response.json()
             except ValueError as e:
-                if response.status == 200:
-                    raise UnknownError("Non-JSON result from server") from e
+                raise UnknownError("Non-JSON result from server") from e
 
             if response.status == 401:
                 raise NotAuthorizedError()
