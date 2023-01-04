@@ -19,7 +19,7 @@ def test_gb_postcode():
     httpretty.register_uri(
         httpretty.GET,
         geocoder.url,
-        body=Path('test/fixtures/uk_postcode.json').read_text(encoding="utf-8")()
+        body=Path('test/fixtures/uk_postcode.json').read_text(encoding="utf-8")
     )
 
     results = geocoder.geocode("EC1M 5RF")
@@ -31,7 +31,7 @@ def test_australia():
     httpretty.register_uri(
         httpretty.GET,
         geocoder.url,
-        body=Path('test/fixtures/mudgee_australia.json').read_text(encoding="utf-8")()
+        body=Path('test/fixtures/mudgee_australia.json').read_text(encoding="utf-8")
     )
 
     results = geocoder.geocode("Mudgee, Australia")
@@ -43,7 +43,7 @@ def testMunster():
     httpretty.register_uri(
         httpretty.GET,
         geocoder.url,
-        body=Path('test/fixtures/muenster.json').read_text(encoding="utf-8")()
+        body=Path('test/fixtures/muenster.json').read_text(encoding="utf-8")
     )
 
     results = geocoder.geocode("Münster")
@@ -54,7 +54,7 @@ def testDonostia():
     httpretty.register_uri(
         httpretty.GET,
         geocoder.url,
-        body=Path('test/fixtures/donostia.json').read_text(encoding="utf-8")()
+        body=Path('test/fixtures/donostia.json').read_text(encoding="utf-8")
 
     )
 
