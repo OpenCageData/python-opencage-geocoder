@@ -26,10 +26,10 @@ def test_must_be_unicode_string():
 
     with pytest.raises(InvalidInputError) as excinfo:
         geocoder.geocode(utf8_string)
-    assert str(excinfo.value) == "Input must be a unicode string, not {0!r}".format(utf8_string)
+    assert str(excinfo.value) == f"Input must be a unicode string, not {utf8_string!r}"
     assert excinfo.value.bad_value == utf8_string
 
     with pytest.raises(InvalidInputError) as excinfo:
         geocoder.geocode(latin1_string)
-    assert str(excinfo.value) == "Input must be a unicode string, not {0!r}".format(latin1_string)
+    assert str(excinfo.value) == f"Input must be a unicode string, not {latin1_string!r}"
     assert excinfo.value.bad_value == latin1_string

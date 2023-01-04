@@ -62,7 +62,7 @@ class RateLimitExceededError(OpenCageGeocodeError):
 
     def __unicode__(self):
         """Convert exception to a string."""
-        return "Your rate limit has expired. It will reset to {0} on {1}".format(self.reset_to, self.reset_time.isoformat())
+        return f"Your rate limit has expired. It will reset to {self.reset_to} on {self.reset_time.isoformat()}"
 
     __str__ = __unicode__
 
@@ -235,7 +235,7 @@ class OpenCageGeocode:
         if self.session:
             response = self.session.get(self.url, params=params)
         else:
-            response = requests.get(self.url, params=params)
+            response = requests.get(self.url, params=params) # pylint: disable=missing-timeout
 
         try:
             response_json = response.json()
@@ -248,7 +248,7 @@ class OpenCageGeocode:
         if response.status_code == 403:
             raise ForbiddenError()
 
-        if (response.status_code == 402 or response.status_code == 429):
+        if response.status_code in (402, 429):
             # Rate limit exceeded
             reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
             raise RateLimitExceededError(reset_to=int(response_json['rate']['limit']), reset_time=reset_time)
@@ -274,7 +274,7 @@ class OpenCageGeocode:
             if response.status == 403:
                 raise ForbiddenError()
 
-            if (response.status == 402 or response.status == 429):
+            if response.status in (402, 429):
                 # Rate limit exceeded
                 print(response_json)
                 reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
@@ -306,7 +306,7 @@ def _query_for_reverse_geocoding(lat, lng):
     # have to do some stupid f/Decimal/str stuff to (a) ensure we get as much
     # decimal places as the user already specified and (b) to ensure we don't
     # get e-5 stuff
-    return "{0:f},{1:f}".format(Decimal(str(lat)), Decimal(str(lng)))
+    return f"{Decimal(str(lat)):f},{Decimal(str(lng)):f}"
 
 
 def float_if_float(float_string):

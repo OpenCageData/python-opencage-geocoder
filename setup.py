@@ -21,7 +21,7 @@ if sys.version_info < (3, 5):
 
 # try for travis
 try:
-    with open(os.path.join(SOURCE_DIR, 'README.md')) as f:
+    with open(os.path.join(SOURCE_DIR, 'README.md'), encoding="utf-8") as f:
         long_description = f.read()
 except FileNotFoundError:
     long_description = ""
