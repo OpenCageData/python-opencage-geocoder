@@ -15,7 +15,7 @@ def test_api_key_blocked():
     httpretty.register_uri(
         httpretty.GET,
         geocoder.url,
-        body=Path('test/fixtures/403_apikey_disabled.json').read_text(),
+        body=Path('test/fixtures/403_apikey_disabled.json').read_text(encoding="utf-8"),
         status=403,
     )
 

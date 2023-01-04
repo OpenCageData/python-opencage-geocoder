@@ -14,7 +14,7 @@ def test_api_key_not_authorized():
     httpretty.register_uri(
         httpretty.GET,
         geocoder.url,
-        body=Path('test/fixtures/401_not_authorized.json').read_text(),
+        body=Path('test/fixtures/401_not_authorized.json').read_text(encoding="utf-8")(),
         status=401,
     )
 

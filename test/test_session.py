@@ -16,7 +16,7 @@ def test_success():
         httpretty.register_uri(
             httpretty.GET,
             geocoder.url,
-            body=Path('test/fixtures/uk_postcode.json').read_text()
+            body=Path('test/fixtures/uk_postcode.json').read_text(encoding="utf-8")()
         )
 
         results = geocoder.geocode("EC1M 5RF")
@@ -28,7 +28,7 @@ def test_failure():
         httpretty.register_uri(
             httpretty.GET,
             geocoder.url,
-            body=Path('test/fixtures/401_not_authorized.json').read_text(),
+            body=Path('test/fixtures/401_not_authorized.json').read_text(encoding="utf-8")(),
             status=401,
         )
 
