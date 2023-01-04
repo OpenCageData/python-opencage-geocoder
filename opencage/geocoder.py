@@ -235,7 +235,7 @@ class OpenCageGeocode:
         if self.session:
             response = self.session.get(self.url, params=params)
         else:
-            response = requests.get(self.url, params=params)
+            response = requests.get(self.url, params=params) # pylint: disable=missing-timeout
 
         try:
             response_json = response.json()
