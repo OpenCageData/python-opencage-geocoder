@@ -29,7 +29,11 @@ def test_rate_limit_exceeded():
         geocoder.url,
         body=Path('test/fixtures/402_rate_limit_exceeded.json').read_text(encoding="utf-8"),
         status=402,
-        adding_headers={'X-RateLimit-Limit': '2500', 'X-RateLimit-Remaining': '0', 'X-RateLimit-Reset': '1402185600'},
+        adding_headers={
+            'X-RateLimit-Limit': '2500',
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': '1402185600'
+        }
     )
 
     with pytest.raises(RateLimitExceededError) as excinfo:
