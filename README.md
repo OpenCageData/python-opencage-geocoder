@@ -14,7 +14,7 @@ A Python module to access the [OpenCage Geocoding API](https://opencagedata.com/
 
 ## Usage
 
-Supports Python 3.6 or newer. Use the older opencage 1.x releases if you need Python 2.7 support.
+Supports Python 3.7 or newer. Use the older opencage 1.x releases if you need Python 2.7 support.
 
 Install the module:
 

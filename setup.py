@@ -13,10 +13,10 @@ if os.environ.get('USER', '') == 'vagrant':
 ROOT_DIR = os.path.dirname(__file__)
 SOURCE_DIR = os.path.join(ROOT_DIR)
 
-if sys.version_info < (3, 5):
+if sys.version_info < (3, 6):
     raise RuntimeError(
-        "opencage requires Python 3.6 or newer"
-        "Use older opencage 1.x for Python 2.7 or 3.5"
+        "opencage requires Python 3.7 or newer"
+        "Use older opencage 1.x for Python 2.7 or 3.6"
     )
 
 # try for travis
@@ -48,11 +48,11 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         "Programming Language :: Python :: 3 :: Only",
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Topic :: Scientific/Engineering :: GIS',
         'Topic :: Utilities'
     ],
@@ -64,7 +64,7 @@ setup(
     test_suite='tests',
     tests_require=[
         'httpretty>=0.9.6',
-        'pylint==2.9.1',
+        'pylint==2.15.9',
         'pytest>=6.0'
     ],
 )
