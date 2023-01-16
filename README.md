@@ -79,7 +79,7 @@ with OpenCageGeocode(key) as geocoder:
     results = [geocoder.geocode(query) for query in queries]
 ```
 
-### Asycronous requests
+### Asyncronous requests
 
 You can run requests in parallel with the `geocode_async` and `reverse_geocode_async`
 method which have the same parameters and response as their synronous counterparts.
@@ -90,15 +90,18 @@ async with OpenCageGeocode(key) as geocoder:
     results = await geocoder.geocode_async(address)
 ```
 
-For a more complete example and links to futher tutorials on asycronous IO see
+For a more complete example and links to futher tutorials on asyncronous IO see
 `batch.py` in the `examples` directory.
 
 ### Exceptions
 
 If anything goes wrong, then an exception will be raised:
- * ``InvalidInputError`` for non-unicode query strings
- * ``UnknownError`` if there's some problem with the API (bad results, 500 status code, etc)
- * ``RateLimitExceededError`` if you go past your rate limit
+
+ * `InvalidInputError` for non-unicode query strings
+ * `NotAuthorizedError` if API key is missing, invalid syntax or disabled
+ * `ForbiddenError` API key is blocked or suspended
+ * `RateLimitExceededError` if you go past your rate limit
+ * `UnknownError` if there's some problem with the API (bad results, 500 status code, etc)
 
 
 ## Copyright & License
