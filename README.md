@@ -36,24 +36,24 @@ key = 'your-api-key-here'
 geocoder = OpenCageGeocode(key)
 ```
 
-Pass a string containing the query or address to be geocoded to the modules's `geocode` method:
+Pass a string containing the query or address to be geocoded to the modules' `geocode` method:
 
 ```python
-query = "82 Clerkenwell Road, London"
-result = geocoder.geocode(query)
+query = '82 Clerkenwell Road, London'
+results = geocoder.geocode(query)
 ```
 
 You can add [additional parameters](https://opencagedata.com/api#forward):
 
 ```python
-result = geocoder.geocode('London', no_annotations=1, language='es')
+results = geocoder.geocode('London', no_annotations=1, language='es')
 ```
 
-You can use the proximity parameter to provide the geocoder with a hint:
+For example you can use the proximity parameter to provide the geocoder with a hint:
 
 ```python
-result = geocoder.geocode('London', proximity='42.828576, -81.406643')
-print(result[0]['formatted'])
+results = geocoder.geocode('London', proximity='42.828576, -81.406643')
+print(results[0]['formatted'])
 # u'London, ON N6A 3M8, Canada'
 ```
 
@@ -63,7 +63,7 @@ print(result[0]['formatted'])
 Turn a lat/long into an address with the ``reverse_geocode`` method:
 
 ```python
-results = geocoder.reverse_geocode(51.51024, -0.10303)
+result = geocoder.reverse_geocode(51.51024, -0.10303)
 ```
 
 ### Sessions

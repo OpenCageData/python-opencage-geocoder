@@ -115,7 +115,7 @@ class OpenCageGeocode:
 
         >>> geocoder.geocode("London")
 
-    Reverse geocode a latitude & longitude into a point:
+    Reverse geocode a latitude & longitude into a place:
 
         >>> geocoder.reverse_geocode(51.5104, -0.1021)
 
@@ -152,7 +152,7 @@ class OpenCageGeocode:
 
     def geocode(self, query, **kwargs):
         """
-        Given a string to search for, return the results from OpenCage's Geocoder.
+        Given a string to search for, return the list (array) of results from OpenCage's Geocoder.
 
         :param string query: String to search for
 
@@ -176,7 +176,7 @@ class OpenCageGeocode:
         """
         Aync version of `geocode`.
 
-        Given a string to search for, return the results from OpenCage's Geocoder.
+        Given a string to search for, return the list (array) of results from OpenCage's Geocoder.
 
         :param string query: String to search for
 

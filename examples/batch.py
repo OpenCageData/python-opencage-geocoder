@@ -12,13 +12,14 @@ import sys, random, time
 import csv
 import backoff
 import asyncio
+import traceback
 from opencage.geocoder import OpenCageGeocode, AioHttpError
 
 api_key = ''
 infile = 'file_to_geocode.csv'
 outfile = 'file_geocoded.csv'
 
-max_items = 100        # Set to 0 for unlimited
+max_items = 100        # How man lines to read from the input file. Set to 0 for unlimited
 num_workers = 3        # For 10 requests per second try 2-5
 timeout = 5            # For individual HTTP requests. In seconds, default is 1
 retry_max_tries = 10   # How often to retry if a HTTP request times out
@@ -26,22 +27,22 @@ retry_max_time = 60    # Limit in seconds for retries
 
 csv_writer = csv.writer(open(outfile, 'w', newline=''))
 
-async def write_one_geocoding_result(geocoding_result, address, address_id):
-  if geocoding_result != None:
-    geocoding_result = geocoding_result[0]
+async def write_one_geocoding_result(geocoding_results, address, address_id):
+  if geocoding_results != None and len(geocoding_results):
+    first_result = geocoding_results[0]
     row = [
       address_id,
-      geocoding_result['geometry']['lat'],
-      geocoding_result['geometry']['lng'],
-      # Any of these components might be empty :
-      geocoding_result['components'].get('country', ''),
-      geocoding_result['components'].get('county', ''),
-      geocoding_result['components'].get('city', ''),
-      geocoding_result['components'].get('postcode', ''),
-      geocoding_result['components'].get('road', ''),
-      geocoding_result['components'].get('house_number', ''),
-      geocoding_result['confidence'],
-      geocoding_result['formatted']
+      first_result['geometry']['lat'],
+      first_result['geometry']['lng'],
+      # Any of the components might be empty:
+      first_result['components'].get('country', ''),
+      first_result['components'].get('county', ''),
+      first_result['components'].get('city', ''),
+      first_result['components'].get('postcode', ''),
+      first_result['components'].get('road', ''),
+      first_result['components'].get('house_number', ''),
+      first_result['confidence'],
+      first_result['formatted']
     ]
 
   else:
@@ -77,11 +78,19 @@ def backoff_hdlr(details):
                       on_backoff=backoff_hdlr)
 async def geocode_one_address(address, address_id):
   async with OpenCageGeocode(api_key) as geocoder:
-    geocoding_result = await geocoder.geocode_async(address)
+    # address -> coordinates
+    geocoding_results = await geocoder.geocode_async(address)
+
+    # coordinates -> address, e.g. '40.78,-73.97' => 101, West 91st Street, New York
+    # lon_lat = address.split(',')
+    # geocoding_result = await geocoder.reverse_geocode_async(lon_lat[0], lon_lat[1])
+    # returns a single result so we convert it to a list
+    # geocoding_results = [geocoding_result]
+
     try:
-      await write_one_geocoding_result(geocoding_result, address, address_id)
+      await write_one_geocoding_result(geocoding_results, address, address_id)
     except Exception as e:
-      sys.stderr.write(e)
+      traceback.print_exception(e, file=sys.stderr)
 
 
 
