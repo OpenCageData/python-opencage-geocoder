@@ -35,6 +35,7 @@ async def write_one_geocoding_result(geocoding_results, address, address_id):
       first_result['geometry']['lat'],
       first_result['geometry']['lng'],
       # Any of the components might be empty:
+      first_result['components'].get('_type', ''),
       first_result['components'].get('country', ''),
       first_result['components'].get('county', ''),
       first_result['components'].get('city', ''),
@@ -50,6 +51,7 @@ async def write_one_geocoding_result(geocoding_results, address, address_id):
       address_id,
       0, # not to be confused with https://en.wikipedia.org/wiki/Null_Island
       0,
+      '',
       '',
       '',
       '',
