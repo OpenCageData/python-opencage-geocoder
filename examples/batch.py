@@ -81,11 +81,14 @@ def backoff_hdlr(details):
 async def geocode_one_address(address, address_id):
   async with OpenCageGeocode(api_key) as geocoder:
     # address -> coordinates
-    geocoding_results = await geocoder.geocode_async(address)
+    # note: you may also want to set other optional parameters like
+    # countrycode, language, etc
+    # see the full list: https://opencagedata.com/api#forward-opt
+    geocoding_results = await geocoder.geocode_async(address, no_annotations=1)
 
     # coordinates -> address, e.g. '40.78,-73.97' => 101, West 91st Street, New York
     # lon_lat = address.split(',')
-    # geocoding_result = await geocoder.reverse_geocode_async(lon_lat[0], lon_lat[1])
+    # geocoding_result = await geocoder.reverse_geocode_async(lon_lat[0], lon_lat[1], no_annotations=1)
     # returns a single result so we convert it to a list
     # geocoding_results = [geocoding_result]
 
