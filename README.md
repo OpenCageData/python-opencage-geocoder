@@ -43,7 +43,7 @@ query = '82 Clerkenwell Road, London'
 results = geocoder.geocode(query)
 ```
 
-You can add [additional parameters](https://opencagedata.com/api#forward):
+You can add [additional parameters](https://opencagedata.com/api#forward-opt):
 
 ```python
 results = geocoder.geocode('London', no_annotations=1, language='es')
