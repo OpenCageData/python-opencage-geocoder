@@ -14,6 +14,11 @@ os.environ['BACKOFF_MAX_TIME'] = '1'
 
 geocoder = OpenCageGeocode('abcde')
 
+# Check if protocol can be set
+geocoder_http = OpenCageGeocode('abcde', 'http')
+assert geocoder_http.url == 'http://api.opencagedata.com/geocode/v1/json'
+
+
 def _any_result_around(results, lat=None, lon=None):
     for result in results:
         if (abs(result['geometry']['lat'] - lat) < 0.05 and

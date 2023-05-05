@@ -125,9 +125,11 @@ class OpenCageGeocode:
     key = ''
     session = None
 
-    def __init__(self, key):
+    def __init__(self, key, protocol='https'):
         """Constructor."""
         self.key = key
+        if protocol and protocol == 'http':
+            self.url = self.url.replace('https://', 'http://')
 
     def __enter__(self):
         self.session = requests.Session()
