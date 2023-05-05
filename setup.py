@@ -28,7 +28,7 @@ except FileNotFoundError:
 
 setup(
     name="opencage",
-    version="2.1.1",
+    version="2.2.0",
     description="Wrapper module for the OpenCage Geocoder API",
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',

@@ -1,3 +1,10 @@
+v2.2.0 Fri 05 May 2023
+  Using requests > 2.26 , pyopenssl no longer a dependency
+  Allow setting the http protocol to make API requests (less secure)
+  Batch example: add progress bar, can be switched off
+  Batch example: add image of output to README
+  Examples: mark scripts as executable
+
 v2.1.1 Thu 20 Apr 2023
   Add python 3.11, no longer test against python 3.6
   Test suite: add pytest-asyncio to enable async tests
