@@ -6,7 +6,7 @@
 # Requires Python 3.7 or newer. Tested with 3.8 and 3.9.
 
 # Installation:
-# pip3 install opencage asyncio aiohttp backoff
+# pip3 install opencage asyncio aiohttp backoff tqdm
 
 import sys, random, time
 import csv
@@ -14,6 +14,7 @@ import backoff
 import asyncio
 import traceback
 from opencage.geocoder import OpenCageGeocode, AioHttpError
+from tqdm import tqdm
 
 api_key = ''
 infile = 'file_to_geocode.csv'
@@ -24,8 +25,11 @@ num_workers = 3        # For 10 requests per second try 2-5
 timeout = 5            # For individual HTTP requests. In seconds, default is 1
 retry_max_tries = 10   # How often to retry if a HTTP request times out
 retry_max_time = 60    # Limit in seconds for retries
+show_progress = True   # Show progress bar
 
 csv_writer = csv.writer(open(outfile, 'w', newline=''))
+
+progress_bar = show_progress and tqdm(total=0, position=0, desc="Addresses geocoded", dynamic_ncols=True)
 
 async def write_one_geocoding_result(geocoding_results, address, address_id):
   if geocoding_results != None and len(geocoding_results):
@@ -100,22 +104,29 @@ async def geocode_one_address(address, address_id):
 
 
 async def run_worker(worker_name, queue):
+  global progress_bar
   sys.stderr.write("Worker %s starts...\n" % worker_name)
+
   while True:
     work_item = await queue.get()
     address_id = work_item['id']
     address = work_item['address']
     await geocode_one_address(address, address_id)
+
+    if show_progress:
+      progress_bar.update(1)
+
     queue.task_done()
 
 
 
 
 async def main():
+  global progress_bar
   assert sys.version_info >= (3, 7), "Script requires Python 3.7+."
 
   ## 1. Read CSV into a Queue
-  ##    Each work_item is an address an id. The id will be part of the output,
+  ##    Each work_item is an address and id. The id will be part of the output,
   ##    easy to add more settings. Named 'work_item' to avoid the words
   ##    'address' or 'task' which are used elsewhere
   ##
@@ -133,6 +144,9 @@ async def main():
 
   sys.stderr.write("%d work_items in queue\n" % queue.qsize())
 
+  if show_progress:
+    progress_bar.total = queue.qsize()
+    progress_bar.refresh()
 
   ## 2. Create tasks workers. That is coroutines, each taks take work_items
   ##    from the queue until it's empty. Tasks run in parallel
@@ -157,6 +171,9 @@ async def main():
   ##
   for task in tasks:
     task.cancel()
+
+  if show_progress:
+    progress_bar.close()
 
   sys.stderr.write("All done.\n")
 
