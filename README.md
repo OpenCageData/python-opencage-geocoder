@@ -32,8 +32,6 @@ Load the module:
 from opencage.geocoder import OpenCageGeocode
 ```
 
-**Please note**: You will need the ability to make https requests, which is unfortunately not always the case with default installs of Python.
-
 Create an instance of the geocoder module, passing a valid OpenCage Data Geocoder API key
 as a parameter to the geocoder modules's constructor:
 
@@ -98,6 +96,17 @@ async with OpenCageGeocode(key) as geocoder:
 
 For a more complete example and links to futher tutorials on asyncronous IO see
 `batch.py` in the `examples` directory.
+
+### Non-SSL API use
+
+If you have trouble accesing the OpenCage API with https, e.g. issues with OpenSSL
+libraries in your enviroment, then you can set the 'http' protocol instead. Please
+understand that the connection to the OpenCage API will no longer be encrypted.
+
+```python
+geocoder = OpenCageGeocode('your-api-key', 'http')
+```
+
 
 ### Exceptions
 
