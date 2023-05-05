@@ -107,6 +107,11 @@ understand that the connection to the OpenCage API will no longer be encrypted.
 geocoder = OpenCageGeocode('your-api-key', 'http')
 ```
 
+### Command-line batch geocoding
+
+See `examples/batch.py` for an example to geocode a CSV file.
+
+<img src="batch-progress.gif"/>
 
 ### Exceptions
 
@@ -126,7 +131,7 @@ Please see `LICENSE.txt`
 
 ### Who is OpenCage GmbH?
 
-<a href="https://opencagedata.com"><img src="opencage_logo_300_150.png"></a>
+<a href="https://opencagedata.com"><img src="opencage_logo_300_150.png"/></a>
 
 We run a worldwide [geocoding API](https://opencagedata.com/api) and [geosearch](https://opencagedata.com/geosearch) service based on open data. 
 Learn more [about us](https://opencagedata.com/about). 
