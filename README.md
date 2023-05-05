@@ -32,6 +32,8 @@ Load the module:
 from opencage.geocoder import OpenCageGeocode
 ```
 
+**Please note**: You will need the ability to make https requests, which is unfortunately not always the case with default installs of Python.
+
 Create an instance of the geocoder module, passing a valid OpenCage Data Geocoder API key
 as a parameter to the geocoder modules's constructor:
 
