@@ -57,8 +57,7 @@ setup(
         'Topic :: Utilities'
     ],
     install_requires=[
-        'Requests>=2.2.0',
-        'pyopenssl>=0.15.1',
+        'Requests>=2.26.0',
         'backoff>=1.10.0'
     ],
     test_suite='pytest',
