@@ -6,7 +6,7 @@
 # Requires Python 3.7 or newer. Tested with 3.8 and 3.9.
 
 # Installation:
-# pip3 install opencage asyncio aiohttp backoff tqdm
+# pip3 install --upgrade opencage asyncio aiohttp backoff tqdm
 
 import sys, random, time
 import csv
@@ -88,7 +88,11 @@ async def geocode_one_address(address, address_id):
     # note: you may also want to set other optional parameters like
     # countrycode, language, etc
     # see the full list: https://opencagedata.com/api#forward-opt
-    geocoding_results = await geocoder.geocode_async(address, no_annotations=1)
+    try:
+      geocoding_results = await geocoder.geocode_async(address, no_annotations=1)
+    except Exception as e:
+      geocoding_results = None
+      traceback.print_exception(e, file=sys.stderr)
 
     # coordinates -> address, e.g. '40.78,-73.97' => 101, West 91st Street, New York
     # lon_lat = address.split(',')
@@ -134,9 +138,12 @@ async def main():
   ##
   queue = asyncio.Queue(maxsize=max_items)
 
-  csv_reader = csv.reader(open(infile, 'r'))
+  csv_reader = csv.reader(open(infile, 'r'), strict=True, skipinitialspace=True)
 
   for row in csv_reader:
+    if len(row) == 0:
+      raise Exception("Empty line in input file at line number %d, aborting" % csv_reader.line_num)
+
     work_item = {'id': row[0], 'address': row[1]}
     await queue.put(work_item)
     if queue.full():
