@@ -19,7 +19,7 @@ if sys.version_info < (3, 6):
         "Use older opencage 1.x for Python 2.7 or 3.6"
     )
 
-# try for travis
+# try for testing
 try:
     with open(os.path.join(SOURCE_DIR, 'README.md'), encoding="utf-8") as f:
         LONG_DESCRIPTION = f.read()

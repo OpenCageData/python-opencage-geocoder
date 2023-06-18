@@ -1,4 +1,3 @@
-
 # OpenCage Geocoding Module for Python
 
 A Python module to access the [OpenCage Geocoding API](https://opencagedata.com/).
@@ -9,7 +8,7 @@ A Python module to access the [OpenCage Geocoding API](https://opencagedata.com/
 [![Downloads](https://pepy.tech/badge/opencage/month)](https://pepy.tech/project/opencage)
 [![Versions](https://img.shields.io/pypi/pyversions/opencage)](https://pypi.org/project/opencage/)
 ![GitHub contributors](https://img.shields.io/github/contributors/opencagedata/python-opencage-geocoder)
-[![Build Status](https://travis-ci.com/OpenCageData/python-opencage-geocoder.svg?branch=master)](https://travis-ci.com/OpenCageData/python-opencage-geocoder)
+[![Build Status](https://github.com/OpenCageData/python-opencage-geocoder/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/OpenCageData/python-opencage-geocoder/actions/workflows/build.yml)
 ![Mastodon Follow](https://img.shields.io/mastodon/follow/109287663468501769?domain=https%3A%2F%2Fen.osm.town%2F&style=social)
 
 ## Tutorial
@@ -61,10 +60,9 @@ print(results[0]['formatted'])
 # u'London, ON N6A 3M8, Canada'
 ```
 
-
 ### Reverse geocoding
 
-Turn a lat/long into an address with the ``reverse_geocode`` method:
+Turn a lat/long into an address with the `reverse_geocode` method:
 
 ```python
 result = geocoder.reverse_geocode(51.51024, -0.10303)
@@ -117,12 +115,11 @@ See `examples/batch.py` for an example to geocode a CSV file.
 
 If anything goes wrong, then an exception will be raised:
 
- * `InvalidInputError` for non-unicode query strings
- * `NotAuthorizedError` if API key is missing, invalid syntax or disabled
- * `ForbiddenError` API key is blocked or suspended
- * `RateLimitExceededError` if you go past your rate limit
- * `UnknownError` if there's some problem with the API (bad results, 500 status code, etc)
-
+- `InvalidInputError` for non-unicode query strings
+- `NotAuthorizedError` if API key is missing, invalid syntax or disabled
+- `ForbiddenError` API key is blocked or suspended
+- `RateLimitExceededError` if you go past your rate limit
+- `UnknownError` if there's some problem with the API (bad results, 500 status code, etc)
 
 ## Copyright & License
 
@@ -133,7 +130,7 @@ Please see `LICENSE.txt`
 
 <a href="https://opencagedata.com"><img src="opencage_logo_300_150.png"/></a>
 
-We run a worldwide [geocoding API](https://opencagedata.com/api) and [geosearch](https://opencagedata.com/geosearch) service based on open data. 
-Learn more [about us](https://opencagedata.com/about). 
+We run a worldwide [geocoding API](https://opencagedata.com/api) and [geosearch](https://opencagedata.com/geosearch) service based on open data.
+Learn more [about us](https://opencagedata.com/about).
 
 We also run [Geomob](https://thegeomob.com), a series of regular meetups for location based service creators, where we do our best to highlight geoinnovation. If you like geo stuff, you will probably enjoy [the Geomob podcast](https://thegeomob.com/podcast/).
