@@ -4,6 +4,7 @@ unreleased
     early than risking errors later during the async geocoding
   Batch example: The CSV '1, "street,city"' were parsed as 3 columns, not the
     expected 2 columns
+  Test suite: Switched from Travis-CI to Github Actions
 
 v2.2.0 Fri 05 May 2023
   Using requests > 2.26 , pyopenssl no longer a dependency
