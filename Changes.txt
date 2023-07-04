@@ -1,10 +1,11 @@
-unreleased
+v2.3.0 Tue 04 Jul 2023
   Batch example: Raise exception when API key fails (quota, missing API key)
   Batch example: Raise exception when input file contains an empty line. Better
     early than risking errors later during the async geocoding
   Batch example: The CSV '1, "street,city"' were parsed as 3 columns, not the
     expected 2 columns
   Test suite: Switched from Travis-CI to Github Actions
+  Dependencies: Requests 2.26->2.31, backoff 1.10->2.2.1, because only those say to support Python 3.10
 
 v2.2.0 Fri 05 May 2023
   Using requests > 2.26 , pyopenssl no longer a dependency

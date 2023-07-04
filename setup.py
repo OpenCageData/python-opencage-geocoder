@@ -28,7 +28,7 @@ except FileNotFoundError:
 
 setup(
     name="opencage",
-    version="2.2.0",
+    version="2.3.0",
     description="Wrapper module for the OpenCage Geocoder API",
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
@@ -57,13 +57,13 @@ setup(
         'Topic :: Utilities'
     ],
     install_requires=[
-        'Requests>=2.26.0',
-        'backoff>=1.10.0'
+        'Requests>=2.31.0',
+        'backoff>=2.2.1'
     ],
     test_suite='pytest',
     tests_require=[
-        'httpretty>=0.9.6',
-        'pylint==2.15.9',
-        'pytest>=6.0'
+        'httpretty>=1.1.4',
+        'pylint==2.17.4',
+        'pytest>=7.4.0'
     ],
 )
