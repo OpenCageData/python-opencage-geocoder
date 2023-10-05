@@ -22,7 +22,7 @@ FILENAME_OUTPUT_CSV = 'file_geocoded.csv'
 
 MAX_ITEMS = 100              # Howy man lines to read from the input file. Set to 0 for unlimited
 NUM_WORKERS = 3              # For 10 requests per second try 2-5
-REQUEST_TIMEOUT_SECONDS = 5  # For individual HTTP requests. Fefault is 1
+REQUEST_TIMEOUT_SECONDS = 5  # For individual HTTP requests. Default is 1
 RETRY_MAX_TRIES = 10         # How often to retry if a HTTP request times out
 RETRY_MAX_TIME = 60          # Limit in seconds for retries
 SHOW_PROGRESS = True         # Show progress bar
