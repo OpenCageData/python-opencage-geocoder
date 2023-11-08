@@ -1,3 +1,7 @@
+unreleased
+  Batch example: Guess if input is coordinate pair, if so then do reverse geocoding
+  Batch example: Give example of input file format
+
 v2.3.0 Tue 04 Jul 2023
   Batch example: Raise exception when API key fails (quota, missing API key)
   Batch example: Raise exception when input file contains an empty line. Better
