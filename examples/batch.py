@@ -32,12 +32,21 @@ import os
 import sys
 import csv
 import re
+import ssl
 import asyncio
 import traceback
+import aiohttp
 import backoff
+import certifi
 from tqdm import tqdm
-from opencage.geocoder import OpenCageGeocode, AioHttpError
+from opencage.geocoder import OpenCageGeocode, SSLError
 
+# Use certificates from the certifi package instead of those of the operating system
+# https://pypi.org/project/certifi/
+# https://docs.aiohttp.org/en/stable/client_advanced.html#ssl-control-for-tcp-sockets
+sslcontext = ssl.create_default_context(cafile=certifi.where())
+# Alternatively set sslcontext=False to ignore certificate validation (not advised)
+# or sslcontext=None to use those of the operating system
 
 
 
@@ -49,11 +58,11 @@ FILENAME_OUTPUT_CSV = 'file_geocoded.csv'
 FORWARD_OR_REVERSE = 'guess' # 'forward' (address -> coordinates) or 'reverse' (coordinates -> address)
                              # With 'guess' the script checks if the address is two numbers and then
                              # assumes reverse
-
+API_DOMAIN = 'api.opencagedata.com'
 MAX_ITEMS = 100              # How many lines to read from the input file. Set to 0 for unlimited
 NUM_WORKERS = 3              # For 10 requests per second try 2-5
 REQUEST_TIMEOUT_SECONDS = 5  # For individual HTTP requests. Default is 1
-RETRY_MAX_TRIES = 10         # How often to retry if a HTTP request times out
+RETRY_MAX_TRIES = 10          # How often to retry if a HTTP request times out
 RETRY_MAX_TIME = 60          # Limit in seconds for retries
 SHOW_PROGRESS = True         # Show progress bar
 
@@ -133,7 +142,7 @@ def backoff_hdlr(details):
                                             max_tries=RETRY_MAX_TRIES,
                                             on_backoff=backoff_hdlr)
 async def geocode_one_address(address, address_id):
-    async with OpenCageGeocode(API_KEY) as geocoder:
+    async with OpenCageGeocode(API_KEY, domain=API_DOMAIN, sslcontext=sslcontext) as geocoder:
         global FORWARD_OR_REVERSE
         try:
             if FORWARD_OR_REVERSE == 'reverse' or \
@@ -150,6 +159,9 @@ async def geocode_one_address(address, address_id):
                 # countrycode, language, etc
                 # see the full list: https://opencagedata.com/api#forward-opt
                 geocoding_results = await geocoder.geocode_async(address, no_annotations=1)
+        except SSLError as exc:
+            sys.stderr.write(str(exc))
+
         except Exception as exc:
             traceback.print_exception(exc, file=sys.stderr)
 

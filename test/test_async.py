@@ -39,4 +39,4 @@ async def test_using_non_async_method():
         with pytest.raises(AioHttpError) as excinfo:
             await geocoder.geocode("Atlantis")
 
-    assert str(excinfo.value) == 'Cannot use `geocode` in an async context, use `gecode_async`.'
+    assert str(excinfo.value) == 'Cannot use `geocode` in an async context, use `geocode_async`.'

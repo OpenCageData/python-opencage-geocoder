@@ -14,6 +14,8 @@ try:
 except ImportError:
     AIOHTTP_AVAILABLE = False
 
+DEFAULT_DOMAIN = 'api.opencagedata.com'
+
 def backoff_max_time():
     return int(os.environ.get('BACKOFF_MAX_TIME', '120'))
 
@@ -102,6 +104,21 @@ class AioHttpError(OpenCageGeocodeError):
     """
 
 
+class SSLError(OpenCageGeocodeError):
+
+    """
+    Exception raised when SSL connection to OpenCage server fails.
+    """
+
+    def __unicode__(self):
+        """Convert exception to a string."""
+        return ("SSL Certificate error connecting to OpenCage API. This is usually due to "
+               "outdated CA root certificates of the operating system. "
+               )
+
+    __str__ = __unicode__
+
+
 class OpenCageGeocode:
 
     """
@@ -121,15 +138,18 @@ class OpenCageGeocode:
 
     """
 
-    url = 'https://api.opencagedata.com/geocode/v1/json'
-    key = ''
     session = None
 
-    def __init__(self, key, protocol='https'):
+    def __init__(self, key, protocol='https', domain=DEFAULT_DOMAIN, sslcontext=None):
         """Constructor."""
         self.key = key
-        if protocol and protocol == 'http':
-            self.url = self.url.replace('https://', 'http://')
+
+        if protocol and protocol not in ('http', 'https'):
+            protocol = 'https'
+        self.url = protocol + '://' + domain + '/geocode/v1/json'
+
+        # https://docs.aiohttp.org/en/stable/client_advanced.html#ssl-control-for-tcp-sockets
+        self.sslcontext = sslcontext
 
     def __enter__(self):
         self.session = requests.Session()
@@ -167,7 +187,7 @@ class OpenCageGeocode:
         """
 
         if self.session and isinstance(self.session, aiohttp.client.ClientSession):
-            raise AioHttpError("Cannot use `geocode` in an async context, use `gecode_async`.")
+            raise AioHttpError("Cannot use `geocode` in an async context, use `geocode_async`.")
 
         request = self._parse_request(query, kwargs)
         response = self._opencage_request(request)
@@ -271,34 +291,38 @@ class OpenCageGeocode:
         return response_json
 
     async def _opencage_async_request(self, params):
-        async with self.session.get(self.url, params=params) as response:
-            try:
-                response_json = await response.json()
-            except ValueError as excinfo:
-                raise UnknownError("Non-JSON result from server") from excinfo
+        try:
+            async with self.session.get(self.url, params=params, ssl=self.sslcontext) as response:
+                try:
+                    response_json = await response.json()
+                except ValueError as excinfo:
+                    raise UnknownError("Non-JSON result from server") from excinfo
 
-            if response.status == 401:
-                raise NotAuthorizedError()
+                if response.status == 401:
+                    raise NotAuthorizedError()
 
-            if response.status == 403:
-                raise ForbiddenError()
+                if response.status == 403:
+                    raise ForbiddenError()
 
-            if response.status in (402, 429):
-                # Rate limit exceeded
-                print(response_json)
-                reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
-                raise RateLimitExceededError(
-                    reset_to=int(response_json['rate']['limit']),
-                    reset_time=reset_time
-                )
+                if response.status in (402, 429):
+                    # Rate limit exceeded
+                    reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
+                    raise RateLimitExceededError(
+                        reset_to=int(response_json['rate']['limit']),
+                        reset_time=reset_time
+                    )
 
-            if response.status == 500:
-                raise UnknownError("500 status code from API")
+                if response.status == 500:
+                    raise UnknownError("500 status code from API")
 
-            if 'results' not in response_json:
-                raise UnknownError("JSON from API doesn't have a 'results' key")
+                if 'results' not in response_json:
+                    raise UnknownError("JSON from API doesn't have a 'results' key")
 
-            return response_json
+                return response_json
+        except aiohttp.ClientSSLError as exp:
+            raise SSLError() from exp
+        except aiohttp.client_exceptions.ClientConnectorCertificateError as exp:
+            raise SSLError() from exp
 
     def _parse_request(self, query, params):
         if not isinstance(query, str):
