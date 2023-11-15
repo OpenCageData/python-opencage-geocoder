@@ -1,6 +1,10 @@
-unreleased
+v2.3.1 Wed Nov 15 2023
+  New error 'SSLError' which is more explicit in case of SSL certificate chain issues
+  Allow setting a domain name (only used in test suite)
+  Allow setting sslcontext, for example to ignore SSL certificat errors (for debugging only)
   Batch example: Guess if input is coordinate pair, if so then do reverse geocoding
   Batch example: Give example of input file format
+  Batch example: Ship CA root certificates instead of relying on those of the operating system
 
 v2.3.0 Tue 04 Jul 2023
   Batch example: Raise exception when API key fails (quota, missing API key)
