@@ -38,8 +38,10 @@ import traceback
 import aiohttp
 import backoff
 import certifi
+import pkg_resources
 from tqdm import tqdm
-from opencage.geocoder import OpenCageGeocode, SSLError
+import opencage
+from opencage.geocoder import OpenCageGeocode, OpenCageGeocodeError
 
 # Use certificates from the certifi package instead of those of the operating system
 # https://pypi.org/project/certifi/
@@ -47,8 +49,6 @@ from opencage.geocoder import OpenCageGeocode, SSLError
 sslcontext = ssl.create_default_context(cafile=certifi.where())
 # Alternatively set sslcontext=False to ignore certificate validation (not advised)
 # or sslcontext=None to use those of the operating system
-
-
 
 
 
@@ -70,10 +70,25 @@ SHOW_PROGRESS = True         # Show progress bar
 
 
 
+# Check OpenCage geocoder is the latest version
+#
+minimum_required_version = '2.3.1'
+package_version = pkg_resources.get_distribution('opencage').version
+if pkg_resources.parse_version(package_version) < pkg_resources.parse_version(minimum_required_version):
+    sys.stderr.write(f"At least version {minimum_required_version} of opencage geocoder package required. ")
+    sys.stderr.write(f"Try upgrading by running 'pip install --upgrade opencage'.\n")
+    sys.exit(1)
 
 
+# Check API key present
+#
+if len(API_KEY) < 32:
+    sys.stderr.write(f"API_KEY '{API_KEY}' does not look valid.\n")
+    sys.exit(1)
 
 
+# Don't overwrite output file
+#
 if os.path.exists(FILENAME_OUTPUT_CSV):
     sys.stderr.write(f"The output file '{FILENAME_OUTPUT_CSV}' already exists.\n")
     sys.exit(1)
@@ -144,6 +159,8 @@ def backoff_hdlr(details):
 async def geocode_one_address(address, address_id):
     async with OpenCageGeocode(API_KEY, domain=API_DOMAIN, sslcontext=sslcontext) as geocoder:
         global FORWARD_OR_REVERSE
+
+        geocoding_results = None
         try:
             if FORWARD_OR_REVERSE == 'reverse' or \
                 (FORWARD_OR_REVERSE == 'guess' and guess_text_is_coordinate_pair(address)):
@@ -159,9 +176,8 @@ async def geocode_one_address(address, address_id):
                 # countrycode, language, etc
                 # see the full list: https://opencagedata.com/api#forward-opt
                 geocoding_results = await geocoder.geocode_async(address, no_annotations=1)
-        except SSLError as exc:
-            sys.stderr.write(str(exc))
-
+        except OpenCageGeocodeError as exc:
+            sys.stderr.write(str(exc) + "\n")
         except Exception as exc:
             traceback.print_exception(exc, file=sys.stderr)
 

@@ -1,3 +1,8 @@
+unreleased
+  Batch example: warn if no API key present earlier
+  Batch example: some errors were not printed, e.g. invalid API key
+  Batch example: Check latest version of opencage package is used
+
 v2.3.1 Wed Nov 15 2023
   New error 'SSLError' which is more explicit in case of SSL certificate chain issues
   Allow setting a domain name (only used in test suite)
