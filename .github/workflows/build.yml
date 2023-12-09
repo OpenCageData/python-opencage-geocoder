@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: '11 22 2 * *'
+    - cron: "11 22 2 * *"
 
 jobs:
   tox:
@@ -13,6 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         py:
+          - "3.12"
           - "3.11"
           - "3.10"
           - "3.9"
