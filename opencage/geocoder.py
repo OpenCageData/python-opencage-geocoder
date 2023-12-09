@@ -5,8 +5,10 @@ from decimal import Decimal
 import collections
 
 import os
+import sys
 import requests
 import backoff
+from .version import __version__
 
 try:
     import aiohttp
@@ -259,9 +261,9 @@ class OpenCageGeocode:
     def _opencage_request(self, params):
 
         if self.session:
-            response = self.session.get(self.url, params=params)
+            response = self.session.get(self.url, params=params, headers=self._opencage_headers('aiohttp'))
         else:
-            response = requests.get(self.url, params=params) # pylint: disable=missing-timeout
+            response = requests.get(self.url, params=params, headers=self._opencage_headers('requests')) # pylint: disable=missing-timeout
 
         try:
             response_json = response.json()
@@ -289,6 +291,21 @@ class OpenCageGeocode:
             raise UnknownError("JSON from API doesn't have a 'results' key")
 
         return response_json
+
+    def _opencage_headers(self, client):
+        if client == 'requests':
+            client_version = requests.__version__
+        elif client == 'aiohttp':
+            client_version = aiohttp.__version__
+
+        return {
+            'User-Agent': 'opencage-python/%s Python/%s %s/%s' % (
+                __version__,
+                '.'.join(str(x) for x in sys.version_info[0:3]),
+                client,
+                client_version
+            )
+        }
 
     async def _opencage_async_request(self, params):
         try:
