@@ -3,7 +3,7 @@
 # Background tutorial on async programming with Python
 # https://realpython.com/async-io-python/
 
-# Requires Python 3.7 or newer. Tested with 3.8/3.9/3.10/3.11.
+# Requires Python 3.8 or newer. Tested with 3.8/3.9/3.10/3.11.
 
 # Installation:
 # pip3 install --upgrade opencage asyncio aiohttp backoff tqdm
@@ -213,7 +213,7 @@ async def run_worker(worker_name, queue):
 
 async def main():
     global PROGRESS_BAR
-    assert sys.version_info >= (3, 7), "Script requires Python 3.7 or newer"
+    assert sys.version_info >= (3, 8), "Script requires Python 3.8 or newer"
 
     ## 1. Read CSV into a Queue
     ##    Each work_item is an address and id. The id will be part of the output,

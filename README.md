@@ -15,11 +15,11 @@ A Python module to access the [OpenCage Geocoding API](https://opencagedata.com/
 
 You can find a [comprehensive tutorial for using this module on the OpenCage site](https://opencagedata.com/tutorials/geocode-in-python).
 
-There are also two brief video tutorials on YouTube, one [covering forward geocoding](https://www.youtube.com/watch?v=9bXu8-LPr5c), one [covering reverse geocoding](https://www.youtube.com/watch?v=u-kkE4yA-z0). 
+There are also two brief video tutorials on YouTube, one [covering forward geocoding](https://www.youtube.com/watch?v=9bXu8-LPr5c), one [covering reverse geocoding](https://www.youtube.com/watch?v=u-kkE4yA-z0).
 
 ## Usage
 
-Supports Python 3.7 or newer. Use the older opencage 1.x releases if you need Python 2.7 support.
+Supports Python 3.8 or newer. Use the older opencage 1.x releases if you need Python 2.7 support.
 
 Install the module:
 
@@ -87,7 +87,7 @@ with OpenCageGeocode(key) as geocoder:
 
 You can run requests in parallel with the `geocode_async` and `reverse_geocode_async`
 method which have the same parameters and response as their synronous counterparts.
-You will need at least Python 3.7 and the `asyncio` and `aiohttp` packages installed.
+You will need at least Python 3.8 and the `asyncio` and `aiohttp` packages installed.
 
 ```python
 async with OpenCageGeocode(key) as geocoder:

@@ -180,10 +180,14 @@ class OpenCageGeocode:
         if self.session and isinstance(self.session, aiohttp.client.ClientSession):
             raise AioHttpError("Cannot use `geocode` in an async context, use `geocode_async`.")
 
+        raw_response = kwargs.pop('raw_response', False)
         request = self._parse_request(query, kwargs)
         response = self._opencage_request(request)
 
-        return floatify_latlng(response['results'])
+        if raw_response:
+            return response
+        else:
+            return floatify_latlng(response['results'])
 
     async def geocode_async(self, query, **kwargs):
         """
@@ -209,10 +213,14 @@ class OpenCageGeocode:
         if not isinstance(self.session, aiohttp.client.ClientSession):
             raise AioHttpError("You must use `geocode_async` in an async context.")
 
+        raw_response = kwargs.pop('raw_response', False)
         request = self._parse_request(query, kwargs)
         response = await self._opencage_async_request(request)
 
-        return floatify_latlng(response['results'])
+        if raw_response:
+            return response
+        else:
+            return floatify_latlng(response['results'])
 
     def reverse_geocode(self, lat, lng, **kwargs):
         """

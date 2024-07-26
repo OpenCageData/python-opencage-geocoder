@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import datetime
 import httpretty
 import pytest
 
@@ -39,6 +38,3 @@ def test_rate_limit_exceeded():
     with pytest.raises(RateLimitExceededError) as excinfo:
         geocoder.geocode("whatever")
     assert 'You have used the requests available on your plan.' in str(excinfo.value)
-    # 'It will reset to 2500 on 2021-03-08T00:00:00'
-    # assert excinfo.value.reset_to == 2500
-    # assert excinfo.value.reset_time == datetime.datetime(2021, 3, 8, 0, 0)

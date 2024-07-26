@@ -13,10 +13,10 @@ if os.environ.get('USER', '') == 'vagrant':
 ROOT_DIR = os.path.dirname(__file__)
 SOURCE_DIR = os.path.join(ROOT_DIR)
 
-if sys.version_info < (3, 6):
+if sys.version_info < (3, 8):
     raise RuntimeError(
-        "opencage requires Python 3.7 or newer"
-        "Use older opencage 1.x for Python 2.7 or 3.6"
+        "opencage requires Python 3.8 or newer"
+        "Use older opencage 1.x for Python 2.7 or 3.7"
     )
 
 # try for testing
@@ -37,6 +37,11 @@ setup(
     url="https://github.com/OpenCageData/python-opencage-geocoder/",
     download_url="https://github.com/OpenCageData/python-opencage-geocoder/tarball/2.1.0",
     license="BSD",
+    entry_points={
+        'console_scripts': [
+            'opencage=opencage.command_line:main'
+        ]
+    },
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
@@ -48,17 +53,20 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         "Programming Language :: Python :: 3 :: Only",
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Topic :: Scientific/Engineering :: GIS',
         'Topic :: Utilities'
     ],
     install_requires=[
         'Requests>=2.31.0',
-        'backoff>=2.2.1'
+        'backoff>=2.2.1',
+        'tqdm>=4.66.4',
+        'certifi>=2024.07.04',
+        'aiohttp>=3.10.5'
     ],
     test_suite='pytest',
     tests_require=[
