@@ -15,11 +15,14 @@ A Python module to access the [OpenCage Geocoding API](https://opencagedata.com/
 
 You can find a [comprehensive tutorial for using this module on the OpenCage site](https://opencagedata.com/tutorials/geocode-in-python).
 
-There are also two brief video tutorials on YouTube, one [covering forward geocoding](https://www.youtube.com/watch?v=9bXu8-LPr5c), one [covering reverse geocoding](https://www.youtube.com/watch?v=u-kkE4yA-z0). 
+There are two brief video tutorials on YouTube, one [covering forward geocoding](https://www.youtube.com/watch?v=9bXu8-LPr5c), one [covering reverse geocoding](https://www.youtube.com/watch?v=u-kkE4yA-z0).
+
+The module installs an `opencage` CLI tool for geocoding files. Check `opencage --help` or the [CLI tutorial](https://opencagedata.com/tutorials/geocode-in-cli).
+
 
 ## Usage
 
-Supports Python 3.7 or newer. Use the older opencage 1.x releases if you need Python 2.7 support.
+Supports Python 3.8 or newer. Starting opencage version 3.0 depends on asyncio package.
 
 Install the module:
 
@@ -87,7 +90,7 @@ with OpenCageGeocode(key) as geocoder:
 
 You can run requests in parallel with the `geocode_async` and `reverse_geocode_async`
 method which have the same parameters and response as their synronous counterparts.
-You will need at least Python 3.7 and the `asyncio` and `aiohttp` packages installed.
+You will need at least Python 3.8 and the `asyncio` and `aiohttp` packages installed.
 
 ```python
 async with OpenCageGeocode(key) as geocoder:
@@ -109,7 +112,34 @@ geocoder = OpenCageGeocode('your-api-key', 'http')
 
 ### Command-line batch geocoding
 
-See `examples/batch.py` for an example to geocode a CSV file.
+Use `opencage forward` or `opencage reverse`
+
+```
+opencage forward --help
+
+  -h, --help            show this help message and exit
+  --api-key API_KEY     Your OpenCage API key
+  --input INPUT         Input file name
+  --output OUTPUT       Output file name
+  --headers             If the first row should be treated as a header row
+  --input-columns INPUT_COLUMNS
+                        Comma-separated list of integers (default '1')
+  --add-columns ADD_COLUMNS
+                        Comma-separated list of output columns
+  --workers WORKERS     Number of parallel geocoding requests (default 1)
+  --timeout TIMEOUT     Timeout in seconds (default 10)
+  --retries RETRIES     Number of retries (default 5)
+  --api-domain API_DOMAIN
+                        API domain (default api.opencagedata.com)
+  --extra-params EXTRA_PARAMS
+                        Extra parameters for each request (e.g. language=fr,no_dedupe=1)
+  --limit LIMIT         Stop after this number of lines in the input
+  --dry-run             Read the input file but no geocoding
+  --no-progress         Display no progress bar
+  --quiet               No progress bar and no messages
+  --overwrite           Delete the output file first if it exists
+  --verbose             Display debug information for each request
+```
 
 <img src="batch-progress.gif"/>
 

@@ -1,7 +1,11 @@
-unreleased
+v3.0.0 Wed Sep 4 2024
+  Requires python 3.7 and asyncio package
+  Inititial release of the 'opencage' CLI tool
+  RateLimitExceededError no longer prints reset date
   Batch example: warn if no API key present earlier
   Batch example: some errors were not printed, e.g. invalid API key
   Batch example: Check latest version of opencage package is used
+  Add python 3.12, no longer test against python 3.7
 
 v2.3.1 Wed Nov 15 2023
   New error 'SSLError' which is more explicit in case of SSL certificate chain issues
