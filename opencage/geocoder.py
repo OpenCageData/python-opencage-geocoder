@@ -1,6 +1,6 @@
 """ Geocoder module. """
 
-from datetime import datetime
+import datetime as dt
 from decimal import Decimal
 import collections
 
@@ -66,9 +66,8 @@ class RateLimitExceededError(OpenCageGeocodeError):
 
     def __unicode__(self):
         """Convert exception to a string."""
-        return ("Your rate limit has expired. "
-                f"It will reset to {self.reset_to} on {self.reset_time.isoformat()}"
-                )
+        return ("You have used the requests available on your plan. "
+                "Please purchase more if you wish to continue: https://opencagedata.com/pricing")
 
     __str__ = __unicode__
 
@@ -278,7 +277,7 @@ class OpenCageGeocode:
 
         if response.status_code in (402, 429):
             # Rate limit exceeded
-            reset_time = datetime.utcfromtimestamp(response.json()['rate']['reset'])
+            reset_time = dt.datetime.fromtimestamp(response.json()['rate']['reset'], dt.UTC)
             raise RateLimitExceededError(
                 reset_to=int(response.json()['rate']['limit']),
                 reset_time=reset_time
@@ -323,7 +322,7 @@ class OpenCageGeocode:
 
                 if response.status in (402, 429):
                     # Rate limit exceeded
-                    reset_time = datetime.utcfromtimestamp(response_json['rate']['reset'])
+                    reset_time = dt.datetime.fromtimestamp(response_json['rate']['reset'], dt.UTC)
                     raise RateLimitExceededError(
                         reset_to=int(response_json['rate']['limit']),
                         reset_time=reset_time
