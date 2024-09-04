@@ -1,6 +1,5 @@
 """ Geocoder module. """
 
-import datetime as dt
 from decimal import Decimal
 import collections
 
@@ -53,16 +52,7 @@ class RateLimitExceededError(OpenCageGeocodeError):
 
     """
     Exception raised when account has exceeded it's limit.
-
-    :var datetime reset_time: When your account limit will be reset.
-    :var int reset_to: What your account will be reset to.
     """
-
-    def __init__(self, reset_time, reset_to):
-        """Constructor."""
-        super().__init__()
-        self.reset_time = reset_time
-        self.reset_to = reset_to
 
     def __unicode__(self):
         """Convert exception to a string."""
@@ -276,12 +266,7 @@ class OpenCageGeocode:
             raise ForbiddenError()
 
         if response.status_code in (402, 429):
-            # Rate limit exceeded
-            reset_time = dt.datetime.fromtimestamp(response.json()['rate']['reset'], dt.UTC)
-            raise RateLimitExceededError(
-                reset_to=int(response.json()['rate']['limit']),
-                reset_time=reset_time
-            )
+            raise RateLimitExceededError()
 
         if response.status_code == 500:
             raise UnknownError("500 status code from API")
@@ -321,12 +306,7 @@ class OpenCageGeocode:
                     raise ForbiddenError()
 
                 if response.status in (402, 429):
-                    # Rate limit exceeded
-                    reset_time = dt.datetime.fromtimestamp(response_json['rate']['reset'], dt.UTC)
-                    raise RateLimitExceededError(
-                        reset_to=int(response_json['rate']['limit']),
-                        reset_time=reset_time
-                    )
+                    raise RateLimitExceededError()
 
                 if response.status == 500:
                     raise UnknownError("500 status code from API")
