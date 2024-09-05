@@ -27,6 +27,9 @@ class OpenCageBatchGeocoder():
             if test['error']:
                 self.log(test['error'])
                 return
+            if test['free'] is True and self.options.workers > 1:
+                sys.stderr.write(f"Free trial account detected. Resetting number of workers to 1.\n")
+                self.options.workers = 1
 
         if self.options.headers:
             header_columns = next(input, None)
