@@ -191,13 +191,14 @@ class OpenCageBatchGeocoder():
         # Enforce that row are written ordered. That means we might wait for other threads
         # to finish a task and make the overall process slower. Alternative would be to
         # use a second queue, or keep some results in memory.
-        while row_id > self.write_counter:
-            if self.options.verbose:
-                self.log(f"Want to write row {row_id}, but write_counter is at {self.write_counter}")
-            await asyncio.sleep(random.uniform(0.01, 0.1))
+        if not self.options.unordered:
+            while row_id > self.write_counter:
+                if self.options.verbose:
+                    self.log(f"Want to write row {row_id}, but write_counter is at {self.write_counter}")
+                await asyncio.sleep(random.uniform(0.01, 0.1))
 
-        if self.options.verbose:
-            self.log(f"Writing row {row_id}")
+            if self.options.verbose:
+                self.log(f"Writing row {row_id}")
         output.writerow(row)
         self.write_counter = self.write_counter + 1
 

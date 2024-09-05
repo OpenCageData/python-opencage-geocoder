@@ -131,6 +131,7 @@ options:
   --api-domain          API domain (default api.opencagedata.com)
   --optional-api-params
                         Extra parameters for each request (e.g. language=fr,no_dedupe=1)
+  --unordered           Allow the output lines to be in different order (can be faster)
   --limit               Stop after this number of lines in the input
   --dry-run             Read the input file but no geocoding
   --no-progress         Display no progress bar

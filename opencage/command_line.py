@@ -68,6 +68,7 @@ def add_optional_arguments(parser):
     parser.add_argument("--api-domain", type=str, default="api.opencagedata.com", help="API domain (default api.opencagedata.com)", metavar='')
     parser.add_argument("--optional-api-params", type=comma_separated_dict_type, default="", help="Extra parameters for each request (e.g. language=fr,no_dedupe=1)", metavar='')
     parser.add_argument("--limit", type=int, default=0, help="Stop after this number of lines in the input", metavar='')
+    parser.add_argument("--unordered", action="store_true", help="Allow the output lines to be in different order (can be faster)")
     parser.add_argument("--dry-run", action="store_true", help="Read the input file but no geocoding")
     parser.add_argument("--no-progress", action="store_true", help="Display no progress bar")
     parser.add_argument("--quiet", action="store_true", help="No progress bar and no messages")
