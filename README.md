@@ -117,23 +117,21 @@ Use `opencage forward` or `opencage reverse`
 ```
 opencage forward --help
 
+options:
   -h, --help            show this help message and exit
   --api-key API_KEY     Your OpenCage API key
-  --input INPUT         Input file name
-  --output OUTPUT       Output file name
+  --input FILENAME      Input file name
+  --output FILENAME     Output file name
   --headers             If the first row should be treated as a header row
-  --input-columns INPUT_COLUMNS
-                        Comma-separated list of integers (default '1')
-  --add-columns ADD_COLUMNS
-                        Comma-separated list of output columns
-  --workers WORKERS     Number of parallel geocoding requests (default 1)
-  --timeout TIMEOUT     Timeout in seconds (default 10)
-  --retries RETRIES     Number of retries (default 5)
-  --api-domain API_DOMAIN
-                        API domain (default api.opencagedata.com)
-  --extra-params EXTRA_PARAMS
+  --input-columns       Comma-separated list of integers (default '1')
+  --add-columns         Comma-separated list of output columns (default 'lat,lng,_type,_category,country_code,country,state,county,_normalized_city,postcode,road,house_number,confidence,formatted')
+  --workers             Number of parallel geocoding requests (default 1)
+  --timeout             Timeout in seconds (default 10)
+  --retries             Number of retries (default 5)
+  --api-domain          API domain (default api.opencagedata.com)
+  --optional-api-params
                         Extra parameters for each request (e.g. language=fr,no_dedupe=1)
-  --limit LIMIT         Stop after this number of lines in the input
+  --limit               Stop after this number of lines in the input
   --dry-run             Read the input file but no geocoding
   --no-progress         Display no progress bar
   --quiet               No progress bar and no messages

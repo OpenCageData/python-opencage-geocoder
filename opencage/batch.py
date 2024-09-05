@@ -140,7 +140,7 @@ class OpenCageBatchGeocoder():
         async def _geocode_one_address():
             async with OpenCageGeocode(self.options.api_key, domain=self.options.api_domain, sslcontext=self.sslcontext) as geocoder:
                 geocoding_results = None
-                params = { 'no_annotations': 1, **self.options.extra_params }
+                params = { 'no_annotations': 1, **self.options.optional_api_params }
 
                 try:
                     if self.options.command == 'reverse':

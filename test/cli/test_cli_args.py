@@ -94,7 +94,7 @@ def test_full_argument_list():
         "--retries", "1",
         "--dry-run",
         "--api-domain", "bulk.opencagedata.com",
-        "--extra-params", "extra=1",
+        "--optional-api-params", "extra=1",
         "--no-progress",
         "--quiet"
     ])
@@ -112,7 +112,7 @@ def test_full_argument_list():
     assert args.retries == 1
     assert args.dry_run is True
     assert args.api_domain == "bulk.opencagedata.com"
-    assert args.extra_params == { "extra": "1" }
+    assert args.optional_api_params == { "extra": "1" }
     assert args.no_progress is True
     assert args.quiet is True
 
@@ -134,6 +134,6 @@ def test_defaults():
     assert args.retries == 10
     assert args.dry_run is False
     assert args.api_domain == "api.opencagedata.com"
-    assert args.extra_params == {}
+    assert args.optional_api_params == {}
     assert args.no_progress is False
     assert args.quiet is False
