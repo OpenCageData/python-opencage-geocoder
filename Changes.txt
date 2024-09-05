@@ -1,3 +1,9 @@
+v3.0.1 Wed Sep 5 2024
+  CLI: rename parameter "extra-params" to "optional-api-params"
+  CLI: parameter "unordered" which can lead to speedup on large files
+  CLI: limit --workers to 1 for free trial accounts
+  Batch example: replaced by CLI now
+
 v3.0.0 Wed Sep 4 2024
   Requires python 3.7 and asyncio package
   Inititial release of the 'opencage' CLI tool

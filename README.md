@@ -110,7 +110,17 @@ understand that the connection to the OpenCage API will no longer be encrypted.
 geocoder = OpenCageGeocode('your-api-key', 'http')
 ```
 
-### Command-line batch geocoding
+### Exceptions
+
+If anything goes wrong, then an exception will be raised:
+
+- `InvalidInputError` for non-unicode query strings
+- `NotAuthorizedError` if API key is missing, invalid syntax or disabled
+- `ForbiddenError` API key is blocked or suspended
+- `RateLimitExceededError` if you go past your rate limit
+- `UnknownError` if there's some problem with the API (bad results, 500 status code, etc)
+
+## Command-line batch geocoding
 
 Use `opencage forward` or `opencage reverse`
 
@@ -142,15 +152,6 @@ options:
 
 <img src="batch-progress.gif"/>
 
-### Exceptions
-
-If anything goes wrong, then an exception will be raised:
-
-- `InvalidInputError` for non-unicode query strings
-- `NotAuthorizedError` if API key is missing, invalid syntax or disabled
-- `ForbiddenError` API key is blocked or suspended
-- `RateLimitExceededError` if you go past your rate limit
-- `UnknownError` if there's some problem with the API (bad results, 500 status code, etc)
 
 ## Copyright & License
 
