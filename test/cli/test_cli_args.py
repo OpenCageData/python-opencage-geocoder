@@ -35,10 +35,10 @@ def test_invalid_command(capfd):
         capfd
     )
 
-def test_invalid_command(capfd):
+def test_version_number(capfd):
     with pytest.raises(SystemExit):
         parse_args(['--version'])
-    out, err = capfd.readouterr()
+    out, _ = capfd.readouterr()
 
     assert __version__ in out
 
@@ -78,6 +78,20 @@ def test_argument_range(capfd):
         'must be within [1, 20]',
         capfd
     )
+
+def test_zero_based_list(capfd):
+    assert_parse_args_error(
+        [
+            "forward",
+            "--api-key", "oc_gc_12345678901234567890123456789012",
+            "--input", "test/fixtures/input.txt",
+            "--output", "test/fixtures/output.csv",
+            "--input-columns", "0,1,2"
+        ],
+        'The lowest possible number is 1',
+        capfd
+    )
+
 
 def test_full_argument_list():
     args = parse_args([
@@ -130,7 +144,8 @@ def test_defaults():
     assert args.limit == 0
     assert args.headers is False
     assert args.input_columns == [1]
-    assert args.add_columns == ["lat", "lng", "_type", "_category", "country_code", "country", "state", "county", "_normalized_city", "postcode", "road", "house_number", "confidence", "formatted"]
+    assert args.add_columns == ["lat", "lng", "_type", "_category", "country_code", "country", "state",
+        "county", "_normalized_city", "postcode", "road", "house_number", "confidence", "formatted"]
     assert args.workers == 1
     assert args.timeout == 10
     assert args.retries == 10

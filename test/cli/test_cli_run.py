@@ -1,7 +1,6 @@
 import pathlib
-import pytest
 import os
-import sys
+import pytest
 
 from opencage.command_line import main
 
@@ -85,14 +84,32 @@ def test_input_errors(capfd):
         "--api-key", TEST_APIKEY_200,
         "--input", "test/fixtures/cli/reverse_with_errors.csv",
         "--output", "test/fixtures/cli/output.csv",
+        "--add-columns", "country_code,postcode",
         "--no-progress"
     ])
 
     _, err = capfd.readouterr()
-    assert 'Missing input column 2 in' in err
-    assert 'Expected two comma-separated values' in err
+    # assert err == ''
+    assert err.count("\n") == 6
+    assert "Line 1 - Missing input column 2 in ['50.101010']" in err
+    assert "Line 1 - Expected two comma-separated values for reverse geocoding, got ['50.101010']" in err
+    assert "Line 3 - Empty line" in err
+    assert "Line 3 - Missing input column 2 in ['']" in err
+    assert "Line 3 - Expected two comma-separated values for reverse geocoding, got ['']" in err
+    assert "Line 4 - Does not look like latitude and longitude: 'a' and 'b'" in err
 
-def test_empty_result(capfd):
+    assert_output(
+        path="test/fixtures/cli/output.csv",
+        length=4,
+        lines=[
+            '50.101010,,',
+            '-100,60.1,de,48153',
+            ',,',
+            'a,b,,'
+        ]
+    )
+
+def test_empty_result():
     # 'NOWHERE-INTERESTING' is guaranteed to return no result
     # https://opencagedata.com/api#testingkeys
     main([
@@ -137,6 +154,11 @@ def test_dryrun(capfd):
     ])
 
     assert not os.path.isfile("test/fixtures/cli/output.csv")
+
+    out, _ = capfd.readouterr()
+    assert out.count("\n") == 1
+    assert "All good." in out
+
 
 def test_invalid_domain(capfd):
     main([

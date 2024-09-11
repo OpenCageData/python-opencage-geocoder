@@ -53,6 +53,10 @@ def parse_args(args):
             print(f"Error: The output file '{options.output}' already exists. You can add --overwrite to your command.", file=sys.stderr)
             sys.exit(1)
 
+    if 0 in options.input_columns:
+        print(f"Error: A column 0 in --input-columns does not exist. The lowest possible number is 1.", file=sys.stderr)
+        sys.exit(1)
+
     return options
 
 
