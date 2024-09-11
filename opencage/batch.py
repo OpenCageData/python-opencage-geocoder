@@ -6,11 +6,12 @@ import threading
 import backoff
 import certifi
 import random
+import re
 
 from tqdm import tqdm
 from urllib.parse import urlencode
 from contextlib import suppress
-from opencage.geocoder import OpenCageGeocode, OpenCageGeocodeError
+from opencage.geocoder import OpenCageGeocode, OpenCageGeocodeError, _query_for_reverse_geocoding
 
 class OpenCageBatchGeocoder():
     def __init__(self, options):
@@ -38,9 +39,11 @@ class OpenCageBatchGeocoder():
 
         queue = asyncio.Queue(maxsize=self.options.limit)
 
-        await self.read_input(input, queue)
+        read_warnings = await self.read_input(input, queue)
 
         if self.options.dry_run:
+            if not read_warnings:
+                print('All good.')
             return
 
         if self.options.headers:
@@ -78,19 +81,28 @@ class OpenCageBatchGeocoder():
             return { 'error': exc }
 
     async def read_input(self, input, queue):
+        any_warnings = False
         for index, row in enumerate(input):
             line_number = index + 1
 
             if len(row) == 0:
-                raise Exception(f"Empty line in input file at line number {line_number}, aborting")
+                self.log(f"Line {line_number} - Empty line")
+                any_warnings = True
+                row = ['']
 
             item = await self.read_one_line(row, line_number)
+            if item['warnings'] is True:
+                any_warnings = True
             await queue.put(item)
 
             if queue.full():
                 break
 
+        return any_warnings
+
     async def read_one_line(self, row, row_id):
+        warnings = False
+
         if self.options.command == 'reverse':
             input_columns = [1, 2]
         elif self.options.input_columns:
@@ -105,14 +117,26 @@ class OpenCageBatchGeocoder():
                     # input_columns option uses 1-based indexing
                     address.append(row[column - 1])
             except IndexError:
-                self.log(f"Missing input column {column} in {row}")
+                self.log(f"Line {row_id} - Missing input column {column} in {row}")
+                warnings = True
         else:
             address = row
 
-        if self.options.command == 'reverse' and len(address) != 2:
-            self.log(f"Expected two comma-separated values for reverse geocoding, got {address}")
+        if self.options.command == 'reverse':
 
-        return { 'row_id': row_id, 'address': ','.join(address), 'original_columns': row }
+            if len(address) != 2:
+                self.log(f"Line {row_id} - Expected two comma-separated values for reverse geocoding, got {address}")
+            else:
+                # _query_for_reverse_geocoding attempts to convert into numbers. We rather have it fail
+                # now than during the actual geocoding
+                try:
+                    _query_for_reverse_geocoding(address[0], address[1])
+                except:
+                    self.log(f"Line {row_id} - Does not look like latitude and longitude: '{address[0]}' and '{address[1]}'")
+                    warnings = True
+                    address = []
+
+        return { 'row_id': row_id, 'address': ','.join(address), 'original_columns': row, 'warnings': warnings }
 
     async def worker(self, output, queue, progress):
         while True:
@@ -147,8 +171,9 @@ class OpenCageBatchGeocoder():
 
                 try:
                     if self.options.command == 'reverse':
-                        lon, lat = address.split(',')
-                        geocoding_results = await geocoder.reverse_geocode_async(lon, lat, **params)
+                        if ',' in address:
+                            lon, lat = address.split(',')
+                            geocoding_results = await geocoder.reverse_geocode_async(lon, lat, **params)
                     else:
                         geocoding_results = await geocoder.geocode_async(address, **params)
                 except OpenCageGeocodeError as exc:
@@ -204,6 +229,7 @@ class OpenCageBatchGeocoder():
                 self.log(f"Writing row {row_id}")
         output.writerow(row)
         self.write_counter = self.write_counter + 1
+
 
     def log(self, message):
         if not self.options.quiet:
