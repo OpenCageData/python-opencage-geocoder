@@ -1,3 +1,7 @@
+v3.0.2 Thu Sep 12 2024
+  CLI: better handling of empty lines and missing or invalid coordinates
+  CLI: --dry-run prints an 'all good' message if no warnings
+
 v3.0.1 Wed Sep 5 2024
   CLI: rename parameter "extra-params" to "optional-api-params"
   CLI: parameter "unordered" which can lead to speedup on large files
