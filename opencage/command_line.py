@@ -15,13 +15,12 @@ def main(args=sys.argv[1:]):
 
     geocoder = OpenCageBatchGeocoder(options)
 
-    with options.input as input:
-        output_io = io.StringIO() if options.dry_run else open(options.output, 'x', encoding='utf-8')
-        reader = csv.reader(input, strict=True, skipinitialspace=True)
-        writer = csv.writer(output_io)
+    with options.input as input_filename:
+        with (io.StringIO() if options.dry_run else open(options.output, 'x', encoding='utf-8')) as output_io:
+            reader = csv.reader(input_filename, strict=True, skipinitialspace=True)
+            writer = csv.writer(output_io)
 
-        geocoder(input=reader, output=writer)
-        output_io.close()
+            geocoder(csv_input=reader, csv_output=writer)
 
 def parse_args(args):
     if len(args) == 0:
@@ -54,7 +53,7 @@ def parse_args(args):
             sys.exit(1)
 
     if 0 in options.input_columns:
-        print(f"Error: A column 0 in --input-columns does not exist. The lowest possible number is 1.", file=sys.stderr)
+        print("Error: A column 0 in --input-columns does not exist. The lowest possible number is 1.", file=sys.stderr)
         sys.exit(1)
 
     return options
@@ -94,8 +93,8 @@ def ranged_type(value_type, min_value, max_value):
     def range_checker(arg: str):
         try:
             f = value_type(arg)
-        except ValueError:
-            raise argparse.ArgumentTypeError(f'must be a valid {value_type}')
+        except ValueError as exc:
+            raise argparse.ArgumentTypeError(f'must be a valid {value_type}') from exc
         if f < min_value or f > max_value:
             raise argparse.ArgumentTypeError(f'must be within [{min_value}, {max_value}]')
         return f
@@ -120,5 +119,5 @@ def comma_separated_dict_type(arg):
 
     try:
         return dict([x.split('=') for x in arg.split(',')])
-    except ValueError:
-        raise argparse.ArgumentTypeError("must be a valid comma separated list of key=value pairs")
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("must be a valid comma separated list of key=value pairs") from exc

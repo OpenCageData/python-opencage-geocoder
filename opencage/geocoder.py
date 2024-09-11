@@ -186,8 +186,8 @@ class OpenCageGeocode:
 
         if raw_response:
             return response
-        else:
-            return floatify_latlng(response['results'])
+
+        return floatify_latlng(response['results'])
 
     async def geocode_async(self, query, **kwargs):
         """
@@ -219,8 +219,8 @@ class OpenCageGeocode:
 
         if raw_response:
             return response
-        else:
-            return floatify_latlng(response['results'])
+
+        return floatify_latlng(response['results'])
 
     def reverse_geocode(self, lat, lng, **kwargs):
         """
@@ -285,18 +285,13 @@ class OpenCageGeocode:
         return response_json
 
     def _opencage_headers(self, client):
-        if client == 'requests':
-            client_version = requests.__version__
-        elif client == 'aiohttp':
+        client_version = requests.__version__
+        if client == 'aiohttp':
             client_version = aiohttp.__version__
 
+        py_version = '.'.join(str(x) for x in sys.version_info[0:3])
         return {
-            'User-Agent': 'opencage-python/%s Python/%s %s/%s' % (
-                __version__,
-                '.'.join(str(x) for x in sys.version_info[0:3]),
-                client,
-                client_version
-            )
+            'User-Agent': f"opencage-python/{__version__} Python/{py_version} {client}/{client_version}"
         }
 
     async def _opencage_async_request(self, params):
