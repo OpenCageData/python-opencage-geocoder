@@ -3,17 +3,22 @@ import ssl
 import asyncio
 import traceback
 import threading
-import backoff
-import certifi
 import random
-import re
 
-from tqdm import tqdm
-from urllib.parse import urlencode
 from contextlib import suppress
+from urllib.parse import urlencode
+from tqdm import tqdm
+import certifi
+import backoff
 from opencage.geocoder import OpenCageGeocode, OpenCageGeocodeError, _query_for_reverse_geocoding
 
 class OpenCageBatchGeocoder():
+
+    """ Called from command_line.py
+        init() receives the parsed command line parameters
+        geocode() receive an input and output CSV reader/writer and loops over the data
+    """
+
     def __init__(self, options):
         self.options = options
         self.sslcontext = ssl.create_default_context(cafile=certifi.where())
@@ -22,7 +27,7 @@ class OpenCageBatchGeocoder():
     def __call__(self, *args, **kwargs):
         asyncio.run(self.geocode(*args, **kwargs))
 
-    async def geocode(self, input, output):
+    async def geocode(self, csv_input, csv_output):
         if not self.options.dry_run:
             test = await self.test_request()
             if test['error']:
@@ -33,13 +38,13 @@ class OpenCageBatchGeocoder():
                 self.options.workers = 1
 
         if self.options.headers:
-            header_columns = next(input, None)
+            header_columns = next(csv_input, None)
             if header_columns is None:
                 return
 
         queue = asyncio.Queue(maxsize=self.options.limit)
 
-        read_warnings = await self.read_input(input, queue)
+        read_warnings = await self.read_input(csv_input, queue)
 
         if self.options.dry_run:
             if not read_warnings:
@@ -47,14 +52,14 @@ class OpenCageBatchGeocoder():
             return
 
         if self.options.headers:
-            output.writerow(header_columns + self.options.add_columns)
+            csv_output.writerow(header_columns + self.options.add_columns)
 
         progress_bar = not (self.options.no_progress or self.options.quiet) and \
             tqdm(total=queue.qsize(), position=0, desc="Addresses geocoded", dynamic_ncols=True)
 
         tasks = []
         for _ in range(self.options.workers):
-            task = asyncio.create_task(self.worker(output, queue, progress_bar))
+            task = asyncio.create_task(self.worker(csv_output, queue, progress_bar))
             tasks.append(task)
 
         # This starts the workers and waits until all are finished
@@ -80,9 +85,9 @@ class OpenCageBatchGeocoder():
         except Exception as exc:
             return { 'error': exc }
 
-    async def read_input(self, input, queue):
+    async def read_input(self, csv_input, queue):
         any_warnings = False
-        for index, row in enumerate(input):
+        for index, row in enumerate(csv_input):
             line_number = index + 1
 
             if len(row) == 0:
@@ -138,12 +143,12 @@ class OpenCageBatchGeocoder():
 
         return { 'row_id': row_id, 'address': ','.join(address), 'original_columns': row, 'warnings': warnings }
 
-    async def worker(self, output, queue, progress):
+    async def worker(self, csv_output, queue, progress):
         while True:
             item = await queue.get()
 
             try:
-                await self.geocode_one_address(output, item['row_id'], item['address'], item['original_columns'])
+                await self.geocode_one_address(csv_output, item['row_id'], item['address'], item['original_columns'])
 
                 if progress:
                     progress.update(1)
@@ -152,7 +157,7 @@ class OpenCageBatchGeocoder():
             finally:
                 queue.task_done()
 
-    async def geocode_one_address(self, output, row_id, address, original_columns):
+    async def geocode_one_address(self, csv_output, row_id, address, original_columns):
         def on_backoff(details):
             if not self.options.quiet:
                 sys.stderr.write("Backing off {wait:0.1f} seconds afters {tries} tries "
@@ -195,13 +200,13 @@ class OpenCageBatchGeocoder():
                             'response': geocoding_result
                         })
 
-                    await self.write_one_geocoding_result(output, row_id, address, geocoding_result, original_columns)
+                    await self.write_one_geocoding_result(csv_output, row_id, geocoding_result, original_columns)
                 except Exception as exc:
                     traceback.print_exception(exc, file=sys.stderr)
 
         await _geocode_one_address()
 
-    async def write_one_geocoding_result(self, output, row_id, address, geocoding_result, original_columns = []):
+    async def write_one_geocoding_result(self, csv_output, row_id, geocoding_result, original_columns):
         row = original_columns
 
         for column in self.options.add_columns:
@@ -227,11 +232,10 @@ class OpenCageBatchGeocoder():
 
             if self.options.verbose:
                 self.log(f"Writing row {row_id}")
-        output.writerow(row)
+        csv_output.writerow(row)
         self.write_counter = self.write_counter + 1
 
 
     def log(self, message):
         if not self.options.quiet:
             sys.stderr.write(f"{message}\n")
-
