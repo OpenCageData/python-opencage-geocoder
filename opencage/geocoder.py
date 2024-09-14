@@ -131,7 +131,7 @@ class OpenCageGeocode:
     """
 
     session = None
-    ratelimit_limit = 2500
+    ratelimit_limit = None
     ratelimit_remaining = None
     ratelimit_reset = None
 
@@ -266,9 +266,25 @@ class OpenCageGeocode:
         else:
             response = requests.get(self.url, params=params, headers=self._opencage_headers('requests')) # pylint: disable=missing-timeout
 
-        self.ratelimit_limit = response.headers.get('x-ratelimit-limit')
-        self.ratelimit_remaining = response.headers.get('x-ratelimit-remaining')
-        self.ratelimit_reset = datetime.fromtimestamp(int(response.headers.get('x-ratelimit-reset')) / 1e3)
+        headers_keys = {
+            'ratelimit_limit': {
+                'header': 'x-ratelimit-limit',
+                'conversor': lambda v: int(v) if v else self.ratelimit_limit
+            },
+            'ratelimit_remaining': {
+                'header': 'x-ratelimit-remaining',
+                'conversor': lambda v: int(v) if v else self.ratelimit_remaining
+            },
+            'ratelimit_reset': {
+                'header': 'x-ratelimit-reset',
+                'conversor': lambda v: datetime.fromtimestamp(int(v) / 1e3) if v else self.ratelimit_reset
+            }
+        }
+
+        for prop_name, prop_data in headers_keys.items():
+            header_value = response.headers.get(prop_data['header'])
+            conversor = prop_data['conversor']
+            setattr(self, prop_name, conversor(header_value))
 
         try:
             response_json = response.json()
