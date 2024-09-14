@@ -8,6 +8,7 @@ import sys
 import requests
 import backoff
 from .version import __version__
+from datetime import datetime
 
 try:
     import aiohttp
@@ -130,6 +131,9 @@ class OpenCageGeocode:
     """
 
     session = None
+    ratelimit_limit = 2500
+    ratelimit_remaining = None
+    ratelimit_reset = None
 
     def __init__(self, key, protocol='https', domain=DEFAULT_DOMAIN, sslcontext=None):
         """Constructor."""
@@ -261,6 +265,10 @@ class OpenCageGeocode:
             response = self.session.get(self.url, params=params, headers=self._opencage_headers('aiohttp'))
         else:
             response = requests.get(self.url, params=params, headers=self._opencage_headers('requests')) # pylint: disable=missing-timeout
+
+        self.ratelimit_limit = response.headers.get('x-ratelimit-limit')
+        self.ratelimit_remaining = response.headers.get('x-ratelimit-remaining')
+        self.ratelimit_reset = datetime.fromtimestamp(int(response.headers.get('x-ratelimit-reset')) / 1e3)
 
         try:
             response_json = response.json()
