@@ -42,4 +42,4 @@ def test_rate_limit_properties():
 
     assert geocoder.ratelimit_limit == 2500
     assert geocoder.ratelimit_remaining == 2487
-    assert geocoder.ratelimit_reset == datetime.fromtimestamp(1402185600 / 1e3)
+    assert geocoder.ratelimit_reset == datetime.fromtimestamp(1402185600)

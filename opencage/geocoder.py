@@ -277,7 +277,7 @@ class OpenCageGeocode:
             },
             'ratelimit_reset': {
                 'header': 'x-ratelimit-reset',
-                'conversor': lambda v: datetime.fromtimestamp(int(v) / 1e3) if v else self.ratelimit_reset
+                'conversor': lambda v: datetime.fromtimestamp(int(v)) if v else self.ratelimit_reset
             }
         }
 
