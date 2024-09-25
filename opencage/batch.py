@@ -213,11 +213,13 @@ class OpenCageBatchGeocoder():
             if geocoding_result is None:
                 row.append('')
             elif column in geocoding_result:
-                row.append(geocoding_result[column])
+                row.append(self.deep_get_result_value(geocoding_result, [column], ''))
             elif column in geocoding_result['components']:
-                row.append(geocoding_result['components'][column])
+                row.append(self.deep_get_result_value(geocoding_result, ['components', column], ''))
             elif column in geocoding_result['geometry']:
-                row.append(geocoding_result['geometry'][column])
+                row.append(self.deep_get_result_value(geocoding_result, ['geometry', column], ''))
+            elif column == 'FIPS':
+                row.append(self.deep_get_result_value(geocoding_result, ['annotations', 'FIPS', 'county'], ''))
             else:
                 row.append('')
 
@@ -235,7 +237,14 @@ class OpenCageBatchGeocoder():
         csv_output.writerow(row)
         self.write_counter = self.write_counter + 1
 
-
     def log(self, message):
         if not self.options.quiet:
             sys.stderr.write(f"{message}\n")
+
+    def deep_get_result_value(self, data, keys, default=None):
+        for key in keys:
+            if isinstance(data, dict):
+                data = data.get(key, default)
+            else:
+                return default
+        return data
