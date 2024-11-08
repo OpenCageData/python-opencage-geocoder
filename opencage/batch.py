@@ -74,7 +74,7 @@ class OpenCageBatchGeocoder():
 
     async def test_request(self):
         try:
-            async with OpenCageGeocode(self.options.api_key, domain=self.options.api_domain, sslcontext=self.sslcontext) as geocoder:
+            async with OpenCageGeocode(self.options.api_key, domain=self.options.api_domain, sslcontext=self.sslcontext, user_agent_comment='OpenCage CLI') as geocoder:
                 result = await geocoder.geocode_async('Kendall Sq, Cambridge, MA', raw_response=True)
 
                 free = False
@@ -170,7 +170,7 @@ class OpenCageBatchGeocoder():
                               max_tries=self.options.retries,
                               on_backoff=on_backoff)
         async def _geocode_one_address():
-            async with OpenCageGeocode(self.options.api_key, domain=self.options.api_domain, sslcontext=self.sslcontext) as geocoder:
+            async with OpenCageGeocode(self.options.api_key, domain=self.options.api_domain, sslcontext=self.sslcontext, user_agent_comment='OpenCage CLI') as geocoder:
                 geocoding_results = None
                 params = { 'no_annotations': 1, **self.options.optional_api_params }
 
