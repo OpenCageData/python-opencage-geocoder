@@ -26,7 +26,7 @@ exec $SHELL
 # 'exec $SHELL' doesn't work well in a provision file. Likely you need to
 # run the following commands manually after 'vagrant up'
 
-for VERSION in 3.8 3.9 3.10 3.11; do
+for VERSION in 3.8 3.9 3.10 3.11 3.12 3.13; do
   VERSION=$(pyenv latest --known $VERSION)
   echo "Installing $VERSION ..."
   pyenv install --skip-existing $VERSION
