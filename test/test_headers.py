@@ -12,9 +12,9 @@ from opencage.geocoder import OpenCageGeocode
 # reduce maximum backoff retry time from 120s to 1s
 os.environ['BACKOFF_MAX_TIME'] = '1'
 
-geocoder = OpenCageGeocode('abcde')
+geocoder = OpenCageGeocode('abcde', user_agent_comment='OpenCage Test')
 
-user_agent_format = re.compile(r'^opencage-python/[\d\.]+ Python/[\d\.]+ (requests|aiohttp)/[\d\.]+$')
+user_agent_format = re.compile(r'^opencage-python/[\d\.]+ Python/[\d\.]+ (requests|aiohttp)/[\d\.]+ \(OpenCage Test\)$')
 
 @httprettified
 def test_sync():

@@ -131,7 +131,7 @@ class OpenCageGeocode:
 
     session = None
 
-    def __init__(self, key, protocol='https', domain=DEFAULT_DOMAIN, sslcontext=None):
+    def __init__(self, key, protocol='https', domain=DEFAULT_DOMAIN, sslcontext=None, user_agent_comment=None):
         """Constructor."""
         self.key = key
 
@@ -141,6 +141,8 @@ class OpenCageGeocode:
 
         # https://docs.aiohttp.org/en/stable/client_advanced.html#ssl-control-for-tcp-sockets
         self.sslcontext = sslcontext
+
+        self.user_agent_comment = user_agent_comment
 
     def __enter__(self):
         self.session = requests.Session()
@@ -290,8 +292,13 @@ class OpenCageGeocode:
             client_version = aiohttp.__version__
 
         py_version = '.'.join(str(x) for x in sys.version_info[0:3])
+
+        comment = ''
+        if self.user_agent_comment:
+            comment = f" ({self.user_agent_comment})"
+
         return {
-            'User-Agent': f"opencage-python/{__version__} Python/{py_version} {client}/{client_version}"
+            'User-Agent': f"opencage-python/{__version__} Python/{py_version} {client}/{client_version}{comment}"
         }
 
     async def _opencage_async_request(self, params):
