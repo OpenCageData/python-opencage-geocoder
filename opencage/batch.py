@@ -4,6 +4,7 @@ import asyncio
 import traceback
 import threading
 import random
+import json
 
 from contextlib import suppress
 from urllib.parse import urlencode
@@ -221,6 +222,8 @@ class OpenCageBatchGeocoder():
                 row.append(self.deep_get_result_value(geocoding_result, ['geometry', column], ''))
             elif column == 'FIPS':
                 row.append(self.deep_get_result_value(geocoding_result, ['annotations', 'FIPS', 'county'], ''))
+            elif column == 'json':
+                row.append(json.dumps(geocoding_result, separators=(',', ':'))) # Compact JSON
             else:
                 row.append('')
 

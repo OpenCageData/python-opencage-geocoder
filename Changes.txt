@@ -1,3 +1,6 @@
+v3.0.4 Mon Dec 30 2024
+  CLI: Add special 'json' output column option
+
 v3.0.3 Sat Nov 9 2024
   CLI: add 'OpenCage CLI' to the HTTP user agent string
   Test suite: remove python 3.7, add 3.13
