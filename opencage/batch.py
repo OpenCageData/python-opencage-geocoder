@@ -110,10 +110,10 @@ class OpenCageBatchGeocoder():
     async def read_one_line(self, row, row_id):
         warnings = False
 
-        if self.options.command == 'reverse':
-            input_columns = [1, 2]
-        elif self.options.input_columns:
+        if self.options.input_columns:
             input_columns = self.options.input_columns
+        elif self.options.command == 'reverse':
+            input_columns = [1, 2]
         else:
             input_columns = None
 
