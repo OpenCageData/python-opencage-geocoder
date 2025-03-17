@@ -155,3 +155,22 @@ def test_defaults():
     assert args.optional_api_params == {}
     assert args.no_progress is False
     assert args.quiet is False
+
+def test_reverse_input_columns():
+    args = parse_args([
+        "reverse",
+        "--api-key", "12345678901234567890123456789012",
+        "--input", "test/fixtures/input.txt",
+        "--output", "test/fixtures/output.csv"
+    ])
+    assert args.input_columns == [1, 2]
+
+    args = parse_args([
+        "reverse",
+        "--api-key", "12345678901234567890123456789012",
+        "--input", "test/fixtures/input.txt",
+        "--output", "test/fixtures/output.csv",
+        "--input-columns", '2,1'
+    ])
+
+    assert args.input_columns == [2, 1]
