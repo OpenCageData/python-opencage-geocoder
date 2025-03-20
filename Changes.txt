@@ -1,3 +1,7 @@
+v3.1.0 Thu Mar 20 2026
+  CLI: Add special 'status' output column option
+  CLI: fixed bug where --input-column for reverse would revert to the defaults
+
 v3.0.4 Mon Dec 30 2024
   CLI: Add special 'json' output column option
 
