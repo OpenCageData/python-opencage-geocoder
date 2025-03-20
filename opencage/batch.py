@@ -11,7 +11,7 @@ from urllib.parse import urlencode
 from tqdm import tqdm
 import certifi
 import backoff
-from opencage.geocoder import OpenCageGeocode, OpenCageGeocodeError, _query_for_reverse_geocoding
+from opencage.geocoder import OpenCageGeocode, OpenCageGeocodeError, _query_for_reverse_geocoding, floatify_latlng
 
 class OpenCageBatchGeocoder():
 
@@ -36,7 +36,7 @@ class OpenCageBatchGeocoder():
                 self.log(test['error'])
                 return
             if test['free'] is True and self.options.workers > 1:
-                sys.stderr.write(f"Free trial account detected. Resetting number of workers to 1.\n")
+                sys.stderr.write("Free trial account detected. Resetting number of workers to 1.\n")
                 self.options.workers = 1
 
         if self.options.headers:
@@ -174,15 +174,18 @@ class OpenCageBatchGeocoder():
         async def _geocode_one_address():
             async with OpenCageGeocode(self.options.api_key, domain=self.options.api_domain, sslcontext=self.sslcontext, user_agent_comment=self.user_agent_comment) as geocoder:
                 geocoding_results = None
-                params = { 'no_annotations': 1, **self.options.optional_api_params }
+                response = None
+                params = { 'no_annotations': 1, 'raw_response': True, **self.options.optional_api_params }
 
                 try:
                     if self.options.command == 'reverse':
                         if ',' in address:
                             lon, lat = address.split(',')
-                            geocoding_results = await geocoder.reverse_geocode_async(lon, lat, **params)
+                            response = await geocoder.reverse_geocode_async(lon, lat, **params)
+                            geocoding_results = floatify_latlng(response['results'])
                     else:
-                        geocoding_results = await geocoder.geocode_async(address, **params)
+                        response = await geocoder.geocode_async(address, **params)
+                        geocoding_results = floatify_latlng(response['results'])
                 except OpenCageGeocodeError as exc:
                     self.log(str(exc))
                 except Exception as exc:
@@ -199,20 +202,22 @@ class OpenCageBatchGeocoder():
                             'row_id': row_id,
                             'thread_id': threading.get_native_id(),
                             'request': geocoder.url + '?' + urlencode(geocoder._parse_request(address, params)),
-                            'response': geocoding_result
+                            'response': response
                         })
 
-                    await self.write_one_geocoding_result(csv_output, row_id, geocoding_result, original_columns)
+                    await self.write_one_geocoding_result(csv_output, row_id, geocoding_result, response, original_columns)
                 except Exception as exc:
                     traceback.print_exception(exc, file=sys.stderr)
 
         await _geocode_one_address()
 
-    async def write_one_geocoding_result(self, csv_output, row_id, geocoding_result, original_columns):
+    async def write_one_geocoding_result(self, csv_output, row_id, geocoding_result, raw_response, original_columns):
         row = original_columns
 
         for column in self.options.add_columns:
-            if geocoding_result is None:
+            if column == 'status':
+                row.append(self.deep_get_result_value(raw_response, ['status', 'message']))
+            elif geocoding_result is None:
                 row.append('')
             elif column in geocoding_result:
                 row.append(self.deep_get_result_value(geocoding_result, [column], ''))

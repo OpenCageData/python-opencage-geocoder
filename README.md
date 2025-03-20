@@ -134,7 +134,7 @@ options:
   --output FILENAME     Output file name
   --headers             If the first row should be treated as a header row
   --input-columns       Comma-separated list of integers (default '1')
-  --add-columns         Comma-separated list of output columns (default 'lat,lng,_type,_category,country_code,country,state,county,_normalized_city,postcode,road,house_number,confidence,formatted')
+  --add-columns         Comma-separated list of output columns (default 'lat,lng,_type,_category,country_code,country,state,county,_normalized_city,postcode,road,house_number,confidence,formatted,json,status')
   --workers             Number of parallel geocoding requests (default 1)
   --timeout             Timeout in seconds (default 10)
   --retries             Number of retries (default 5)
