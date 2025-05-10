@@ -71,7 +71,7 @@ setup(
     ],
     test_suite='pytest',
     tests_require=[
-        'httpretty>=1.1.4',
+        'responses>=0.25.7',
         'pylint==2.17.4',
         'pytest>=7.4.0'
     ],

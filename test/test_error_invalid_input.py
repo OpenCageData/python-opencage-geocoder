@@ -1,19 +1,19 @@
 import pytest
 
-import httpretty
+import responses
 
-from httpretty import httprettified
 from opencage.geocoder import OpenCageGeocode
 from opencage.geocoder import InvalidInputError
 
 geocoder = OpenCageGeocode('abcde')
 
-@httprettified
+@responses.activate
 def test_must_be_unicode_string():
-    httpretty.register_uri(
-        httpretty.GET,
+    responses.add(
+        responses.GET,
         geocoder.url,
-        body='{"results":{}}'
+        body='{"results":{}}',
+        status=200
     )
 
     # Should not give errors
