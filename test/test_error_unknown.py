@@ -1,18 +1,18 @@
 import pytest
 
-import httpretty
+import responses
 
-from httpretty import httprettified
 from opencage.geocoder import OpenCageGeocode
 from opencage.geocoder import UnknownError
 
 geocoder = OpenCageGeocode('abcde')
 
-@httprettified
+@responses.activate
 def test_http_500_status():
-    httpretty.register_uri(
-        httpretty.GET,
+    responses.add(
+        responses.GET,
         geocoder.url,
+        body='{}',
         status=500,
     )
 
@@ -21,14 +21,14 @@ def test_http_500_status():
 
     assert str(excinfo.value) == '500 status code from API'
 
-@httprettified
+@responses.activate
 def test_non_json():
     "These kinds of errors come from webserver and may not be JSON"
-    httpretty.register_uri(
-        httpretty.GET,
+    responses.add(
+        responses.GET,
         geocoder.url,
         body='<html><body><h1>503 Service Unavailable</h1></body></html>',
-        forcing_headers={
+        headers={
             'Content-Type': 'text/html',
         },
         status=503
@@ -39,12 +39,13 @@ def test_non_json():
 
     assert str(excinfo.value) == 'Non-JSON result from server'
 
-@httprettified
+@responses.activate
 def test_no_results_key():
-    httpretty.register_uri(
-        httpretty.GET,
+    responses.add(
+        responses.GET,
         geocoder.url,
         body='{"spam": "eggs"}',
+        status=200,  # Need to specify status code with responses
     )
 
     with pytest.raises(UnknownError) as excinfo:

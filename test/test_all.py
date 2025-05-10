@@ -3,9 +3,8 @@
 from pathlib import Path
 
 import os
-import httpretty
+import responses
 
-from httpretty import httprettified
 from opencage.geocoder import OpenCageGeocode
 
 # reduce maximum backoff retry time from 120s to 1s
@@ -22,51 +21,54 @@ def _any_result_around(results, lat=None, lon=None):
             return True
     return False
 
-@httprettified
+@responses.activate
 def test_gb_postcode():
-    httpretty.register_uri(
-        httpretty.GET,
+    responses.add(
+        responses.GET,
         geocoder.url,
-        body=Path('test/fixtures/uk_postcode.json').read_text(encoding="utf-8")
+        body=Path('test/fixtures/uk_postcode.json').read_text(encoding="utf-8"),
+        status=200
     )
 
     results = geocoder.geocode("EC1M 5RF")
     assert _any_result_around(results, lat=51.5201666, lon=-0.0985142)
 
 
-@httprettified
+@responses.activate
 def test_australia():
-    httpretty.register_uri(
-        httpretty.GET,
+    responses.add(
+        responses.GET,
         geocoder.url,
-        body=Path('test/fixtures/mudgee_australia.json').read_text(encoding="utf-8")
+        body=Path('test/fixtures/mudgee_australia.json').read_text(encoding="utf-8"),
+        status=200
     )
 
     results = geocoder.geocode("Mudgee, Australia")
     assert _any_result_around(results, lat=-32.5980702, lon=149.5886383)
 
 
-@httprettified
+@responses.activate
 def test_munster():
-    httpretty.register_uri(
-        httpretty.GET,
+    responses.add(
+        responses.GET,
         geocoder.url,
-        body=Path('test/fixtures/muenster.json').read_text(encoding="utf-8")
+        body=Path('test/fixtures/muenster.json').read_text(encoding="utf-8"),
+        status=200
     )
 
     results = geocoder.geocode("Münster")
     assert _any_result_around(results, lat=51.9625101, lon=7.6251879)
 
-@httprettified
+@responses.activate
 def test_donostia():
-    httpretty.register_uri(
-        httpretty.GET,
+    responses.add(
+        responses.GET,
         geocoder.url,
-        body=Path('test/fixtures/donostia.json').read_text(encoding="utf-8")
-
+        body=Path('test/fixtures/donostia.json').read_text(encoding="utf-8"),
+        status=200
     )
 
-    results =geocoder.geocode("Donostia")
+    results = geocoder.geocode("Donostia")
     assert _any_result_around(results, lat=43.300836, lon=-1.9809529)
 
     # test that the results are in unicode

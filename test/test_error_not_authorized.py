@@ -1,18 +1,17 @@
 from pathlib import Path
 
-import httpretty
 import pytest
+import responses
 
-from httpretty import httprettified
 from opencage.geocoder import OpenCageGeocode
 from opencage.geocoder import NotAuthorizedError
 
 geocoder = OpenCageGeocode('unauthorized-key')
 
-@httprettified
+@responses.activate
 def test_api_key_not_authorized():
-    httpretty.register_uri(
-        httpretty.GET,
+    responses.add(
+        responses.GET,
         geocoder.url,
         body=Path('test/fixtures/401_not_authorized.json').read_text(encoding="utf-8"),
         status=401,
