@@ -66,8 +66,7 @@ def parse_args(args):
             os.remove(options.output)
         else:
             print(
-                f"Error: The output file '{
-                    options.output}' already exists. You can add --overwrite to your command.",
+                f"Error: The output file '{options.output}' already exists. You can add --overwrite to your command.",
                 file=sys.stderr)
             sys.exit(1)
 
