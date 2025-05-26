@@ -1,6 +1,6 @@
 from opencage.geocoder import _query_for_reverse_geocoding
 
-def _expected_output(input_latlng, expected_output): # pylint: disable=no-self-argument
+def _expected_output(input_latlng, expected_output):
     def test():
         lat, lng = input_latlng
         assert _query_for_reverse_geocoding(lat, lng) == expected_output

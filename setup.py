@@ -72,7 +72,7 @@ setup(
     test_suite='pytest',
     tests_require=[
         'responses>=0.25.7',
-        'pylint==2.17.4',
+        'flake8>=7.0.0',
         'pytest>=7.4.0'
     ],
 )

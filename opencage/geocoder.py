@@ -262,7 +262,7 @@ class OpenCageGeocode:
         if self.session:
             response = self.session.get(self.url, params=params, headers=self._opencage_headers('aiohttp'))
         else:
-            response = requests.get(self.url, params=params, headers=self._opencage_headers('requests')) # pylint: disable=missing-timeout
+            response = requests.get(self.url, params=params, headers=self._opencage_headers('requests'))
 
         try:
             response_json = response.json()

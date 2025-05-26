@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# pylint: disable=redefined-builtin
-
 #
 # OpenCage Geocoder documentation build configuration file, created by
 # sphinx-quickstart on Sat Jun  7 14:38:18 2014.
