@@ -96,7 +96,7 @@ def test_input_errors(capfd):
 
     _, err = capfd.readouterr()
     # assert err == ''
-    assert err.count("\n") == 6
+    assert err.count("\n") == 7
     assert "Line 1 - Missing input column 2 in ['50.101010']" in err
     assert "Line 1 - Expected two comma-separated values for reverse geocoding, got ['50.101010']" in err
     assert "Line 3 - Empty line" in err
@@ -109,7 +109,7 @@ def test_input_errors(capfd):
         length=4,
         lines=[
             '50.101010,,',
-            '-100,60.1,de,48153',
+            '-100,60.1,,',
             ',,',
             'a,b,,'
         ]

@@ -32,15 +32,17 @@ class InvalidInputError(OpenCageGeocodeError):
     """
     There was a problem with the input you provided.
 
-    :var bad_value: The value that caused the problem
+    :var message: Error message describing the bad input.
+    :var bad_value: The value that caused the problem.
     """
 
-    def __init__(self, bad_value):
+    def __init__(self, message, bad_value=None):
         super().__init__()
+        self.message = message
         self.bad_value = bad_value
 
     def __unicode__(self):
-        return "Input must be a unicode string, not " + repr(self.bad_value)[:100]
+        return self.message
 
     __str__ = __unicode__
 
@@ -135,13 +137,19 @@ class OpenCageGeocode:
 
     def __init__(
             self,
-            key,
+            key=None,
             protocol='https',
             domain=DEFAULT_DOMAIN,
             sslcontext=None,
             user_agent_comment=None):
         """Constructor."""
-        self.key = key
+        self.key = key if key is not None else os.environ.get('OPENCAGE_API_KEY')
+
+        if self.key is None:
+            raise ValueError(
+                "API key not provided. "
+                "Either pass a 'key' parameter or set the OPENCAGE_API_KEY environment variable."
+            )
 
         if protocol and protocol not in ('http', 'https'):
             protocol = 'https'
@@ -243,7 +251,11 @@ class OpenCageGeocode:
         :raises RateLimitExceededError: if you have exceeded the number of queries you can make.
         :                                  Exception says when you can try again
         :raises UnknownError: if something goes wrong with the OpenCage API
+        :raises InvalidInputError: if the latitude or longitude is out of bounds
         """
+
+        self._validate_lat_lng(lat, lng)
+
         return self.geocode(_query_for_reverse_geocoding(lat, lng), **kwargs)
 
     async def reverse_geocode_async(self, lat, lng, **kwargs):
@@ -258,7 +270,11 @@ class OpenCageGeocode:
         :rtype: dict
         :raises RateLimitExceededError: if exceeded number of queries you can make. You can try again
         :raises UnknownError: if something goes wrong with the OpenCage API
+        :raises InvalidInputError: if the latitude or longitude is out of bounds
         """
+
+        self._validate_lat_lng(lat, lng)
+
         return await self.geocode_async(_query_for_reverse_geocoding(lat, lng), **kwargs)
 
     @backoff.on_exception(
@@ -340,11 +356,32 @@ class OpenCageGeocode:
 
     def _parse_request(self, query, params):
         if not isinstance(query, str):
-            raise InvalidInputError(bad_value=query)
+            error_message = "Input must be a unicode string, not " + repr(query)[:100]
+            raise InvalidInputError(error_message, bad_value=query)
 
         data = {'q': query, 'key': self.key}
         data.update(params)  # Add user parameters
         return data
+
+    def _validate_lat_lng(self, lat, lng):
+        """
+        Validate latitude and longitude values.
+
+        Raises InvalidInputError if the values are out of bounds.
+        """
+        try:
+            lat_float = float(lat)
+            if not -90 <= lat_float <= 90:
+                raise InvalidInputError(f"Latitude must be a number between -90 and 90, not {lat}", bad_value=lat)
+        except ValueError:
+            raise InvalidInputError(f"Latitude must be a number between -90 and 90, not {lat}", bad_value=lat)
+
+        try:
+            lng_float = float(lng)
+            if not -180 <= lng_float <= 180:
+                raise InvalidInputError(f"Longitude must be a number between -180 and 180, not {lng}", bad_value=lng)
+        except ValueError:
+            raise InvalidInputError(f"Longitude must be a number between -180 and 180, not {lng}", bad_value=lng)
 
 
 def _query_for_reverse_geocoding(lat, lng):
