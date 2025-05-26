@@ -131,9 +131,12 @@ class OpenCageGeocode:
 
     session = None
 
-    def __init__(self, key, protocol='https', domain=DEFAULT_DOMAIN, sslcontext=None, user_agent_comment=None):
+    def __init__(self, key=None, protocol='https', domain=DEFAULT_DOMAIN, sslcontext=None, user_agent_comment=None):
         """Constructor."""
-        self.key = key
+        self.key = key if key is not None else os.environ.get('OPENCAGE_API_KEY')
+
+        if self.key is None:
+            raise ValueError("API key not provided. Either pass a 'key' parameter or set the OPENCAGE_API_KEY environment variable.")
 
         if protocol and protocol not in ('http', 'https'):
             protocol = 'https'
