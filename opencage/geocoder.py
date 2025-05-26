@@ -146,7 +146,10 @@ class OpenCageGeocode:
         self.key = key if key is not None else os.environ.get('OPENCAGE_API_KEY')
 
         if self.key is None:
-            raise ValueError("API key not provided. Either pass a 'key' parameter or set the OPENCAGE_API_KEY environment variable.")
+            raise ValueError(
+                "API key not provided. "
+                "Either pass a 'key' parameter or set the OPENCAGE_API_KEY environment variable."
+            )
 
         if protocol and protocol not in ('http', 'https'):
             protocol = 'https'

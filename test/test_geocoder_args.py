@@ -23,4 +23,3 @@ def test_custom_domain():
     """Test that custom domain can be set"""
     geocoder = OpenCageGeocode('abcde', domain='example.com')
     assert geocoder.url == 'https://example.com/geocode/v1/json'
-
