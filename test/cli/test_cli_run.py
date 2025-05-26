@@ -5,8 +5,9 @@ import pytest
 from opencage.command_line import main
 
 # NOTE: Testing keys https://opencagedata.com/api#testingkeys
-TEST_APIKEY_200 = '6d0e711d72d74daeb2b0bfd2a5cdfdba' # always returns same address
-TEST_APIKEY_401 = '11111111111111111111111111111111' # invalid key
+TEST_APIKEY_200 = '6d0e711d72d74daeb2b0bfd2a5cdfdba'  # always returns same address
+TEST_APIKEY_401 = '11111111111111111111111111111111'  # invalid key
+
 
 @pytest.fixture(autouse=True)
 def around():
@@ -15,6 +16,7 @@ def around():
         pathlib.Path("test/fixtures/cli/output.csv").unlink()
     except FileNotFoundError:
         pass
+
 
 def assert_output(path, length, lines):
     assert pathlib.Path(path).exists()
@@ -26,6 +28,7 @@ def assert_output(path, length, lines):
 
         for i, expected in enumerate(lines):
             assert actual[i].strip() == expected
+
 
 def test_forward():
     main([
@@ -43,6 +46,7 @@ def test_forward():
         lines=['Rathausmarkt 1,Hamburg,20095,Germany,de,Germany,48153,Münster']
     )
 
+
 def test_reverse():
     main([
         "reverse",
@@ -57,6 +61,7 @@ def test_reverse():
         length=1,
         lines=['51.9526622,7.6324709,de,Germany,48153']
     )
+
 
 def test_headers():
     main([
@@ -77,6 +82,7 @@ def test_headers():
             'Rathausmarkt 1,Hamburg,20095,Germany,51.9526622,7.6324709,48153'
         ]
     )
+
 
 def test_input_errors(capfd):
     main([
@@ -108,6 +114,7 @@ def test_input_errors(capfd):
             'a,b,,'
         ]
     )
+
 
 def test_empty_result():
     # 'NOWHERE-INTERESTING' is guaranteed to return no result
@@ -143,6 +150,7 @@ def test_invalid_api_key(capfd):
 
     _, err = capfd.readouterr()
     assert 'Your API key is not authorized' in err
+
 
 def test_dryrun(capfd):
     main([

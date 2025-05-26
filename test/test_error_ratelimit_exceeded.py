@@ -8,6 +8,7 @@ from opencage.geocoder import RateLimitExceededError
 
 geocoder = OpenCageGeocode('abcde')
 
+
 @responses.activate
 def test_no_rate_limit():
     responses.add(

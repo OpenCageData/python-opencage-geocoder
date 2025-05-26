@@ -17,8 +17,10 @@ except ImportError:
 
 DEFAULT_DOMAIN = 'api.opencagedata.com'
 
+
 def backoff_max_time():
     return int(os.environ.get('BACKOFF_MAX_TIME', '120'))
+
 
 class OpenCageGeocodeError(Exception):
 
@@ -106,8 +108,8 @@ class SSLError(OpenCageGeocodeError):
     def __unicode__(self):
         """Convert exception to a string."""
         return ("SSL Certificate error connecting to OpenCage API. This is usually due to "
-               "outdated CA root certificates of the operating system. "
-               )
+                "outdated CA root certificates of the operating system. "
+                )
 
     __str__ = __unicode__
 
@@ -133,7 +135,13 @@ class OpenCageGeocode:
 
     session = None
 
-    def __init__(self, key=None, protocol='https', domain=DEFAULT_DOMAIN, sslcontext=None, user_agent_comment=None):
+    def __init__(
+            self,
+            key=None,
+            protocol='https',
+            domain=DEFAULT_DOMAIN,
+            sslcontext=None,
+            user_agent_comment=None):
         """Constructor."""
         self.key = key if key is not None else os.environ.get('OPENCAGE_API_KEY')
 
@@ -275,7 +283,7 @@ class OpenCageGeocode:
         if self.session:
             response = self.session.get(self.url, params=params, headers=self._opencage_headers('aiohttp'))
         else:
-            response = requests.get(self.url, params=params, headers=self._opencage_headers('requests')) # pylint: disable=missing-timeout
+            response = requests.get(self.url, params=params, headers=self._opencage_headers('requests'))
 
         try:
             response_json = response.json()
@@ -348,8 +356,8 @@ class OpenCageGeocode:
             error_message = "Input must be a unicode string, not " + repr(query)[:100]
             raise InvalidInputError(error_message, bad_value=query)
 
-        data = { 'q': query, 'key': self.key }
-        data.update(params) # Add user parameters
+        data = {'q': query, 'key': self.key}
+        data.update(params)  # Add user parameters
         return data
 
     def _validate_lat_lng(self, lat, lng):

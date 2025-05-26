@@ -7,7 +7,8 @@ from opencage.geocoder import OpenCageGeocode
 from opencage.geocoder import ForbiddenError
 
 
-geocoder = OpenCageGeocode('2e10e5e828262eb243ec0b54681d699a') # will always return 403
+geocoder = OpenCageGeocode('2e10e5e828262eb243ec0b54681d699a')  # will always return 403
+
 
 @responses.activate
 def test_api_key_blocked():

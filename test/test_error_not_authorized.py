@@ -8,6 +8,7 @@ from opencage.geocoder import NotAuthorizedError
 
 geocoder = OpenCageGeocode('unauthorized-key')
 
+
 @responses.activate
 def test_api_key_not_authorized():
     responses.add(

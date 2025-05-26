@@ -7,6 +7,7 @@ from opencage.geocoder import InvalidInputError
 
 geocoder = OpenCageGeocode('abcde')
 
+
 @responses.activate
 def test_must_be_unicode_string():
     responses.add(
