@@ -3,7 +3,11 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "bento/ubuntu-22.04"
+  config.vm.box = 'bento/ubuntu-24.04'
+  if RUBY_PLATFORM.include?('darwin') && RUBY_PLATFORM.include?('arm64')
+    # Apple Silicon/M processor
+    config.vm.box = 'gutehall/ubuntu24-04'
+  end
 
   config.vm.synced_folder ".", "/home/vagrant/python-opencage-geocoder"
 
