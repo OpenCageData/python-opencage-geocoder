@@ -17,8 +17,10 @@ except ImportError:
 
 DEFAULT_DOMAIN = 'api.opencagedata.com'
 
+
 def backoff_max_time():
     return int(os.environ.get('BACKOFF_MAX_TIME', '120'))
+
 
 class OpenCageGeocodeError(Exception):
 
@@ -38,7 +40,7 @@ class InvalidInputError(OpenCageGeocodeError):
         self.bad_value = bad_value
 
     def __unicode__(self):
-        return "Input must be a unicode string, not "+repr(self.bad_value)[:100]
+        return "Input must be a unicode string, not " + repr(self.bad_value)[:100]
 
     __str__ = __unicode__
 
@@ -104,8 +106,8 @@ class SSLError(OpenCageGeocodeError):
     def __unicode__(self):
         """Convert exception to a string."""
         return ("SSL Certificate error connecting to OpenCage API. This is usually due to "
-               "outdated CA root certificates of the operating system. "
-               )
+                "outdated CA root certificates of the operating system. "
+                )
 
     __str__ = __unicode__
 
@@ -131,7 +133,13 @@ class OpenCageGeocode:
 
     session = None
 
-    def __init__(self, key, protocol='https', domain=DEFAULT_DOMAIN, sslcontext=None, user_agent_comment=None):
+    def __init__(
+            self,
+            key,
+            protocol='https',
+            domain=DEFAULT_DOMAIN,
+            sslcontext=None,
+            user_agent_comment=None):
         """Constructor."""
         self.key = key
 
@@ -334,8 +342,8 @@ class OpenCageGeocode:
         if not isinstance(query, str):
             raise InvalidInputError(bad_value=query)
 
-        data = { 'q': query, 'key': self.key }
-        data.update(params) # Add user parameters
+        data = {'q': query, 'key': self.key}
+        data.update(params)  # Add user parameters
         return data
 
 

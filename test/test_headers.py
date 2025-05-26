@@ -13,7 +13,9 @@ os.environ['BACKOFF_MAX_TIME'] = '1'
 
 geocoder = OpenCageGeocode('abcde', user_agent_comment='OpenCage Test')
 
-user_agent_format = re.compile(r'^opencage-python/[\d\.]+ Python/[\d\.]+ (requests|aiohttp)/[\d\.]+ \(OpenCage Test\)$')
+user_agent_format = re.compile(
+    r'^opencage-python/[\d\.]+ Python/[\d\.]+ (requests|aiohttp)/[\d\.]+ \(OpenCage Test\)$')
+
 
 @responses.activate
 def test_sync():
@@ -25,7 +27,7 @@ def test_sync():
     )
 
     geocoder.geocode("EC1M 5RF")
-    
+
     # Check the User-Agent header in the most recent request
     request = responses.calls[-1].request
     user_agent = request.headers['User-Agent']
