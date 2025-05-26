@@ -11,7 +11,12 @@ from urllib.parse import urlencode
 from tqdm import tqdm
 import certifi
 import backoff
-from opencage.geocoder import OpenCageGeocode, OpenCageGeocodeError, _query_for_reverse_geocoding, floatify_latlng
+from opencage.geocoder import (
+    OpenCageGeocode,
+    OpenCageGeocodeError,
+    _query_for_reverse_geocoding,
+    floatify_latlng
+)
 
 
 class OpenCageBatchGeocoder():
@@ -77,7 +82,12 @@ class OpenCageBatchGeocoder():
 
     async def test_request(self):
         try:
-            async with OpenCageGeocode(self.options.api_key, domain=self.options.api_domain, sslcontext=self.sslcontext, user_agent_comment=self.user_agent_comment) as geocoder:
+            async with OpenCageGeocode(
+                self.options.api_key,
+                domain=self.options.api_domain,
+                sslcontext=self.sslcontext,
+                user_agent_comment=self.user_agent_comment
+            ) as geocoder:
                 result = await geocoder.geocode_async('Kendall Sq, Cambridge, MA', raw_response=True)
 
                 free = False
@@ -175,7 +185,12 @@ class OpenCageBatchGeocoder():
                               max_tries=self.options.retries,
                               on_backoff=on_backoff)
         async def _geocode_one_address():
-            async with OpenCageGeocode(self.options.api_key, domain=self.options.api_domain, sslcontext=self.sslcontext, user_agent_comment=self.user_agent_comment) as geocoder:
+            async with OpenCageGeocode(
+                self.options.api_key,
+                domain=self.options.api_domain,
+                sslcontext=self.sslcontext,
+                user_agent_comment=self.user_agent_comment
+            ) as geocoder:
                 geocoding_results = None
                 response = None
                 params = {'no_annotations': 1, 'raw_response': True, **self.options.optional_api_params}
@@ -208,7 +223,13 @@ class OpenCageBatchGeocoder():
                             'response': response
                         })
 
-                    await self.write_one_geocoding_result(csv_output, row_id, geocoding_result, response, original_columns)
+                    await self.write_one_geocoding_result(
+                        csv_output,
+                        row_id,
+                        geocoding_result,
+                        response,
+                        original_columns
+                    )
                 except Exception as exc:
                     traceback.print_exception(exc, file=sys.stderr)
 

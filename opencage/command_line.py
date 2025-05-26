@@ -90,7 +90,10 @@ def add_optional_arguments(parser):
         default=default_input_cols,
         help=f"Comma-separated list of integers (default '{default_input_cols}')",
         metavar='')
-    default_add_cols = 'lat,lng,_type,_category,country_code,country,state,county,_normalized_city,postcode,road,house_number,confidence,formatted'
+    default_add_cols = (
+        'lat,lng,_type,_category,country_code,country,state,county,_normalized_city,'
+        'postcode,road,house_number,confidence,formatted'
+    )
     parser.add_argument(
         "--add-columns",
         type=comma_separated_type(str),
