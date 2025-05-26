@@ -1,4 +1,11 @@
-v3.1.0 Thu Mar 20 2026
+v3.2.0 Mon May 26 2025
+  New error 'InvalidInputError' when input coordinates are out of bound
+  CLI: You can set OPENCAGE_API_KEY environment variable instead specify as parameter
+  Tests: replace pylint library with flake for enforcing code style
+  Tests: replace httpretty library with response
+  Removed very outdated files from docs/ subdirectory
+
+v3.1.0 Thu Mar 20 2025
   CLI: Add special 'status' output column option
   CLI: fixed bug where --input-column for reverse would revert to the defaults
 
