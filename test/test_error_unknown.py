@@ -7,6 +7,7 @@ from opencage.geocoder import UnknownError
 
 geocoder = OpenCageGeocode('abcde')
 
+
 @responses.activate
 def test_http_500_status():
     responses.add(
@@ -20,6 +21,7 @@ def test_http_500_status():
         geocoder.geocode('whatever')
 
     assert str(excinfo.value) == '500 status code from API'
+
 
 @responses.activate
 def test_non_json():
@@ -38,6 +40,7 @@ def test_non_json():
         geocoder.geocode('whatever')
 
     assert str(excinfo.value) == 'Non-JSON result from server'
+
 
 @responses.activate
 def test_no_results_key():

@@ -11,7 +11,13 @@ from urllib.parse import urlencode
 from tqdm import tqdm
 import certifi
 import backoff
-from opencage.geocoder import OpenCageGeocode, OpenCageGeocodeError, _query_for_reverse_geocoding, floatify_latlng
+from opencage.geocoder import (
+    OpenCageGeocode,
+    OpenCageGeocodeError,
+    _query_for_reverse_geocoding,
+    floatify_latlng
+)
+
 
 class OpenCageBatchGeocoder():
 
@@ -76,16 +82,21 @@ class OpenCageBatchGeocoder():
 
     async def test_request(self):
         try:
-            async with OpenCageGeocode(self.options.api_key, domain=self.options.api_domain, sslcontext=self.sslcontext, user_agent_comment=self.user_agent_comment) as geocoder:
+            async with OpenCageGeocode(
+                self.options.api_key,
+                domain=self.options.api_domain,
+                sslcontext=self.sslcontext,
+                user_agent_comment=self.user_agent_comment
+            ) as geocoder:
                 result = await geocoder.geocode_async('Kendall Sq, Cambridge, MA', raw_response=True)
 
                 free = False
                 with suppress(KeyError):
                     free = result['rate']['limit'] == 2500
 
-                return { 'error': None, 'free': free }
+                return {'error': None, 'free': free}
         except Exception as exc:
-            return { 'error': exc }
+            return {'error': exc}
 
     async def read_input(self, csv_input, queue):
         any_warnings = False
@@ -132,18 +143,20 @@ class OpenCageBatchGeocoder():
         if self.options.command == 'reverse':
 
             if len(address) != 2:
-                self.log(f"Line {row_id} - Expected two comma-separated values for reverse geocoding, got {address}")
+                self.log(
+                    f"Line {row_id} - Expected two comma-separated values for reverse geocoding, got {address}")
             else:
                 # _query_for_reverse_geocoding attempts to convert into numbers. We rather have it fail
                 # now than during the actual geocoding
                 try:
                     _query_for_reverse_geocoding(address[0], address[1])
-                except:
-                    self.log(f"Line {row_id} - Does not look like latitude and longitude: '{address[0]}' and '{address[1]}'")
+                except BaseException:
+                    self.log(
+                        f"Line {row_id} - Does not look like latitude and longitude: '{address[0]}' and '{address[1]}'")
                     warnings = True
                     address = []
 
-        return { 'row_id': row_id, 'address': ','.join(address), 'original_columns': row, 'warnings': warnings }
+        return {'row_id': row_id, 'address': ','.join(address), 'original_columns': row, 'warnings': warnings}
 
     async def worker(self, csv_output, queue, progress):
         while True:
@@ -163,8 +176,8 @@ class OpenCageBatchGeocoder():
         def on_backoff(details):
             if not self.options.quiet:
                 sys.stderr.write("Backing off {wait:0.1f} seconds afters {tries} tries "
-                    "calling function {target} with args {args} and kwargs "
-                    "{kwargs}\n".format(**details))
+                                 "calling function {target} with args {args} and kwargs "
+                                 "{kwargs}\n".format(**details))
 
         @backoff.on_exception(backoff.expo,
                               asyncio.TimeoutError,
@@ -172,10 +185,15 @@ class OpenCageBatchGeocoder():
                               max_tries=self.options.retries,
                               on_backoff=on_backoff)
         async def _geocode_one_address():
-            async with OpenCageGeocode(self.options.api_key, domain=self.options.api_domain, sslcontext=self.sslcontext, user_agent_comment=self.user_agent_comment) as geocoder:
+            async with OpenCageGeocode(
+                self.options.api_key,
+                domain=self.options.api_domain,
+                sslcontext=self.sslcontext,
+                user_agent_comment=self.user_agent_comment
+            ) as geocoder:
                 geocoding_results = None
                 response = None
-                params = { 'no_annotations': 1, 'raw_response': True, **self.options.optional_api_params }
+                params = {'no_annotations': 1, 'raw_response': True, **self.options.optional_api_params}
 
                 try:
                     if self.options.command == 'reverse':
@@ -205,13 +223,25 @@ class OpenCageBatchGeocoder():
                             'response': response
                         })
 
-                    await self.write_one_geocoding_result(csv_output, row_id, geocoding_result, response, original_columns)
+                    await self.write_one_geocoding_result(
+                        csv_output,
+                        row_id,
+                        geocoding_result,
+                        response,
+                        original_columns
+                    )
                 except Exception as exc:
                     traceback.print_exception(exc, file=sys.stderr)
 
         await _geocode_one_address()
 
-    async def write_one_geocoding_result(self, csv_output, row_id, geocoding_result, raw_response, original_columns):
+    async def write_one_geocoding_result(
+            self,
+            csv_output,
+            row_id,
+            geocoding_result,
+            raw_response,
+            original_columns):
         row = original_columns
 
         for column in self.options.add_columns:
@@ -226,9 +256,12 @@ class OpenCageBatchGeocoder():
             elif column in geocoding_result['geometry']:
                 row.append(self.deep_get_result_value(geocoding_result, ['geometry', column], ''))
             elif column == 'FIPS':
-                row.append(self.deep_get_result_value(geocoding_result, ['annotations', 'FIPS', 'county'], ''))
+                row.append(
+                    self.deep_get_result_value(
+                        geocoding_result, [
+                            'annotations', 'FIPS', 'county'], ''))
             elif column == 'json':
-                row.append(json.dumps(geocoding_result, separators=(',', ':'))) # Compact JSON
+                row.append(json.dumps(geocoding_result, separators=(',', ':')))  # Compact JSON
             else:
                 row.append('')
 

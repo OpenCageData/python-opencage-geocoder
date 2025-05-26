@@ -1,8 +1,0 @@
-[FORMAT]
-max-line-length=110
-
-[MESSAGES CONTROL]
-; C0114 Missing module docstring (missing-module-docstring)
-; C0116 Missing function or method docstring (missing-function-docstring)
-; R0801 Similar lines in ... files (duplicate-code)
-disable=C0114,C0116,R0801

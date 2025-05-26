@@ -4,6 +4,7 @@ from opencage.version import __version__
 
 from opencage.command_line import parse_args
 
+
 @pytest.fixture(autouse=True)
 def around():
     yield
@@ -12,6 +13,7 @@ def around():
     except FileNotFoundError:
         pass
 
+
 def assert_parse_args_error(args, message, capfd):
     with pytest.raises(SystemExit):
         parse_args(args)
@@ -19,12 +21,14 @@ def assert_parse_args_error(args, message, capfd):
     _, err = capfd.readouterr()
     assert message in err
 
+
 def test_required_arguments(capfd):
     assert_parse_args_error(
         [],
         'To display help use',
         capfd
     )
+
 
 def test_invalid_command(capfd):
     assert_parse_args_error(
@@ -35,12 +39,14 @@ def test_invalid_command(capfd):
         capfd
     )
 
+
 def test_version_number(capfd):
     with pytest.raises(SystemExit):
         parse_args(['--version'])
     out, _ = capfd.readouterr()
 
     assert __version__ in out
+
 
 def test_invalid_api_key(capfd):
     assert_parse_args_error(
@@ -54,6 +60,7 @@ def test_invalid_api_key(capfd):
         capfd
     )
 
+
 def test_existing_output_file(capfd):
     assert_parse_args_error(
         [
@@ -65,6 +72,7 @@ def test_existing_output_file(capfd):
         'already exists',
         capfd
     )
+
 
 def test_argument_range(capfd):
     assert_parse_args_error(
@@ -78,6 +86,7 @@ def test_argument_range(capfd):
         'must be within [1, 20]',
         capfd
     )
+
 
 def test_zero_based_list(capfd):
     assert_parse_args_error(
@@ -128,9 +137,10 @@ def test_full_argument_list():
     assert args.dry_run is True
     assert args.unordered is True
     assert args.api_domain == "bulk.opencagedata.com"
-    assert args.optional_api_params == { "extra": "1" }
+    assert args.optional_api_params == {"extra": "1"}
     assert args.no_progress is True
     assert args.quiet is True
+
 
 def test_defaults():
     args = parse_args([
@@ -144,8 +154,21 @@ def test_defaults():
     assert args.limit == 0
     assert args.headers is False
     assert args.input_columns == [1]
-    assert args.add_columns == ["lat", "lng", "_type", "_category", "country_code", "country", "state",
-        "county", "_normalized_city", "postcode", "road", "house_number", "confidence", "formatted"]
+    assert args.add_columns == [
+        "lat",
+        "lng",
+        "_type",
+        "_category",
+        "country_code",
+        "country",
+        "state",
+        "county",
+        "_normalized_city",
+        "postcode",
+        "road",
+        "house_number",
+        "confidence",
+        "formatted"]
     assert args.workers == 1
     assert args.timeout == 10
     assert args.retries == 10
@@ -155,6 +178,7 @@ def test_defaults():
     assert args.optional_api_params == {}
     assert args.no_progress is False
     assert args.quiet is False
+
 
 def test_reverse_input_columns():
     args = parse_args([

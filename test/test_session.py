@@ -8,12 +8,14 @@ import responses
 from opencage.geocoder import OpenCageGeocode
 from opencage.geocoder import NotAuthorizedError
 
+
 def _any_result_around(results, lat=None, lon=None):
     for result in results:
-        if (abs(result['geometry']['lat'] - lat) < 0.05 and
-            abs(result['geometry']['lng'] - lon) < 0.05):
+        if (abs(result['geometry']['lat'] - lat) < 0.05
+                and abs(result['geometry']['lng'] - lon) < 0.05):
             return True
     return False
+
 
 @responses.activate
 def test_success():
@@ -27,6 +29,7 @@ def test_success():
 
         results = geocoder.geocode("EC1M 5RF")
         assert _any_result_around(results, lat=51.5201666, lon=-0.0985142)
+
 
 @responses.activate
 def test_failure():

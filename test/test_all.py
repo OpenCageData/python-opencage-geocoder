@@ -16,10 +16,11 @@ geocoder = OpenCageGeocode('abcde')
 
 def _any_result_around(results, lat=None, lon=None):
     for result in results:
-        if (abs(result['geometry']['lat'] - lat) < 0.05 and
-            abs(result['geometry']['lng'] - lon) < 0.05):
+        if (abs(result['geometry']['lat'] - lat) < 0.05
+                and abs(result['geometry']['lng'] - lon) < 0.05):
             return True
     return False
+
 
 @responses.activate
 def test_gb_postcode():
@@ -58,6 +59,7 @@ def test_munster():
 
     results = geocoder.geocode("Münster")
     assert _any_result_around(results, lat=51.9625101, lon=7.6251879)
+
 
 @responses.activate
 def test_donostia():
