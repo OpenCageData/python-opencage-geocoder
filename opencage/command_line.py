@@ -17,8 +17,6 @@ def main(args=sys.argv[1:]):
     """
     options = parse_args(args)
 
-    assert sys.version_info >= (3, 8), "Script requires Python 3.8 or newer"
-
     geocoder = OpenCageBatchGeocoder(options)
 
     with options.input as input_filename:
