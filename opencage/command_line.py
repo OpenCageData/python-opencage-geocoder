@@ -10,6 +10,11 @@ from opencage.version import __version__
 
 
 def main(args=sys.argv[1:]):
+    """Entry point for the OpenCage CLI.
+
+    Args:
+        args: Command-line arguments (defaults to sys.argv[1:]).
+    """
     options = parse_args(args)
 
     assert sys.version_info >= (3, 8), "Script requires Python 3.8 or newer"
@@ -25,11 +30,19 @@ def main(args=sys.argv[1:]):
 
 
 def parse_args(args):
+    """Parse and validate command-line arguments.
+
+    Args:
+        args: List of command-line argument strings.
+
+    Returns:
+        Parsed argparse.Namespace with all options set.
+    """
     if len(args) == 0:
         print("To display help use 'opencage -h', 'opencage forward -h' or 'opencage reverse -h'", file=sys.stderr)
         sys.exit(1)
 
-    parser = argparse.ArgumentParser(description=f'Opencage CLI {__version__}')
+    parser = argparse.ArgumentParser(description=f'OpenCage CLI {__version__}')
     parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}')
 
     subparsers = parser.add_subparsers(dest='command')
@@ -78,6 +91,14 @@ def parse_args(args):
 
 
 def add_optional_arguments(parser):
+    """Add optional arguments shared by forward and reverse subcommands.
+
+    Args:
+        parser: argparse subparser to add arguments to.
+
+    Returns:
+        The parser with arguments added.
+    """
     parser.add_argument(
         "--headers",
         action="store_true",
@@ -129,6 +150,21 @@ def add_optional_arguments(parser):
 
 
 def api_key_type(apikey):
+    """Validate an OpenCage API key format.
+
+    Expects a 32-character lowercase hex string, optionally prefixed
+    with ``oc_gc_`` (e.g. ``oc_gc_1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d``
+    or ``1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d``).
+
+    Args:
+        apikey: API key string to validate.
+
+    Returns:
+        The validated API key string.
+
+    Raises:
+        argparse.ArgumentTypeError: If the key doesn't match the expected format.
+    """
     pattern = re.compile(r"^(oc_gc_)?[0-9a-f]{32}$")
 
     if not pattern.match(apikey):
@@ -138,6 +174,16 @@ def api_key_type(apikey):
 
 
 def ranged_type(value_type, min_value, max_value):
+    """Create an argparse type function that enforces a value range.
+
+    Args:
+        value_type: Type to convert the argument to (e.g. int, float).
+        min_value: Minimum allowed value (inclusive).
+        max_value: Maximum allowed value (inclusive).
+
+    Returns:
+        A type-checking function suitable for argparse's type parameter.
+    """
     def range_checker(arg: str):
         try:
             f = value_type(arg)
@@ -152,6 +198,14 @@ def ranged_type(value_type, min_value, max_value):
 
 
 def comma_separated_type(value_type):
+    """Create an argparse type function that parses comma-separated values.
+
+    Args:
+        value_type: Type to convert each element to (e.g. int, str).
+
+    Returns:
+        A type-checking function suitable for argparse's type parameter.
+    """
     def comma_separated(arg: str):
         if not arg:
             return []
@@ -162,6 +216,17 @@ def comma_separated_type(value_type):
 
 
 def comma_separated_dict_type(arg):
+    """Parse a comma-separated list of key=value pairs into a dict.
+
+    Args:
+        arg: String like "key1=val1,key2=val2".
+
+    Returns:
+        Dict of parsed key-value pairs, or empty dict if arg is empty.
+
+    Raises:
+        argparse.ArgumentTypeError: If the string is not valid key=value format.
+    """
     if not arg:
         return {}
 
