@@ -1,7 +1,7 @@
 import argparse
 import sys
-import os
 import io
+from pathlib import Path
 import re
 import csv
 
@@ -72,9 +72,9 @@ def parse_args(args):
 
     options = parser.parse_args(args)
 
-    if os.path.exists(options.output) and not options.dry_run:
+    if Path(options.output).exists() and not options.dry_run:
         if options.overwrite:
-            os.remove(options.output)
+            Path(options.output).unlink()
         else:
             print(
                 f"Error: The output file '{options.output}' already exists. You can add --overwrite to your command.",
