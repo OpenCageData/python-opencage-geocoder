@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "opencage"
+version = "3.2.0"
+description = "Wrapper module for the OpenCage Geocoder API"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "BSD"}
+authors = [{name = "OpenCage GmbH", email = "info@opencagedata.com"}]
+keywords = ["geocoding", "geocoder"]
+classifiers = [
+    "Environment :: Web Environment",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "Requests>=2.31.0",
+    "backoff>=2.2.1",
+    "tqdm>=4.66.4",
+    "certifi>=2024.07.04",
+    "aiohttp>=3.10.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "responses>=0.25.7",
+    "flake8>=7.0.0",
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+]
+
+[project.scripts]
+opencage = "opencage.command_line:main"
+
+[project.urls]
+Repository = "https://github.com/OpenCageData/python-opencage-geocoder"
+Download = "https://github.com/OpenCageData/python-opencage-geocoder/tarball/3.2.0"
