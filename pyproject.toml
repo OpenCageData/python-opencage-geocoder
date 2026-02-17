@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "opencage"
-version = "3.2.0"
+dynamic = ["version"]
 description = "Wrapper module for the OpenCage Geocoder API"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -49,7 +49,10 @@ opencage = "opencage.command_line:main"
 
 [project.urls]
 Repository = "https://github.com/OpenCageData/python-opencage-geocoder"
-Download = "https://github.com/OpenCageData/python-opencage-geocoder/tarball/3.2.0"
+Download = "https://github.com/OpenCageData/python-opencage-geocoder"
+
+[tool.setuptools.dynamic]
+version = {attr = "opencage.version.__version__"}
 
 [tool.coverage.run]
 branch = true
