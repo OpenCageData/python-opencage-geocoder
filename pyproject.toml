@@ -8,14 +8,13 @@ dynamic = ["version"]
 description = "Wrapper module for the OpenCage Geocoder API"
 readme = "README.md"
 requires-python = ">=3.9"
-license = {text = "BSD"}
+license = "BSD-3-Clause"
 authors = [{name = "OpenCage GmbH", email = "info@opencagedata.com"}]
 keywords = ["geocoding", "geocoder"]
 classifiers = [
     "Environment :: Web Environment",
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.9",
