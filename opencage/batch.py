@@ -20,10 +20,13 @@ from opencage.geocoder import (
 
 
 class OpenCageBatchGeocoder():
+    """Batch geocoder that processes CSV files using the OpenCage API.
 
-    """ Called from command_line.py
-        init() receives the parsed command line parameters
-        geocode() receive an input and output CSV reader/writer and loops over the data
+    Reads rows from a CSV input, geocodes each address using async workers,
+    and writes results to a CSV output.
+
+    Args:
+        options: Parsed command-line options from argparse.
     """
 
     def __init__(self, options):
@@ -33,9 +36,16 @@ class OpenCageBatchGeocoder():
         self.write_counter = 1
 
     def __call__(self, *args, **kwargs):
+        """Run the batch geocoder synchronously via asyncio.run."""
         asyncio.run(self.geocode(*args, **kwargs))
 
     async def geocode(self, csv_input, csv_output):
+        """Process a CSV input, geocode each row, and write results.
+
+        Args:
+            csv_input: CSV reader for input rows.
+            csv_output: CSV writer for output rows.
+        """
         if not self.options.dry_run:
             test = await self.test_request()
             if test['error']:
@@ -81,6 +91,12 @@ class OpenCageBatchGeocoder():
             progress_bar.close()
 
     async def test_request(self):
+        """Send a test geocoding request to verify the API key.
+
+        Returns:
+            Dict with 'error' (None or exception) and 'free' (bool indicating
+            whether a free trial account is being used).
+        """
         try:
             async with OpenCageGeocode(
                 self.options.api_key,
@@ -99,6 +115,15 @@ class OpenCageBatchGeocoder():
             return {'error': exc}
 
     async def read_input(self, csv_input, queue):
+        """Read all rows from CSV input and add them to the work queue.
+
+        Args:
+            csv_input: CSV reader for input rows.
+            queue: Async queue to populate with parsed input items.
+
+        Returns:
+            True if any warnings were encountered while reading, False otherwise.
+        """
         any_warnings = False
         for index, row in enumerate(csv_input):
             line_number = index + 1
@@ -119,6 +144,16 @@ class OpenCageBatchGeocoder():
         return any_warnings
 
     async def read_one_line(self, row, row_id):
+        """Parse a single CSV row into a work item for geocoding.
+
+        Args:
+            row: List of column values from the CSV reader.
+            row_id: 1-based line number of the row in the input.
+
+        Returns:
+            Dict with keys 'row_id', 'address', 'original_columns',
+            and 'warnings'.
+        """
         warnings = False
 
         if self.options.input_columns:
@@ -159,6 +194,13 @@ class OpenCageBatchGeocoder():
         return {'row_id': row_id, 'address': ','.join(address), 'original_columns': row, 'warnings': warnings}
 
     async def worker(self, csv_output, queue, progress):
+        """Consume items from the queue and geocode each one.
+
+        Args:
+            csv_output: CSV writer for output rows.
+            queue: Async queue of work items to process.
+            progress: tqdm progress bar, or False if disabled.
+        """
         while True:
             item = await queue.get()
 
@@ -173,6 +215,14 @@ class OpenCageBatchGeocoder():
                 queue.task_done()
 
     async def geocode_one_address(self, csv_output, row_id, address, original_columns):
+        """Geocode a single address and write the result to the output.
+
+        Args:
+            csv_output: CSV writer for output rows.
+            row_id: 1-based line number of the row in the input.
+            address: Address string (or lat,lng for reverse geocoding).
+            original_columns: Original CSV row columns to preserve in output.
+        """
         def on_backoff(details):
             if not self.options.quiet:
                 sys.stderr.write("Backing off {wait:0.1f} seconds afters {tries} tries "
@@ -242,6 +292,18 @@ class OpenCageBatchGeocoder():
             geocoding_result,
             raw_response,
             original_columns):
+        """Write a single geocoding result row to the CSV output.
+
+        Appends the requested output columns to the original CSV columns.
+        Rows are written in order unless the --unordered option is set.
+
+        Args:
+            csv_output: CSV writer for output rows.
+            row_id: 1-based line number of the row in the input.
+            geocoding_result: First result dict from the API, or None.
+            raw_response: Full API response dict.
+            original_columns: Original CSV row columns to preserve in output.
+        """
         row = original_columns
 
         for column in self.options.add_columns:
@@ -280,10 +342,32 @@ class OpenCageBatchGeocoder():
         self.write_counter = self.write_counter + 1
 
     def log(self, message):
+        """Write a message to stderr unless quiet mode is enabled.
+
+        Args:
+            message: Message string to display.
+        """
         if not self.options.quiet:
             sys.stderr.write(f"{message}\n")
 
     def deep_get_result_value(self, data, keys, default=None):
+        """Retrieve a nested value from a dict using a list of keys.
+
+        Args:
+            data: Dict to traverse.
+            keys: List of keys to follow in sequence.
+            default: Value to return if any key is missing.
+
+        Returns:
+            The nested value, or default if the path doesn't exist.
+
+        Example:
+            >>> data = {'status': {'code': 200, 'message': 'OK'}}
+            >>> self.deep_get_result_value(data, ['status', 'message'])
+            'OK'
+            >>> self.deep_get_result_value(data, ['missing', 'key'], '')
+            ''
+        """
         for key in keys:
             if isinstance(data, dict):
                 data = data.get(key, default)

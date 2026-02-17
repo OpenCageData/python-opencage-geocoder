@@ -1,4 +1,4 @@
-""" Geocoder module. """
+"""Geocoder module for the OpenCage API."""
 
 from decimal import Decimal
 import collections
@@ -19,21 +19,25 @@ DEFAULT_DOMAIN = 'api.opencagedata.com'
 
 
 def backoff_max_time():
+    """Return the maximum backoff time in seconds for retrying API requests.
+
+    Returns:
+        Maximum time in seconds, from the BACKOFF_MAX_TIME environment
+        variable or 120 by default.
+    """
     return int(os.environ.get('BACKOFF_MAX_TIME', '120'))
 
 
 class OpenCageGeocodeError(Exception):
-
     """Base class for all errors/exceptions that can happen when geocoding."""
 
 
 class InvalidInputError(OpenCageGeocodeError):
+    """There was a problem with the input you provided.
 
-    """
-    There was a problem with the input you provided.
-
-    :var message: Error message describing the bad input.
-    :var bad_value: The value that caused the problem.
+    Attributes:
+        message: Error message describing the bad input.
+        bad_value: The value that caused the problem.
     """
 
     def __init__(self, message, bad_value=None):
@@ -48,15 +52,11 @@ class InvalidInputError(OpenCageGeocodeError):
 
 
 class UnknownError(OpenCageGeocodeError):
-
     """There was a problem with the OpenCage server."""
 
 
 class RateLimitExceededError(OpenCageGeocodeError):
-
-    """
-    Exception raised when account has exceeded it's limit.
-    """
+    """Exception raised when account has exceeded its limit."""
 
     def __unicode__(self):
         """Convert exception to a string."""
@@ -67,10 +67,7 @@ class RateLimitExceededError(OpenCageGeocodeError):
 
 
 class NotAuthorizedError(OpenCageGeocodeError):
-
-    """
-    Exception raised when an unautorized API key is used.
-    """
+    """Exception raised when an unauthorized API key is used."""
 
     def __unicode__(self):
         """Convert exception to a string."""
@@ -80,10 +77,7 @@ class NotAuthorizedError(OpenCageGeocodeError):
 
 
 class ForbiddenError(OpenCageGeocodeError):
-
-    """
-    Exception raised when a blocked or suspended API key is used.
-    """
+    """Exception raised when a blocked or suspended API key is used."""
 
     def __unicode__(self):
         """Convert exception to a string."""
@@ -93,17 +87,11 @@ class ForbiddenError(OpenCageGeocodeError):
 
 
 class AioHttpError(OpenCageGeocodeError):
-
-    """
-    Exceptions related to async HTTP calls with aiohttp
-    """
+    """Exception raised for errors related to async HTTP calls with aiohttp."""
 
 
 class SSLError(OpenCageGeocodeError):
-
-    """
-    Exception raised when SSL connection to OpenCage server fails.
-    """
+    """Exception raised when SSL connection to OpenCage server fails."""
 
     def __unicode__(self):
         """Convert exception to a string."""
@@ -115,22 +103,15 @@ class SSLError(OpenCageGeocodeError):
 
 
 class OpenCageGeocode:
+    """Client for the OpenCage Geocoding API.
 
-    """
-    Geocoder object.
+    Supports both synchronous and asynchronous geocoding. Can be used as
+    a context manager for connection pooling.
 
-    Initialize it with your API key:
-
+    Example:
         >>> geocoder = OpenCageGeocode('your-key-here')
-
-    Query:
-
         >>> geocoder.geocode("London")
-
-    Reverse geocode a latitude & longitude into a place:
-
         >>> geocoder.reverse_geocode(51.5104, -0.1021)
-
     """
 
     session = None
@@ -142,7 +123,19 @@ class OpenCageGeocode:
             domain=DEFAULT_DOMAIN,
             sslcontext=None,
             user_agent_comment=None):
-        """Constructor."""
+        """Initialize the geocoder.
+
+        Args:
+            key: OpenCage API key. If not provided, reads from the
+                OPENCAGE_API_KEY environment variable.
+            protocol: HTTP protocol to use, either 'http' or 'https'.
+            domain: API domain to connect to.
+            sslcontext: SSL context for async (aiohttp) connections.
+            user_agent_comment: Optional comment appended to the User-Agent header.
+
+        Raises:
+            ValueError: If no API key is provided or found in the environment.
+        """
         self.key = key if key is not None else os.environ.get('OPENCAGE_API_KEY')
 
         if self.key is None:
@@ -182,17 +175,23 @@ class OpenCageGeocode:
         return False
 
     def geocode(self, query, **kwargs):
-        """
-        Given a string to search for, return the list (array) of results from OpenCage's Geocoder.
+        """Geocode an address string.
 
-        :param string query: String to search for
+        Args:
+            query: Address or place name to geocode.
+            **kwargs: Additional API parameters (e.g. language, countrycode).
+                Pass raw_response=True to get the full API response dict
+                instead of just the results list.
 
-        :returns: Dict results
-        :raises InvalidInputError: if the query string is not a unicode string
-        :raises RateLimitExceededError: if you have exceeded the number of queries you can make.
-        :                                  Exception says when you can try again
-        :raises UnknownError: if something goes wrong with the OpenCage API
+        Returns:
+            List of geocoding results with lat/lng and components, or the
+            full API response dict if raw_response=True.
 
+        Raises:
+            InvalidInputError: If query is not a unicode string.
+            RateLimitExceededError: If API quota is exceeded.
+            UnknownError: If something goes wrong with the OpenCage API.
+            AioHttpError: If called inside an async context manager.
         """
 
         if self.session and isinstance(self.session, aiohttp.client.ClientSession):
@@ -208,18 +207,25 @@ class OpenCageGeocode:
         return floatify_latlng(response['results'])
 
     async def geocode_async(self, query, **kwargs):
-        """
-        Aync version of `geocode`.
+        """Async version of geocode.
 
-        Given a string to search for, return the list (array) of results from OpenCage's Geocoder.
+        Must be used inside an async context manager (``async with``).
 
-        :param string query: String to search for
+        Args:
+            query: Address or place name to geocode.
+            **kwargs: Additional API parameters (e.g. language, countrycode).
+                Pass raw_response=True to get the full API response dict
+                instead of just the results list.
 
-        :returns: Dict results
-        :raises InvalidInputError: if the query string is not a unicode string
-        :raises RateLimitExceededError: if exceeded number of queries you can make. You can try again
-        :raises UnknownError: if something goes wrong with the OpenCage API
+        Returns:
+            List of geocoding results with lat/lng and components, or the
+            full API response dict if raw_response=True.
 
+        Raises:
+            InvalidInputError: If query is not a unicode string.
+            RateLimitExceededError: If API quota is exceeded.
+            UnknownError: If something goes wrong with the OpenCage API.
+            AioHttpError: If aiohttp is not installed or no async session is active.
         """
 
         if not AIOHTTP_AVAILABLE:
@@ -241,17 +247,20 @@ class OpenCageGeocode:
         return floatify_latlng(response['results'])
 
     def reverse_geocode(self, lat, lng, **kwargs):
-        """
-        Given a latitude & longitude, return an address for that point from OpenCage's Geocoder.
+        """Reverse geocode a latitude/longitude pair into an address.
 
-        :param lat: Latitude
-        :param lng: Longitude
-        :return: Results from OpenCageData
-        :rtype: dict
-        :raises RateLimitExceededError: if you have exceeded the number of queries you can make.
-        :                                  Exception says when you can try again
-        :raises UnknownError: if something goes wrong with the OpenCage API
-        :raises InvalidInputError: if the latitude or longitude is out of bounds
+        Args:
+            lat: Latitude (-90 to 90).
+            lng: Longitude (-180 to 180).
+            **kwargs: Additional API parameters (e.g. language, countrycode).
+
+        Returns:
+            List of geocoding results with address components.
+
+        Raises:
+            InvalidInputError: If latitude or longitude is out of bounds.
+            RateLimitExceededError: If API quota is exceeded.
+            UnknownError: If something goes wrong with the OpenCage API.
         """
 
         self._validate_lat_lng(lat, lng)
@@ -259,18 +268,22 @@ class OpenCageGeocode:
         return self.geocode(_query_for_reverse_geocoding(lat, lng), **kwargs)
 
     async def reverse_geocode_async(self, lat, lng, **kwargs):
-        """
-        Aync version of `reverse_geocode`.
+        """Async version of reverse_geocode.
 
-        Given a latitude & longitude, return an address for that point from OpenCage's Geocoder.
+        Must be used inside an async context manager (``async with``).
 
-        :param lat: Latitude
-        :param lng: Longitude
-        :return: Results from OpenCageData
-        :rtype: dict
-        :raises RateLimitExceededError: if exceeded number of queries you can make. You can try again
-        :raises UnknownError: if something goes wrong with the OpenCage API
-        :raises InvalidInputError: if the latitude or longitude is out of bounds
+        Args:
+            lat: Latitude (-90 to 90).
+            lng: Longitude (-180 to 180).
+            **kwargs: Additional API parameters (e.g. language, countrycode).
+
+        Returns:
+            List of geocoding results with address components.
+
+        Raises:
+            InvalidInputError: If latitude or longitude is out of bounds.
+            RateLimitExceededError: If API quota is exceeded.
+            UnknownError: If something goes wrong with the OpenCage API.
         """
 
         self._validate_lat_lng(lat, lng)
@@ -282,7 +295,20 @@ class OpenCageGeocode:
         (UnknownError, requests.exceptions.RequestException),
         max_tries=5, max_time=backoff_max_time)
     def _opencage_request(self, params):
+        """Send a synchronous geocoding request to the OpenCage API.
 
+        Args:
+            params: Dict of query parameters for the API request.
+
+        Returns:
+            Parsed JSON response dict from the API.
+
+        Raises:
+            NotAuthorizedError: If the API key is invalid.
+            ForbiddenError: If the API key is blocked or suspended.
+            RateLimitExceededError: If the rate limit is exceeded.
+            UnknownError: If the server returns an error or invalid JSON.
+        """
         if self.session:
             response = self.session.get(self.url, params=params, headers=self._opencage_headers('aiohttp'))
         else:
@@ -311,6 +337,14 @@ class OpenCageGeocode:
         return response_json
 
     def _opencage_headers(self, client):
+        """Build the HTTP headers for an API request.
+
+        Args:
+            client: HTTP client name ('requests' or 'aiohttp').
+
+        Returns:
+            Dict with User-Agent header.
+        """
         client_version = requests.__version__
         if client == 'aiohttp':
             client_version = aiohttp.__version__
@@ -326,6 +360,21 @@ class OpenCageGeocode:
         }
 
     async def _opencage_async_request(self, params):
+        """Send an async geocoding request to the OpenCage API.
+
+        Args:
+            params: Dict of query parameters for the API request.
+
+        Returns:
+            Parsed JSON response dict from the API.
+
+        Raises:
+            NotAuthorizedError: If the API key is invalid.
+            ForbiddenError: If the API key is blocked or suspended.
+            RateLimitExceededError: If the rate limit is exceeded.
+            UnknownError: If the server returns an error or invalid JSON.
+            SSLError: If the SSL connection fails.
+        """
         try:
             async with self.session.get(self.url, params=params, ssl=self.sslcontext) as response:
                 try:
@@ -355,6 +404,18 @@ class OpenCageGeocode:
             raise SSLError() from exp
 
     def _parse_request(self, query, params):
+        """Build the request parameters dict for an API call.
+
+        Args:
+            query: The geocoding query string.
+            params: Additional API parameters from the caller.
+
+        Returns:
+            Dict of parameters ready to send to the API.
+
+        Raises:
+            InvalidInputError: If query is not a unicode string.
+        """
         if not isinstance(query, str):
             error_message = "Input must be a unicode string, not " + repr(query)[:100]
             raise InvalidInputError(error_message, bad_value=query)
@@ -364,10 +425,15 @@ class OpenCageGeocode:
         return data
 
     def _validate_lat_lng(self, lat, lng):
-        """
-        Validate latitude and longitude values.
+        """Validate latitude and longitude values.
 
-        Raises InvalidInputError if the values are out of bounds.
+        Args:
+            lat: Latitude value to validate.
+            lng: Longitude value to validate.
+
+        Raises:
+            InvalidInputError: If latitude is not in [-90, 90] or longitude
+                is not in [-180, 180].
         """
         try:
             lat_float = float(lat)
@@ -385,10 +451,14 @@ class OpenCageGeocode:
 
 
 def _query_for_reverse_geocoding(lat, lng):
-    """
-    Given a lat & lng, what's the string search query.
+    """Build the query string for a reverse geocoding request.
 
-    If the API changes, change this function. Only for internal use.
+    Args:
+        lat: Latitude value.
+        lng: Longitude value.
+
+    Returns:
+        Comma-separated string of lat and lng with full decimal precision.
     """
     # have to do some stupid f/Decimal/str stuff to (a) ensure we get as much
     # decimal places as the user already specified and (b) to ensure we don't
@@ -397,9 +467,13 @@ def _query_for_reverse_geocoding(lat, lng):
 
 
 def float_if_float(float_string):
-    """
-    Given a float string, returns the float value.
-    On value error returns the original string.
+    """Convert a string to float if possible.
+
+    Args:
+        float_string: String to attempt to convert.
+
+    Returns:
+        The float value if conversion succeeds, or the original string.
     """
     try:
         float_val = float(float_string)
@@ -409,15 +483,16 @@ def float_if_float(float_string):
 
 
 def floatify_latlng(input_value):
-    """
-    Work around a JSON dict with string, not float, lat/lngs.
+    """Recursively convert string lat/lng values to floats in API results.
 
-    Given anything (list/dict/etc) it will return that thing again, *but* any
-    dict (at any level) that has only 2 elements lat & lng, will be replaced
-    with the lat & lng turned into floats.
+    Any dict at any nesting level that has exactly two keys 'lat' and 'lng'
+    will have its values converted to floats.
 
-    If the API returns the lat/lng as strings, and not numbers, then this
-    function will 'clean them up' to be floats.
+    Args:
+        input_value: A dict, list, or scalar from the API response.
+
+    Returns:
+        The same structure with lat/lng string values converted to floats.
     """
     if isinstance(input_value, collections.abc.Mapping):
         if len(input_value) == 2 and sorted(input_value.keys()) == ['lat', 'lng']:
