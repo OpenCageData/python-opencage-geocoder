@@ -1,3 +1,10 @@
+v3.3.0 Tue Feb 17 2026
+  Requires python 3.9
+  Documentation: overhaul, add missing docstrings, use Google-style (a bit more verbose)
+  Tests: Add python 3.14 to test suite
+  Tests: Add coverage report (92%)
+  Packaging: migrate from setup.py to pyproject.toml
+
 v3.2.0 Mon May 26 2025
   New error 'InvalidInputError' when input coordinates are out of bound
   CLI: You can set OPENCAGE_API_KEY environment variable instead specify as parameter
