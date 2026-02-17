@@ -41,6 +41,7 @@ dev = [
     "flake8>=7.0.0",
     "pytest>=7.4.0",
     "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
 ]
 
 [project.scripts]
@@ -49,3 +50,16 @@ opencage = "opencage.command_line:main"
 [project.urls]
 Repository = "https://github.com/OpenCageData/python-opencage-geocoder"
 Download = "https://github.com/OpenCageData/python-opencage-geocoder/tarball/3.2.0"
+
+[tool.coverage.run]
+branch = true
+source = ["opencage"]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
