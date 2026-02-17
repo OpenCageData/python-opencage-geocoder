@@ -22,7 +22,7 @@ The module installs an `opencage` CLI tool for geocoding files. Check `opencage 
 
 ## Usage
 
-Supports Python 3.8 or newer. Starting opencage version 3.0 depends on asyncio package.
+Supports Python 3.9 or newer. Starting opencage version 3.0 depends on asyncio package.
 
 Install the module:
 
