@@ -19,6 +19,9 @@ There are two brief video tutorials on YouTube, one [covering forward geocoding]
 
 The module installs an `opencage` CLI tool for geocoding files. Check `opencage --help` or the [CLI tutorial](https://opencagedata.com/tutorials/geocode-commandline).
 
+## Working with AI / Agent Skill
+
+There is an [Agent Skill for working with the OpenCage Geocoding API](https://github.com/OpenCageData/opencage-skills/blob/master/opencage-geocoding-api/SKILL.md) which includes a reference file for developing in Python using this module.
 
 ## Usage
 
