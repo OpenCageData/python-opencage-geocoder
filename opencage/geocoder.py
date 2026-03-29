@@ -341,9 +341,9 @@ class OpenCageGeocode:
             UnknownError: If the server returns an error or invalid JSON.
         """
         if self.session:
-            response = self.session.get(self.url, params=params, headers=self._opencage_headers('aiohttp'))
+            response = self.session.get(self.url, params=params, headers=self._opencage_headers('aiohttp'), timeout=30)
         else:
-            response = requests.get(self.url, params=params, headers=self._opencage_headers('requests'))
+            response = requests.get(self.url, params=params, headers=self._opencage_headers('requests'), timeout=30)
 
         try:
             response_json = response.json()
@@ -408,7 +408,8 @@ class OpenCageGeocode:
             SSLError: If the SSL connection fails.
         """
         try:
-            async with self.session.get(self.url, params=params, ssl=self.sslcontext) as response:
+            timeout = aiohttp.ClientTimeout(total=30)
+            async with self.session.get(self.url, params=params, ssl=self.sslcontext, timeout=timeout) as response:
                 try:
                     response_json = await response.json()
                 except ValueError as excinfo:
