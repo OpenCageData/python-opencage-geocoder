@@ -21,5 +21,18 @@ def test_api_key_env_var():
 
 def test_custom_domain():
     """Test that custom domain can be set"""
-    geocoder = OpenCageGeocode('abcde', domain='example.com')
-    assert geocoder.url == 'https://example.com/geocode/v1/json'
+    geocoder = OpenCageGeocode('abcde', domain='api2.opencagedata.com')
+    assert geocoder.url == 'https://api2.opencagedata.com/geocode/v1/json'
+
+
+def test_custom_domain_localhost():
+    """Test that localhost domain can be set"""
+    geocoder = OpenCageGeocode('abcde', domain='localhost:8080')
+    assert geocoder.url == 'https://localhost:8080/geocode/v1/json'
+
+
+def test_custom_domain_invalid():
+    """Test that invalid domains are rejected"""
+    import pytest
+    with pytest.raises(ValueError, match="Invalid API domain"):
+        OpenCageGeocode('abcde', domain='www.example.com')

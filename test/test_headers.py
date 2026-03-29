@@ -33,3 +33,25 @@ def test_sync():
     user_agent = request.headers['User-Agent']
 
     assert user_agent_format.match(user_agent) is not None
+
+
+@responses.activate
+def test_user_agent_comment_crlf_stripped():
+    """Test that CR/LF characters are stripped from user_agent_comment to prevent header injection."""
+    geocoder_crlf = OpenCageGeocode('abcde', user_agent_comment="bad\r\nInjected-Header: value")
+
+    responses.add(
+        responses.GET,
+        geocoder_crlf.url,
+        body=Path('test/fixtures/uk_postcode.json').read_text(encoding="utf-8"),
+        status=200
+    )
+
+    geocoder_crlf.geocode("EC1M 5RF")
+
+    request = responses.calls[-1].request
+    user_agent = request.headers['User-Agent']
+
+    assert '\r' not in user_agent
+    assert '\n' not in user_agent
+    assert 'Injected-Header' in user_agent  # still present, just on the same line
