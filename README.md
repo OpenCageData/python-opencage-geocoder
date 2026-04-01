@@ -21,7 +21,7 @@ The module installs an `opencage` CLI tool for geocoding files. Check `opencage 
 
 ## Working with AI / Agent Skill
 
-There is an [Agent Skill for working with the OpenCage Geocoding API](https://github.com/OpenCageData/opencage-skills/blob/master/opencage-geocoding-api/SKILL.md) which includes a reference file for developing in Python using this module.
+There is an [Agent Skill for working with the OpenCage Geocoding API](https://github.com/OpenCageData/opencage-skills/) which includes a reference file for developing in Python using this module.
 
 ## Usage
 
