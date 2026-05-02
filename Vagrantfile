@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
     config.vm.box = 'gutehall/ubuntu24-04'
   end
 
-  config.vm.synced_folder ".", "/home/vagrant/python-opencage-geocoder"
+  config.vm.synced_folder ".", "/home/vagrant/opencage-cli"
 
   # provision using a simple shell script
   config.vm.provision :shell, path: "vagrant-provision.sh", privileged: false
