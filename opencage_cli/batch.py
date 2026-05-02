@@ -372,9 +372,6 @@ class OpenCageBatchGeocoder():
                 return default
         return data
 
-    # The following helpers were vendored from `opencage.geocoder` so the CLI
-    # does not depend on the library's private API.
-
     def _query_for_reverse_geocoding(self, lat, lng):
         """Format a (lat, lng) pair as the string the API expects for reverse geocoding.
 
