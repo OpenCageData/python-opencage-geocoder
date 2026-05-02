@@ -11,12 +11,9 @@ from urllib.parse import urlencode
 from tqdm import tqdm
 import certifi
 import backoff
-from opencage.geocoder import (
-    OpenCageGeocode,
-    OpenCageGeocodeError,
-    _query_for_reverse_geocoding,
-    floatify_latlng
-)
+from opencage.geocoder import OpenCageGeocode, OpenCageGeocodeError
+
+from opencage_cli._helpers import query_for_reverse_geocoding, floatify_latlng
 
 
 class OpenCageBatchGeocoder():
@@ -181,10 +178,10 @@ class OpenCageBatchGeocoder():
                 self.log(
                     f"Line {row_id} - Expected two comma-separated values for reverse geocoding, got {address}")
             else:
-                # _query_for_reverse_geocoding attempts to convert into numbers. We rather have it fail
+                # query_for_reverse_geocoding attempts to convert into numbers. We rather have it fail
                 # now than during the actual geocoding
                 try:
-                    _query_for_reverse_geocoding(address[0], address[1])
+                    query_for_reverse_geocoding(address[0], address[1])
                 except BaseException:
                     self.log(
                         f"Line {row_id} - Does not look like latitude and longitude: '{address[0]}' and '{address[1]}'")

@@ -39,7 +39,7 @@ options:
   --add-columns         Comma-separated list of output columns (default 'lat,lng,_type,_category,country_code,country,state,county,_normalized_city,postcode,road,house_number,confidence,formatted,json,status')
   --workers             Number of parallel geocoding requests (default 1)
   --timeout             Timeout in seconds (default 10)
-  --retries             Number of retries (default 5)
+  --retries             Number of retries (default 10)
   --api-domain          API domain (default api.opencagedata.com)
   --optional-api-params
                         Extra parameters for each request (e.g. language=fr,no_dedupe=1)
@@ -54,7 +54,7 @@ options:
 
 <img src="batch-progress.gif"/>
 
-See [`examples/batch.py`](examples/batch.py) for an example of programmatic batch usage and [`examples/addresses.csv`](examples/addresses.csv) for sample input.
+See [`examples/addresses.csv`](examples/addresses.csv) for sample input.
 
 ## Working with AI / Agent Skill
 

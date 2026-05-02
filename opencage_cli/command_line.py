@@ -123,7 +123,7 @@ def add_optional_arguments(parser):
     parser.add_argument("--timeout", type=ranged_type(int, 1, 60), default=10,
                         help="Timeout in seconds (default 10)", metavar='')
     parser.add_argument("--retries", type=ranged_type(int, 1, 60), default=10,
-                        help="Number of retries (default 5)", metavar='')
+                        help="Number of retries (default 10)", metavar='')
     parser.add_argument("--api-domain", type=str, default="api.opencagedata.com",
                         help="API domain (default api.opencagedata.com)", metavar='')
     parser.add_argument("--optional-api-params", type=comma_separated_dict_type, default="",
