@@ -2,9 +2,9 @@ v1.0.0 Sat May  2 2026
   Extracted from the `opencage` Python package; the CLI is now a standalone
   `opencage-cli` distribution that depends on `opencage>=3.3.1` from PyPI.
   No feature changes. Internal Python module renamed to `opencage_cli`.
-  Vendored two small helpers (`query_for_reverse_geocoding`, `floatify_latlng`)
-  from `opencage.geocoder` into `opencage_cli/_helpers.py` so the CLI no longer
-  depends on the library's private API.
+  Vendored two small helpers (`_query_for_reverse_geocoding`, `_floatify_latlng`)
+  from `opencage.geocoder` as private methods of `OpenCageBatchGeocoder` so the
+  CLI no longer depends on the library's private API.
 
 == Below: changelog from when the CLI shipped inside the `opencage` package ==
 
