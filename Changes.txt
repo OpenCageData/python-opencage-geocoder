@@ -1,3 +1,10 @@
+v1.0.0 Sat May  2 2026
+  Extracted from the `opencage` Python package; the CLI is now a standalone
+  `opencage-cli` distribution that depends on `opencage>=3.3.1` from PyPI.
+  No feature changes. Internal Python module renamed to `opencage_cli`.
+
+== Below: changelog from when the CLI shipped inside the `opencage` package ==
+
 v3.3.1 Sun Mar 29 2026
   Validate the host domain parameter. Should be opencagedata.com subdomain or localhost
   Set explicit timeout for HTTP requests

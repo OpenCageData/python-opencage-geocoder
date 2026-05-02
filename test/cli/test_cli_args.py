@@ -1,8 +1,8 @@
 import pathlib
 import pytest
-from opencage.version import __version__
+from opencage_cli.version import __version__
 
-from opencage.command_line import parse_args
+from opencage_cli.command_line import parse_args
 
 
 @pytest.fixture(autouse=True)

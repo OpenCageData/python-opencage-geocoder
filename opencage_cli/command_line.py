@@ -5,8 +5,8 @@ from pathlib import Path
 import re
 import csv
 
-from opencage.batch import OpenCageBatchGeocoder
-from opencage.version import __version__
+from opencage_cli.batch import OpenCageBatchGeocoder
+from opencage_cli.version import __version__
 
 
 def main(args=sys.argv[1:]):
