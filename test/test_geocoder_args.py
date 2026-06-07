@@ -1,8 +1,10 @@
 # encoding: utf-8
 
-from opencage.geocoder import OpenCageGeocode
-
 import os
+
+import pytest
+
+from opencage.geocoder import OpenCageGeocode
 
 
 def test_protocol_http():
@@ -33,6 +35,23 @@ def test_custom_domain_localhost():
 
 def test_custom_domain_invalid():
     """Test that invalid domains are rejected"""
-    import pytest
     with pytest.raises(ValueError, match="Invalid API domain"):
         OpenCageGeocode('abcde', domain='www.example.com')
+
+
+@pytest.mark.parametrize("bad_domain", [
+    "example.com/api.opencagedata.com",
+    "example.com?api.opencagedata.com",
+    "user@api.opencagedata.com",
+    "",
+])
+def test_custom_domain_rejects_extra_url_parts(bad_domain):
+    """Domain must be a bare hostname, not a URL with path/query/userinfo."""
+    with pytest.raises(ValueError, match="Invalid API domain"):
+        OpenCageGeocode('abcde', domain=bad_domain)
+
+
+def test_custom_domain_with_port_preserved():
+    """Valid subdomain with explicit port still works after validation."""
+    geocoder = OpenCageGeocode('abcde', domain='api2.opencagedata.com:8443')
+    assert geocoder.url == 'https://api2.opencagedata.com:8443/geocode/v1/json'

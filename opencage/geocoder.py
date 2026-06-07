@@ -5,6 +5,7 @@ import collections
 
 import os
 import sys
+from urllib.parse import urlsplit
 import requests
 import backoff
 from .version import __version__
@@ -28,24 +29,41 @@ def _validate_domain(domain):
         domain: Hostname string, optionally with a port.
 
     Returns:
-        The validated domain string.
+        The validated ``host`` or ``host:port`` string, re-serialized from
+        the parsed components so any scheme, userinfo, path, query, or
+        fragment is rejected rather than silently absorbed.
 
     Raises:
-        ValueError: If the domain is not in the allow-list.
+        ValueError: If the domain is not in the allow-list, or carries any
+            URL component beyond host and port.
     """
-    # Strip optional port
-    host = domain.rsplit(':', 1)[0] if ':' in domain else domain
+    if not isinstance(domain, str) or not domain:
+        raise ValueError("Invalid API domain.")
 
-    if host in ('localhost', '0.0.0.0'):
-        return domain
+    try:
+        parts = urlsplit('//' + domain)
+        port = parts.port
+    except ValueError as exc:
+        raise ValueError("Invalid API domain.") from exc
 
-    if host.endswith('.opencagedata.com'):
-        return domain
+    if (parts.scheme or parts.username or parts.password
+            or parts.path or parts.query or parts.fragment):
+        raise ValueError(
+            "Invalid API domain. Must be a bare hostname, optionally with a port."
+        )
 
-    raise ValueError(
-        f"Invalid API domain '{domain}'. "
-        f"Must be a subdomain of opencagedata.com, localhost, or 0.0.0.0."
-    )
+    hostname = parts.hostname
+    if not hostname:
+        raise ValueError("Invalid API domain.")
+
+    if (hostname not in ('localhost', '0.0.0.0')
+            and not hostname.endswith('.opencagedata.com')):
+        raise ValueError(
+            "Invalid API domain. "
+            "Must be a subdomain of opencagedata.com, localhost, or 0.0.0.0."
+        )
+
+    return f"{hostname}:{port}" if port is not None else hostname
 
 
 def backoff_max_time():
@@ -176,7 +194,7 @@ class OpenCageGeocode:
 
         if protocol and protocol not in ('http', 'https'):
             protocol = 'https'
-        _validate_domain(domain)
+        domain = _validate_domain(domain)
         self.url = protocol + '://' + domain + '/geocode/v1/json'
 
         # https://docs.aiohttp.org/en/stable/client_advanced.html#ssl-control-for-tcp-sockets
