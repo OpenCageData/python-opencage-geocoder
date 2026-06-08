@@ -17,8 +17,6 @@ You can find a [comprehensive tutorial for using this module on the OpenCage sit
 
 There are two brief video tutorials on YouTube, one [covering forward geocoding](https://www.youtube.com/watch?v=9bXu8-LPr5c), one [covering reverse geocoding](https://www.youtube.com/watch?v=u-kkE4yA-z0).
 
-The module installs an `opencage` CLI tool for geocoding files. Check `opencage --help` or the [CLI tutorial](https://opencagedata.com/tutorials/geocode-commandline).
-
 ## Working with AI / Agent Skill
 
 There is an [Agent Skill for working with the OpenCage Geocoding API](https://github.com/OpenCageData/opencage-skills/) which includes a reference file for developing in Python using this module.
@@ -100,9 +98,6 @@ async with OpenCageGeocode(key) as geocoder:
     results = await geocoder.geocode_async(address)
 ```
 
-For a more complete example and links to futher tutorials on asyncronous IO see
-`batch.py` in the `examples` directory.
-
 ### Non-SSL API use
 
 If you have trouble accesing the OpenCage API with https, e.g. issues with OpenSSL
@@ -125,35 +120,7 @@ If anything goes wrong, then an exception will be raised:
 
 ## Command-line batch geocoding
 
-Use `opencage forward` or `opencage reverse`
-
-```
-opencage forward --help
-
-options:
-  -h, --help            show this help message and exit
-  --api-key API_KEY     Your OpenCage API key
-  --input FILENAME      Input file name
-  --output FILENAME     Output file name
-  --headers             If the first row should be treated as a header row
-  --input-columns       Comma-separated list of integers (default '1')
-  --add-columns         Comma-separated list of output columns (default 'lat,lng,_type,_category,country_code,country,state,county,_normalized_city,postcode,road,house_number,confidence,formatted,json,status')
-  --workers             Number of parallel geocoding requests (default 1)
-  --timeout             Timeout in seconds (default 10)
-  --retries             Number of retries (default 5)
-  --api-domain          API domain (default api.opencagedata.com)
-  --optional-api-params
-                        Extra parameters for each request (e.g. language=fr,no_dedupe=1)
-  --unordered           Allow the output lines to be in different order (can be faster)
-  --limit               Stop after this number of lines in the input
-  --dry-run             Read the input file but no geocoding
-  --no-progress         Display no progress bar
-  --quiet               No progress bar and no messages
-  --overwrite           Delete the output file first if it exists
-  --verbose             Display debug information for each request
-```
-
-<img src="batch-progress.gif"/>
+The `opencage` CLI now lives in its own package. See [opencage-cli](https://github.com/OpenCageData/opencage-cli) — install with `pip install opencage-cli`.
 
 
 ## Copyright & License

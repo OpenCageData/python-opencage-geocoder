@@ -29,8 +29,6 @@ classifiers = [
 dependencies = [
     "Requests>=2.31.0",
     "backoff>=2.2.1",
-    "tqdm>=4.66.4",
-    "certifi>=2024.07.04",
     "aiohttp>=3.10.5",
 ]
 
@@ -42,9 +40,6 @@ dev = [
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.1.0",
 ]
-
-[project.scripts]
-opencage = "opencage.command_line:main"
 
 [project.urls]
 Repository = "https://github.com/OpenCageData/python-opencage-geocoder"

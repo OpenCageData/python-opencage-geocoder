@@ -1,3 +1,6 @@
+v3.4.0 Mon Jun 09 2026
+  CLI tool extracted to separate `opencage-cli` package and repository (https://github.com/OpenCageData/opencage-cli)
+
 v3.3.2 Sun Jun 08 2026
   Improve validation of the host domain parameter
 
