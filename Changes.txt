@@ -1,3 +1,6 @@
+unreleased
+  Add warning and safeguard that overlapping/nested context managers on one instance aren't supported
+
 v3.4.0 Mon Jun 09 2026
   CLI tool extracted to separate `opencage-cli` package and repository (https://github.com/OpenCageData/opencage-cli)
 

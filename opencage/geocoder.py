@@ -203,6 +203,17 @@ class OpenCageGeocode:
         self.user_agent_comment = user_agent_comment
 
     def __enter__(self):
+        """Open a pooled requests session for sync geocoding.
+
+        Overlapping or nested ``with`` blocks on the same instance are
+        not supported and will raise ``RuntimeError`` to prevent silently
+        leaking the previous session's connection pool.
+        """
+        if self.session is not None:
+            raise RuntimeError(
+                "OpenCageGeocode context already entered; "
+                "overlapping `with` blocks on the same instance are not supported."
+            )
         self.session = requests.Session()
         return self
 
@@ -212,9 +223,20 @@ class OpenCageGeocode:
         return False
 
     async def __aenter__(self):
+        """Open a pooled aiohttp session for async geocoding.
+
+        Overlapping or nested ``async with`` blocks on the same instance
+        are not supported and will raise ``RuntimeError`` to prevent
+        silently leaking the previous session's connection pool.
+        """
         if not AIOHTTP_AVAILABLE:
             raise AioHttpError("You must install `aiohttp` to use async methods")
 
+        if self.session is not None:
+            raise RuntimeError(
+                "OpenCageGeocode context already entered; "
+                "overlapping `async with` blocks on the same instance are not supported."
+            )
         self.session = aiohttp.ClientSession()
         return self
 
