@@ -3,16 +3,16 @@ requires = ["setuptools>=65.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "opencage"
+name = "opencage-cli"
 dynamic = ["version"]
-description = "Wrapper module for the OpenCage Geocoder API"
+description = "Command-line tool for the OpenCage Geocoding API"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "BSD-3-Clause"
 authors = [{name = "OpenCage GmbH", email = "info@opencagedata.com"}]
-keywords = ["geocoding", "geocoder"]
+keywords = ["geocoding", "geocoder", "cli", "command-line", "batch"]
 classifiers = [
-    "Environment :: Web Environment",
+    "Environment :: Console",
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
@@ -27,11 +27,10 @@ classifiers = [
     "Topic :: Utilities",
 ]
 dependencies = [
-    "Requests>=2.31.0",
-    "backoff>=2.2.1",
+    "opencage>=3.3.1",
     "tqdm>=4.66.4",
+    "backoff>=2.2.1",
     "certifi>=2024.07.04",
-    "aiohttp>=3.10.5",
 ]
 
 [project.optional-dependencies]
@@ -44,18 +43,18 @@ dev = [
 ]
 
 [project.scripts]
-opencage = "opencage.command_line:main"
+opencage = "opencage_cli.command_line:main"
 
 [project.urls]
-Repository = "https://github.com/OpenCageData/python-opencage-geocoder"
-Download = "https://github.com/OpenCageData/python-opencage-geocoder"
+Repository = "https://github.com/OpenCageData/opencage-cli"
+Download = "https://github.com/OpenCageData/opencage-cli"
 
 [tool.setuptools.dynamic]
-version = {attr = "opencage.version.__version__"}
+version = {attr = "opencage_cli.version.__version__"}
 
 [tool.coverage.run]
 branch = true
-source = ["opencage"]
+source = ["opencage_cli"]
 
 [tool.coverage.report]
 show_missing = true

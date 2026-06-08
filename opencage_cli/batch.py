@@ -1,22 +1,19 @@
 import sys
 import ssl
 import asyncio
+import collections
 import traceback
 import threading
 import random
 import json
 
 from contextlib import suppress
+from decimal import Decimal
 from urllib.parse import urlencode
 from tqdm import tqdm
 import certifi
 import backoff
-from opencage.geocoder import (
-    OpenCageGeocode,
-    OpenCageGeocodeError,
-    _query_for_reverse_geocoding,
-    floatify_latlng
-)
+from opencage.geocoder import OpenCageGeocode, OpenCageGeocodeError
 
 
 class OpenCageBatchGeocoder():
@@ -184,7 +181,7 @@ class OpenCageBatchGeocoder():
                 # _query_for_reverse_geocoding attempts to convert into numbers. We rather have it fail
                 # now than during the actual geocoding
                 try:
-                    _query_for_reverse_geocoding(address[0], address[1])
+                    self._query_for_reverse_geocoding(address[0], address[1])
                 except BaseException:
                     self.log(
                         f"Line {row_id} - Does not look like latitude and longitude: '{address[0]}' and '{address[1]}'")
@@ -250,10 +247,10 @@ class OpenCageBatchGeocoder():
                         if ',' in address:
                             lon, lat = address.split(',')
                             response = await geocoder.reverse_geocode_async(lon, lat, **params)
-                            geocoding_results = floatify_latlng(response['results'])
+                            geocoding_results = self._floatify_latlng(response['results'])
                     else:
                         response = await geocoder.geocode_async(address, **params)
-                        geocoding_results = floatify_latlng(response['results'])
+                        geocoding_results = self._floatify_latlng(response['results'])
                 except OpenCageGeocodeError as exc:
                     self.log(str(exc))
                 except Exception as exc:
@@ -374,3 +371,39 @@ class OpenCageBatchGeocoder():
             else:
                 return default
         return data
+
+    def _query_for_reverse_geocoding(self, lat, lng):
+        """Format a (lat, lng) pair as the string the API expects for reverse geocoding.
+
+        Uses ``Decimal(str(...))`` to preserve the precision the caller specified
+        and to avoid scientific notation (e.g. ``1e-5``).
+        """
+        return f"{Decimal(str(lat)):f},{Decimal(str(lng)):f}"
+
+    def _floatify_latlng(self, input_value):
+        """Recursively convert ``{'lat': ..., 'lng': ...}`` dicts to floats.
+
+        Walks lists and dicts; any dict that contains exactly the two keys
+        ``lat`` and ``lng`` is rewritten with float values. Other structures
+        pass through unchanged. Works around the API occasionally returning
+        lat/lng as strings.
+        """
+        if isinstance(input_value, collections.abc.Mapping):
+            if len(input_value) == 2 and sorted(input_value.keys()) == ['lat', 'lng']:
+                return {
+                    'lat': self._float_if_float(input_value['lat']),
+                    'lng': self._float_if_float(input_value['lng']),
+                }
+
+            return dict((key, self._floatify_latlng(value)) for key, value in input_value.items())
+
+        if isinstance(input_value, collections.abc.MutableSequence):
+            return [self._floatify_latlng(x) for x in input_value]
+
+        return input_value
+
+    def _float_if_float(self, value):
+        try:
+            return float(value)
+        except ValueError:
+            return value

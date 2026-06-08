@@ -1,4 +1,4 @@
-from opencage.batch import OpenCageBatchGeocoder
+from opencage_cli.batch import OpenCageBatchGeocoder
 
 batch = OpenCageBatchGeocoder({})
 

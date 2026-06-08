@@ -2,7 +2,7 @@ import pathlib
 import os
 import pytest
 
-from opencage.command_line import main
+from opencage_cli.command_line import main
 
 # NOTE: Testing keys https://opencagedata.com/api#testingkeys
 TEST_APIKEY_200 = '6d0e711d72d74daeb2b0bfd2a5cdfdba'  # always returns same address
