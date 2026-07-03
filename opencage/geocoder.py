@@ -9,6 +9,7 @@ from urllib.parse import urlsplit
 import requests
 import backoff
 from .version import __version__
+from datetime import datetime
 
 try:
     import aiohttp
@@ -163,6 +164,9 @@ class OpenCageGeocode:
     """
 
     session = None
+    ratelimit_limit = None
+    ratelimit_remaining = None
+    ratelimit_reset = None
 
     def __init__(
             self,
@@ -384,6 +388,26 @@ class OpenCageGeocode:
             response = self.session.get(self.url, params=params, headers=self._opencage_headers('aiohttp'), timeout=30)
         else:
             response = requests.get(self.url, params=params, headers=self._opencage_headers('requests'), timeout=30)
+
+        headers_keys = {
+            'ratelimit_limit': {
+                'header': 'x-ratelimit-limit',
+                'conversor': lambda v: int(v) if v else self.ratelimit_limit
+            },
+            'ratelimit_remaining': {
+                'header': 'x-ratelimit-remaining',
+                'conversor': lambda v: int(v) if v else self.ratelimit_remaining
+            },
+            'ratelimit_reset': {
+                'header': 'x-ratelimit-reset',
+                'conversor': lambda v: datetime.fromtimestamp(int(v)) if v else self.ratelimit_reset
+            }
+        }
+
+        for prop_name, prop_data in headers_keys.items():
+            header_value = response.headers.get(prop_data['header'])
+            conversor = prop_data['conversor']
+            setattr(self, prop_name, conversor(header_value))
 
         try:
             response_json = response.json()
