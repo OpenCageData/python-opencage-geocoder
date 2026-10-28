@@ -117,6 +117,8 @@ If anything goes wrong, then an exception will be raised:
 - `ForbiddenError` API key is blocked or suspended
 - `RateLimitExceededError` if you go past your rate limit
 - `UnknownError` if there's some problem with the API (bad results, 500 status code, etc)
+- `NetworkError` if the request fails at the network level (connection refused, DNS or TLS failure, etc)
+- `NetworkTimeoutError` if the request times out. A subclass of `NetworkError` and of `asyncio.TimeoutError`
 
 ## Command-line batch geocoding
 

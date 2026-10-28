@@ -1,9 +1,11 @@
 """Geocoder module for the OpenCage API."""
 
 from decimal import Decimal
+import asyncio
 import collections
 
 import os
+import re
 import sys
 from urllib.parse import urlsplit
 import requests
@@ -150,6 +152,14 @@ class SSLError(OpenCageGeocodeError):
     __str__ = __unicode__
 
 
+class NetworkError(OpenCageGeocodeError):
+    """Exception raised when the connection to the OpenCage API fails."""
+
+
+class NetworkTimeoutError(NetworkError, asyncio.TimeoutError):
+    """Exception raised when the request to the OpenCage API times out."""
+
+
 class OpenCageGeocode:
     """Client for the OpenCage Geocoding API.
 
@@ -262,6 +272,8 @@ class OpenCageGeocode:
             InvalidInputError: If query is not a unicode string.
             RateLimitExceededError: If API quota is exceeded.
             UnknownError: If something goes wrong with the OpenCage API.
+            NetworkError: If the request fails at the network or HTTP level.
+            NetworkTimeoutError: If the request times out.
             AioHttpError: If called inside an async context manager.
         """
 
@@ -270,7 +282,13 @@ class OpenCageGeocode:
 
         raw_response = kwargs.pop('raw_response', False)
         request = self._parse_request(query, kwargs)
-        response = self._opencage_request(request)
+        # outside _opencagedata_api_request so backoff still retries
+        try:
+            response = self._opencagedata_api_request(request)
+        except requests.exceptions.Timeout as exc:
+            raise NetworkTimeoutError(_sanetize_exception_message(exc, request)) from None
+        except requests.exceptions.RequestException as exc:
+            raise NetworkError(_sanetize_exception_message(exc, request)) from None
 
         if raw_response:
             return response
@@ -296,6 +314,8 @@ class OpenCageGeocode:
             InvalidInputError: If query is not a unicode string.
             RateLimitExceededError: If API quota is exceeded.
             UnknownError: If something goes wrong with the OpenCage API.
+            NetworkError: If the request fails at the network or HTTP level.
+            NetworkTimeoutError: If the request times out.
             AioHttpError: If aiohttp is not installed or no async session is active.
         """
 
@@ -310,7 +330,12 @@ class OpenCageGeocode:
 
         raw_response = kwargs.pop('raw_response', False)
         request = self._parse_request(query, kwargs)
-        response = await self._opencage_async_request(request)
+        try:
+            response = await self._opencage_async_request(request)
+        except asyncio.TimeoutError as exc:
+            raise NetworkTimeoutError(_sanetize_exception_message(exc, request)) from None
+        except aiohttp.ClientError as exc:
+            raise NetworkError(_sanetize_exception_message(exc, request)) from None
 
         if raw_response:
             return response
@@ -365,7 +390,7 @@ class OpenCageGeocode:
         backoff.expo,
         (UnknownError, requests.exceptions.RequestException),
         max_tries=5, max_time=backoff_max_time)
-    def _opencage_request(self, params):
+    def _opencagedata_api_request(self, params):
         """Send a synchronous geocoding request to the OpenCage API.
 
         Args:
@@ -454,6 +479,8 @@ class OpenCageGeocode:
                     response_json = await response.json()
                 except ValueError as excinfo:
                     raise UnknownError("Non-JSON result from server") from excinfo
+                except aiohttp.ContentTypeError:
+                    raise UnknownError("Non-JSON result from server") from None
 
                 if response.status == 401:
                     raise NotAuthorizedError()
@@ -521,6 +548,27 @@ class OpenCageGeocode:
                 raise InvalidInputError(f"Longitude must be a number between -180 and 180, not {lng}", bad_value=lng)
         except ValueError:
             raise InvalidInputError(f"Longitude must be a number between -180 and 180, not {lng}", bad_value=lng)
+
+
+def _sanetize_exception_message(exc, params):
+    """Describe an exception without sensitive request parameter values.
+
+    Some ``requests`` and ``aiohttp`` exceptions include the request URL.
+
+    Args:
+        exc: Exception raised by the HTTP client.
+        params: Query parameters of the request.
+
+    Returns:
+        Exception type and message, with sensitive values replaced.
+    """
+    message = f"{type(exc).__name__}: {exc}" if str(exc) else type(exc).__name__
+    for field in ('key',):
+        if params.get(field):
+            message = message.replace(str(params[field]), '[REDACTED]')
+        # also catches values the HTTP client URL-encoded
+        message = re.sub(rf'([?&]{re.escape(field)}=)[^&#\s\'"]*', r'\1[REDACTED]', message)
+    return message
 
 
 def _query_for_reverse_geocoding(lat, lng):

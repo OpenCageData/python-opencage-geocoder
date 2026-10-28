@@ -1,5 +1,9 @@
-unreleased
+v3.5.0 Wed Oct 28 2026
   Add warning and safeguard that overlapping/nested context managers on one instance aren't supported
+  Redact API key in error messages
+  Note: Network errors from `requests` and `aiohttp` are now raised as the new `NetworkError` / `NetworkTimeoutError`.
+    Code catching `requests.exceptions.*` or `aiohttp.ClientError` must catch these instead
+  Async: like with sync, non-JSON responses (e.g. HTML error page from a proxy) now raise `UnknownError`
 
 v3.4.0 Mon Jun 09 2026
   CLI tool extracted to separate `opencage-cli` package and repository (https://github.com/OpenCageData/opencage-cli)
