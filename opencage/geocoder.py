@@ -95,10 +95,8 @@ class InvalidInputError(OpenCageGeocodeError):
         self.message = message
         self.bad_value = bad_value
 
-    def __unicode__(self):
+    def __str__(self):
         return self.message
-
-    __str__ = __unicode__
 
 
 class UnknownError(OpenCageGeocodeError):
@@ -108,32 +106,26 @@ class UnknownError(OpenCageGeocodeError):
 class RateLimitExceededError(OpenCageGeocodeError):
     """Exception raised when account has exceeded its limit."""
 
-    def __unicode__(self):
+    def __str__(self):
         """Convert exception to a string."""
         return ("You have used the requests available on your plan. "
                 "Please purchase more if you wish to continue: https://opencagedata.com/pricing")
-
-    __str__ = __unicode__
 
 
 class NotAuthorizedError(OpenCageGeocodeError):
     """Exception raised when an unauthorized API key is used."""
 
-    def __unicode__(self):
+    def __str__(self):
         """Convert exception to a string."""
         return "Your API key is not authorized. You may have entered it incorrectly."
-
-    __str__ = __unicode__
 
 
 class ForbiddenError(OpenCageGeocodeError):
     """Exception raised when a blocked or suspended API key is used."""
 
-    def __unicode__(self):
+    def __str__(self):
         """Convert exception to a string."""
         return "Your API key has been blocked or suspended."
-
-    __str__ = __unicode__
 
 
 class AioHttpError(OpenCageGeocodeError):
@@ -143,13 +135,11 @@ class AioHttpError(OpenCageGeocodeError):
 class SSLError(OpenCageGeocodeError):
     """Exception raised when SSL connection to OpenCage server fails."""
 
-    def __unicode__(self):
+    def __str__(self):
         """Convert exception to a string."""
         return ("SSL Certificate error connecting to OpenCage API. This is usually due to "
                 "outdated CA root certificates of the operating system. "
                 )
-
-    __str__ = __unicode__
 
 
 class NetworkError(OpenCageGeocodeError):
@@ -620,7 +610,7 @@ def floatify_latlng(input_value):
             # This dict has only 2 keys 'lat' & 'lon'
             return {'lat': float_if_float(input_value["lat"]), 'lng': float_if_float(input_value["lng"])}
 
-        return dict((key, floatify_latlng(value)) for key, value in input_value.items())
+        return {key: floatify_latlng(value) for key, value in input_value.items()}
 
     if isinstance(input_value, collections.abc.MutableSequence):
         return [floatify_latlng(x) for x in input_value]

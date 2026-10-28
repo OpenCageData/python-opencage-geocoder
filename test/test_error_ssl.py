@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 import ssl
 import pytest
 from opencage.geocoder import OpenCageGeocode, SSLError
