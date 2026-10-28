@@ -1,4 +1,6 @@
 v3.5.0 Wed Oct 28 2026
+  Requires python 3.10
+  Added python 3.15 to test matrix
   Add warning and safeguard that overlapping/nested context managers on one instance aren't supported
   Redact API key in error messages
   Note: Network errors from `requests` and `aiohttp` are now raised as the new `NetworkError` / `NetworkTimeoutError`.

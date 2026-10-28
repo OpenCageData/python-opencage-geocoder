@@ -23,7 +23,7 @@ There is an [Agent Skill for working with the OpenCage Geocoding API](https://gi
 
 ## Usage
 
-Supports Python 3.9 or newer. Starting opencage version 3.0 depends on asyncio package.
+Supports Python 3.10 or newer. Starting opencage version 3.0 depends on asyncio package.
 
 Install the module:
 
@@ -91,7 +91,7 @@ with OpenCageGeocode(key) as geocoder:
 
 You can run requests in parallel with the `geocode_async` and `reverse_geocode_async`
 method which have the same parameters and response as their synronous counterparts.
-You will need at least Python 3.8 and the `asyncio` and `aiohttp` packages installed.
+You will need the `asyncio` and `aiohttp` packages installed.
 
 ```python
 async with OpenCageGeocode(key) as geocoder:
